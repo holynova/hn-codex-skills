@@ -1,0 +1,25 @@
+{
+  "name": "hn-codex-skills",
+  "version": "0.1.0",
+  "description": "Installer package for HN personal Codex skills.",
+  "homepage": "https://github.com/holynova/hn-codex-skills",
+  "type": "module",
+  "bin": {
+    "hn-codex-skills": "./bin/install.mjs"
+  },
+  "files": [
+    "bin/",
+    "skills/"
+  ],
+  "scripts": {
+    "install-skills": "node ./bin/install.mjs install",
+    "check": "node ./bin/install.mjs --dry-run"
+  },
+  "keywords": [
+    "codex",
+    "skills",
+    "agent",
+    "workflow"
+  ],
+  "license": "MIT"
+}
