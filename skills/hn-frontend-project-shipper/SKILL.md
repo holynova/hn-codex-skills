@@ -16,6 +16,8 @@ Move a frontend project from request to a verified, presentable release. Use the
 - Prefer shipping the real usable experience over landing pages or explanation screens.
 - Verify with a browser when layout, interaction, screenshots, canvas, or responsive behavior matter.
 - Treat `README`, screenshots, GitHub repo links, GitHub Pages links, and publish steps as part of the shipping workflow, not afterthoughts.
+- When starting a new project, prefer the reusable templates in `references/templates/` over building a fresh structure from memory.
+- When working inside `G:\code` or another multi-project workspace, create or update a compact project index using `references/project-index.md`.
 - Do not commit or push unless the user asks, but prepare clean changes and report what remains.
 
 ## Workflow
@@ -67,3 +69,9 @@ Notes:
 
 - Read `references/release-checklist.md` for the end-to-end ship checklist.
 - Read `references/ui-qa.md` when the task touches layout, responsive design, animations, screenshots, or share cards.
+- Read `references/project-index.md` when creating or refreshing a workspace-level project map.
+- Read `references/template-readme.md` when a project needs a short README or `AGENTS.md`.
+- Read `references/templates/frontend-vite-react.md` when creating a small frontend/web tool project.
+- Read `references/templates/chrome-extension-mv3.md` when creating a browser extension.
+- Read `references/templates/codex-skill-package.md` when creating a reusable Codex skill package.
+- Use `scripts/create_project_index.ps1` on Windows when a workspace needs a first-pass `PROJECTS.md` draft.
