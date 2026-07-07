@@ -12,6 +12,9 @@ const skillNames = [
   "hn-windows-stability-doctor",
   "hn-frontend-project-shipper",
   "hn-agent-workflow-productizer",
+  "hn-product-release-packager",
+  "hn-tool-ui-polisher",
+  "hn-visual-asset-pipeline",
 ];
 
 function usage(exitCode = 0) {

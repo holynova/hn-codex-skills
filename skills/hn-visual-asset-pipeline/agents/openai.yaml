@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN Visual Asset Pipeline"
+  short_description: "Create and verify icons, screenshots, and image assets."
+  default_prompt: "Use $hn-visual-asset-pipeline to create, organize, wire, and verify the visual assets for this project."
