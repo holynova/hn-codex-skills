@@ -18,6 +18,7 @@ Diagnose Windows instability from evidence before recommending fixes. Treat cras
 - If dump analysis can freeze the machine, copy dumps to a working folder and inspect metadata first. Analyze one dump at a time.
 - Separate "likely root cause", "possible contributor", and "not supported by evidence".
 - Finish with a verification checklist the user can run after the fix.
+- For repeated Codex environment friction, use the preflight checklist before deeper diagnosis.
 
 ## Workflow
 
@@ -71,3 +72,5 @@ Residual risk:
 
 - Read `references/evidence-checklist.md` for Windows evidence sources and safe command patterns.
 - Read `references/repair-playbook.md` before proposing driver, disk, memory, BIOS, or overclock changes.
+- Read `references/codex-preflight.md` when the task involves Codex, PowerShell, npm/npx shims, encoding, Git/GitHub CLI, Node, Python, Docker, or recurring local development setup problems.
+- Use `scripts/codex_preflight.ps1` for a safe, read-only Windows/Codex environment check.
