@@ -12,7 +12,7 @@ const skillNames = [
   "hn-windows-stability-doctor",
   "hn-frontend-project-shipper",
   "hn-agent-workflow-productizer",
-  "hn-ian-xiaohei-illustrations",
+  "hn-xiaohei-draw",
 ];
 
 function usage(exitCode = 0) {
