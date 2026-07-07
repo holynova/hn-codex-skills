@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN Windows Stability Doctor"
+  short_description: "Diagnose Windows crashes and instability."
+  default_prompt: "Use $hn-windows-stability-doctor to diagnose this Windows crash and produce a safe repair plan."

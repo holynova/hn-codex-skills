@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN Frontend Project Shipper"
+  short_description: "Ship frontend fixes, QA, docs, and releases."
+  default_prompt: "Use $hn-frontend-project-shipper to polish, verify, document, and publish this frontend project."

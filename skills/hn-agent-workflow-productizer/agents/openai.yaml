@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN Agent Workflow Productizer"
+  short_description: "Turn agent processes into safe workflows."
+  default_prompt: "Use $hn-agent-workflow-productizer to convert this agent process into a validated workflow product design."
