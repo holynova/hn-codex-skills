@@ -5,6 +5,7 @@ Personal Codex skills for recurring workflows:
 - `hn-windows-stability-doctor`: Windows crash and instability diagnosis.
 - `hn-frontend-project-shipper`: frontend project polish, QA, docs, and release workflow.
 - `hn-agent-workflow-productizer`: productize manual agent procedures into safe workflow systems.
+- `ian-xiaohei-illustrations`: Ian-style Chinese article illustrations with the Xiaohei astronaut IP.
 
 ## Install With npx
 
@@ -18,6 +19,7 @@ Install one skill:
 
 ```bash
 npx github:holynova/hn-codex-skills install hn-frontend-project-shipper
+npx github:holynova/hn-codex-skills install ian-xiaohei-illustrations
 ```
 
 Options:
@@ -35,6 +37,7 @@ Copy the wanted skill folder into your Codex skills directory:
 Copy-Item -Recurse .\skills\hn-windows-stability-doctor $HOME\.codex\skills\
 Copy-Item -Recurse .\skills\hn-frontend-project-shipper $HOME\.codex\skills\
 Copy-Item -Recurse .\skills\hn-agent-workflow-productizer $HOME\.codex\skills\
+Copy-Item -Recurse .\skills\ian-xiaohei-illustrations $HOME\.codex\skills\
 ```
 
 ## 中文说明
@@ -44,6 +47,7 @@ Copy-Item -Recurse .\skills\hn-agent-workflow-productizer $HOME\.codex\skills\
 - `hn-windows-stability-doctor`: 诊断 Windows 蓝屏、死机、重启、硬盘/内存/驱动稳定性问题。
 - `hn-frontend-project-shipper`: 将前端项目从修改、调试、移动端 QA、截图、README 一直推进到发布。
 - `hn-agent-workflow-productizer`: 把手工 agent 流程产品化，设计状态机、沙盒权限、验证点和失败恢复。
+- `ian-xiaohei-illustrations`: 为中文文章生成 Ian 风格、宇航员小黑 IP 的怪诞清爽正文配图。
 
 推荐安装方式：
 
