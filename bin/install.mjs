@@ -18,6 +18,7 @@ const skillNames = [
   "hn-opencli-batch-image-production",
   "hn-data-to-github-pages-gallery",
   "hn-stateful-cron-report-pipeline",
+  "hn-xiaohei-draw",
 ];
 
 function usage(exitCode = 0) {
