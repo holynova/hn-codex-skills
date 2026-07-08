@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN OpenCLI Batch Image Production"
+  short_description: "Run reliable ChatGPT/Gemini image batches."
+  default_prompt: "Use $hn-opencli-batch-image-production to generate, validate, package, and optionally publish this OpenCLI image batch."

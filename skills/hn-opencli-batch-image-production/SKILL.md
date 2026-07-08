@@ -1,0 +1,132 @@
+---
+name: hn-opencli-batch-image-production
+description: Run reliable OpenCLI batch image production. Use when the user asks to generate many AI images with ChatGPT or Gemini, reuse the same prompt set across backends, handle quota or EMPTY_RESULT failures, validate image files, retry missing items, produce renamed copies, mapping CSV, contact sheet, zip packages, batch logs, or replace website/gallery images.
+---
+
+# HN OpenCLI Batch Image Production
+
+## Purpose
+
+Turn a batch of prompts into a verified, reusable image package. This skill is for long-running OpenCLI image jobs where reliability matters more than speed: fixed prompt sets, backend parity, retries, quality gates, resumability, renamed outputs, mapping tables, contact sheets, and optional website replacement.
+
+## When to Use
+
+- The user asks for 10+ generated images or a phased image batch.
+- The same prompt set must run through ChatGPT, Gemini, or multiple backends.
+- The task mentions OpenCLI, ChatGPT image, Gemini image, quota limits, EMPTY_RESULT, black images, placeholder images, or missing items.
+- The deliverable needs `images/`, `renamed/`, `mapping.csv`, `contact_sheet`, `zip`, `README.md`, or `batch.log`.
+- The generated images will later feed a GitHub Pages gallery, README, store listing, or portfolio.
+
+Don't use for one-off hand-authored image prompts with no batch artifacts.
+
+## Project Layout
+
+Create or preserve this structure under `~/AI_outputs/<project_name>/`:
+
+```text
+~/AI_outputs/<project_name>/
+  README.md
+  prompts.txt
+  prompts.json
+  prompts.jsonl
+  images/
+  renamed/
+  mapping.csv
+  contact_sheet.jpg
+  batch.log
+  <project_name>.zip
+```
+
+For backend comparisons, add backend-specific folders instead of overwriting:
+
+```text
+chatgpt_images/
+gemini_images/
+renamed_chatgpt/
+renamed_gemini/
+mapping_chatgpt.csv
+mapping_gemini.csv
+contact_sheet_chatgpt.jpg
+contact_sheet_gemini.jpg
+```
+
+## Workflow
+
+1. **Freeze the prompt set.**
+   - Write `prompts.txt`, `prompts.json`, and `prompts.jsonl` before generating.
+   - Include stable IDs, display titles, prompt text, intended backend, and expected filename stem.
+   - Completion criterion: every planned item has an ID and prompt in all required prompt files.
+
+2. **Interrogate OpenCLI before running.**
+   - Run the relevant help command instead of trusting memory: `opencli chatgpt image --help`, `opencli gemini image --help`, and structured help when available.
+   - Prefer structured output (`-f yaml` or JSON when available).
+   - Completion criterion: the command shape is verified against the installed OpenCLI version.
+
+3. **Use backend-specific command shapes.**
+   - ChatGPT image baseline:
+     ```bash
+     opencli chatgpt image "<prompt>" \
+       --window background \
+       --site-session persistent \
+       -f yaml \
+       --op <output_dir> \
+       --timeout 240
+     ```
+   - `--site-session` must be one of `ephemeral` or `persistent`; do not invent custom session names.
+   - Gemini can save to `~/AI_outputs/gemini/images/` even when `--op` points elsewhere. After each Gemini generation, locate the newest `gemini_*.png` there and copy it into the project folder.
+   - Completion criterion: the first item is generated and its real output path is known.
+
+4. **Run with resume state.**
+   - Log each item as `pending`, `success`, `retry`, `failed`, or `blocked`.
+   - Keep source output paths, final copied paths, dimensions, file size, backend, and error text.
+   - Do not restart completed items unless the user explicitly asks for replacement.
+   - Completion criterion: interrupted runs can resume without duplicating completed images.
+
+5. **Apply image quality gates.**
+   - For each candidate file, verify it exists and is a real image.
+   - Reject tiny placeholders, especially `480x480` or very small files when a full image is expected.
+   - Reject all-black, all-transparent, corrupt, or zero-byte images.
+   - Use image dimensions and pixel sampling, not just file extension.
+   - Completion criterion: every accepted item has dimensions, size, and quality status recorded.
+
+6. **Retry deliberately.**
+   - Retry transient failures with bounded attempts.
+   - Treat ChatGPT `EMPTY_RESULT`, exit code `66`, and browser timeout as retryable unless quota is visibly hit.
+   - If quota/frequency limit is hit, stop, record missing IDs, and prepare a resume command or scheduled retry only if the user asks.
+   - For repeated content-filter failures, simplify the prompt while preserving the core concept, style, subject, and labeling requirements.
+   - Completion criterion: remaining failures are classified as retryable, quota-blocked, filtered, or hard failed.
+
+7. **Normalize outputs.**
+   - Copy accepted images into `renamed/` using stable names such as `001_title_backend.png`.
+   - Generate `mapping.csv` with at least: `id,title,backend,prompt,source_path,final_path,width,height,status,error`.
+   - Generate a contact sheet with visible ID/title labels.
+   - Create a zip containing prompts, README, mapping, contact sheet, logs, and renamed images.
+   - Completion criterion: the package can be inspected without reading chat history.
+
+8. **Update website/gallery only after a full audit.**
+   - Do not replace live site images until the target set is complete or the user approves partial replacement.
+   - Convert to WebP thumbnails/large images when the site uses WebP.
+   - Update data references deterministically; preserve IDs and old/new mapping.
+   - Completion criterion: local files and site references agree item-for-item.
+
+9. **Report with evidence.**
+   - Report counts, missing IDs, paths, zip path, and verification performed.
+   - Include blockers honestly; do not claim images exist unless files were verified.
+
+## Common Pitfalls
+
+1. **Trusting stale OpenCLI arguments.** Always check help; OpenCLI session flags and output behavior change.
+2. **Believing `--op` for Gemini.** Gemini may save under `~/AI_outputs/gemini/images/`; locate and copy the latest real file.
+3. **Counting OpenCLI success as image success.** The CLI can return success while no valid image is present. Validate the file.
+4. **Overwriting backend comparisons.** Keep ChatGPT and Gemini outputs in separate folders until the user picks the winner.
+5. **Replacing a live gallery before full coverage.** Audit completeness first, then update the site.
+6. **Losing provenance.** Keep prompt, backend, source path, final path, and failure reason in mapping CSV.
+
+## Verification Checklist
+
+- [ ] Prompt files exist and item counts match.
+- [ ] OpenCLI command shape was checked against installed help.
+- [ ] Every accepted image exists, opens, has expected dimensions, and is not black/transparent/tiny.
+- [ ] Failures are logged with IDs and reasons.
+- [ ] `renamed/`, `mapping.csv`, contact sheet, README, and zip are created.
+- [ ] If a website was updated, all referenced files exist and the live/cache-busted URL was verified.
