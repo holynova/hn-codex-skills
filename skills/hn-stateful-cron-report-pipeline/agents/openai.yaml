@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN Stateful Cron Report Pipeline"
+  short_description: "Build stateful recurring reports and digests."
+  default_prompt: "Use $hn-stateful-cron-report-pipeline to create or update this recurring report with state files, comparison logic, strict output, and a verified first run."

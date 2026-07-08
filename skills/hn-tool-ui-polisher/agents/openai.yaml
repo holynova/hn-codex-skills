@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN Tool UI Polisher"
+  short_description: "Polish compact utility UIs for real use."
+  default_prompt: "Use $hn-tool-ui-polisher to audit and polish this tool UI, then verify desktop and mobile behavior."

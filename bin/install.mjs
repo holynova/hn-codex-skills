@@ -12,6 +12,12 @@ const skillNames = [
   "hn-windows-stability-doctor",
   "hn-frontend-project-shipper",
   "hn-agent-workflow-productizer",
+  "hn-product-release-packager",
+  "hn-tool-ui-polisher",
+  "hn-visual-asset-pipeline",
+  "hn-opencli-batch-image-production",
+  "hn-data-to-github-pages-gallery",
+  "hn-stateful-cron-report-pipeline",
   "hn-xiaohei-draw",
 ];
 

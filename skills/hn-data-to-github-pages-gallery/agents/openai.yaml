@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN Data to GitHub Pages Gallery"
+  short_description: "Turn data and image batches into static gallery sites."
+  default_prompt: "Use $hn-data-to-github-pages-gallery to normalize this dataset, build/update a GitHub Pages gallery, and verify the live site."
