@@ -1,61 +1,23 @@
-# Release Checklist
+# Frontend Local Readiness Checklist
 
-Use this checklist when shipping a frontend or UI project.
+Use this checklist to decide whether an existing frontend project can be handed to a separate packaging or publishing workflow.
 
-## Orientation
+## Evidence Matrix
 
-- Read `package.json` and identify npm, pnpm, yarn, or bun.
-- Read framework config: Vite, Next.js, Astro, Remix, Electron, or static HTML.
-- Read README and design docs.
-- Run `git status --short`.
-- Identify deploy target: GitHub Pages, Vercel, Netlify, static files, Chrome extension, desktop app.
+| Layer | Evidence |
+|---|---|
+| Repository | Instructions, clean understanding of worktree state, correct package manager |
+| Static checks | Required lint and typecheck commands exit successfully |
+| Tests | Required automated tests execute non-empty cases and pass |
+| Build | Production build exits successfully and expected output exists |
+| Runtime | Built output or documented preview starts successfully |
+| Primary workflow | Main user path completes against the built application |
+| Responsive surface | Required desktop/mobile viewports have no blocking defects |
 
-## Build And Verification
+## Decision Rules
 
-Run only commands that fit the project:
-
-- install: `npm install`, `pnpm install`, `yarn install`, or existing lockfile preference.
-- dev server: project `dev` script.
-- tests: `test`, `vitest`, `jest`, or framework-specific tests.
-- type check: `tsc --noEmit` or framework type script.
-- lint: project lint script.
-- build: project build script.
-
-If a command fails:
-
-- Report the failure.
-- Fix if it is in scope.
-- Avoid hiding failures by removing tests or weakening checks.
-
-## README And Presentation
-
-For small public projects, README should usually include:
-
-- Project name and one-sentence value.
-- Screenshot or GIF.
-- Live demo link.
-- GitHub repo link only if useful outside GitHub contexts.
-- Local run commands.
-- Tech stack in one short line.
-
-Keep the README concise unless the project needs full docs.
-
-## GitHub Pages
-
-Before publishing:
-
-- Confirm base path settings for Vite/Next/static site.
-- Confirm generated output directory.
-- Confirm links work under the GitHub Pages URL.
-- Capture at least desktop and mobile screenshots if the README or user asks.
-
-## Handoff
-
-Report:
-
-- Files changed.
-- Commands run and results.
-- Local URL.
-- Screenshots updated.
-- Commit/push/publish status.
-- Any unresolved risk.
+- Mark `ready for handoff` only when every project-required layer has current evidence.
+- Mark `blocked` when a required command fails or a built workflow has a reproducible defect.
+- Mark `unverified` when tooling, credentials, services, or environment constraints prevent a required check.
+- A development server is not a substitute for inspecting the production build.
+- Do not fix a blocker as part of this verification skill; return the reproduction to the correct owner.

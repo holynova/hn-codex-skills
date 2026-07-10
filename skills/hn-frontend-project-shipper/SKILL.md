@@ -1,77 +1,60 @@
 ---
 name: hn-frontend-project-shipper
-description: Ship small frontend, web app, portfolio, GitHub Pages, and UI demo projects end to end. Use when the user asks to build, polish, fix, locally run, QA, screenshot, update README, add repository/page links, improve responsive layout, create share cards, add subtle motion, commit, publish, or prepare a frontend project for GitHub release.
+description: Verify whether an existing frontend project is locally ready to hand off for release. Use when the user asks for a frontend release-readiness check, pre-publish verification, build and browser QA, or a concrete list of blockers before someone commits or deploys. This skill runs existing checks and inspects the built UI; it does not redesign the UI, create assets or documentation, commit, push, or publish.
 ---
 
 # HN Frontend Project Shipper
 
-## Purpose
+## Responsibility
 
-Move a frontend project from request to a verified, presentable release. Use the existing stack and design direction, make focused improvements, verify desktop and mobile, capture screenshots when needed, and leave the repository ready to publish.
+Determine whether an existing frontend project is locally ready for release handoff. Produce evidence from the repository's own checks and the built application, then return either `ready for handoff` or a concrete blocker list.
 
-## Operating Rules
+## Boundaries
 
-- Inspect the project before editing: package manager, framework, scripts, deploy target, current git status, and existing design conventions.
-- Preserve the user's design taste: compact, polished, low-noise, mobile-safe, not generic AI slop.
-- Prefer shipping the real usable experience over landing pages or explanation screens.
-- Verify with a browser when layout, interaction, screenshots, canvas, or responsive behavior matter.
-- Treat `README`, screenshots, GitHub repo links, GitHub Pages links, and publish steps as part of the shipping workflow, not afterthoughts.
-- When starting a new project, prefer the reusable templates in `references/templates/` over building a fresh structure from memory.
-- When working inside `G:\code` or another multi-project workspace, create or update a compact project index using `references/project-index.md`.
-- Do not commit or push unless the user asks, but prepare clean changes and report what remains.
+- Do not implement features, fix defects, or redesign the UI under this skill.
+- Do not create screenshots, icons, README content, release packages, workflows, commits, or deployments.
+- If verification exposes a defect, report the reproduction and route the fix to the appropriate implementation or UI skill.
+- Use the project's existing package manager, scripts, and documented release rules.
+- Preserve unrelated worktree changes and never clean or switch away from them.
 
 ## Workflow
 
-1. Orient.
-   - Read `package.json`, framework config, README, design docs, and relevant app entry files.
-   - Run `git status --short` and avoid overwriting unrelated user changes.
+1. Establish the verification contract.
+   - Read repository instructions, package manifest, lockfile, build configuration, and deploy configuration.
+   - Run `git status --short --branch -uall`.
+   - Identify the commands and browser paths that define local release readiness.
 
-2. Plan the smallest useful release slice.
-   - If the request is broad, split into build/fix, UI polish, QA, docs, publish.
-   - Use `references/release-checklist.md` to choose the right path.
+2. Run repository checks.
+   - Run the applicable test, typecheck, lint, and production build commands already defined by the project.
+   - Do not weaken configuration or skip a failing required check to obtain a pass.
+   - Record the command, exit status, and relevant failure output.
 
-3. Implement.
-   - Follow existing component, style, and state patterns.
-   - For UI, check spacing, typography, responsive behavior, empty states, loading states, and button text fit.
-   - For performance bugs, reproduce first and fix the root cause rather than masking symptoms.
+3. Inspect the built application.
+   - Serve the production build or the documented preview target.
+   - Exercise the primary workflow and relevant error, empty, and loading states.
+   - When layout matters, use `references/ui-qa.md` for desktop and mobile verification.
 
-4. Verify.
-   - Install dependencies only when needed.
-   - Run relevant tests, type checks, lint, and build.
-   - Start the local dev server when the app needs one.
-   - Use Playwright or browser inspection for desktop and mobile checks.
+4. Issue the handoff decision.
+   - `ready for handoff`: every required local check passed and the primary workflow was exercised against the built output.
+   - `blocked`: list each failing command or reproducible browser defect with the narrowest next owner.
+   - `unverified`: state which required layer could not be exercised and why.
 
-5. Package for presentation.
-   - Update README only with concise, useful content.
-   - Add or refresh screenshots if requested or if README/page links require them.
-   - Confirm GitHub repo and Pages links are visible where requested.
-
-6. Handoff.
-   - Summarize changed files, verification, local URL, and any publish/commit status.
-
-## Output Shape
+## Output
 
 ```text
-Done:
-- ...
+Decision: ready for handoff | blocked | unverified
 
-Verified:
-- ...
+Checks:
+- <command or browser path> -> pass | fail | not run
 
-Try it:
-- Local URL or file path
+Blockers:
+- <reproduction and likely owner>
 
-Notes:
-- ...
+Handoff boundary:
+- No commit, push, package, or deployment performed.
 ```
 
-## References
+## Reference Routing
 
-- Read `references/release-checklist.md` for the end-to-end ship checklist.
-- Read `references/ui-qa.md` when the task touches layout, responsive design, animations, screenshots, or share cards.
-- Read `references/project-index.md` when creating or refreshing a workspace-level project map.
-- Read `references/template-readme.md` when a project needs a short README or `AGENTS.md`.
-- Read `references/templates/frontend-vite-react.md` when creating a small frontend/web tool project.
-- Read `references/templates/chrome-extension-mv3.md` when creating a browser extension.
-- Read `references/templates/codex-skill-package.md` when creating a reusable Codex skill package.
-- Use `scripts/create_project_index.ps1` on Windows when a workspace needs a first-pass `PROJECTS.md` draft.
+- Read `references/release-checklist.md` for the local readiness evidence matrix.
+- Read `references/ui-qa.md` only when the built application has a visual or responsive surface.

@@ -1,4 +1,4 @@
 interface:
   display_name: "HN Product Release Packager"
-  short_description: "Prepare apps and extensions for public release."
-  default_prompt: "Use $hn-product-release-packager to prepare this project for release with docs, assets, build artifacts, and store materials."
+  short_description: "Assemble and inspect release archives."
+  default_prompt: "Use $hn-product-release-packager to package this existing build output and verify the archive contents without publishing it."

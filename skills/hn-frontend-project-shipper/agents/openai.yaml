@@ -1,4 +1,4 @@
 interface:
   display_name: "HN Frontend Project Shipper"
-  short_description: "Ship frontend fixes, QA, docs, and releases."
-  default_prompt: "Use $hn-frontend-project-shipper to polish, verify, document, and publish this frontend project."
+  short_description: "Verify frontend release readiness locally."
+  default_prompt: "Use $hn-frontend-project-shipper to verify whether this existing frontend project is locally ready for release handoff, without modifying or publishing it."
