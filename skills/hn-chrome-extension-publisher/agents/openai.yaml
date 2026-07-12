@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN Chrome Extension Publisher"
+  short_description: "Prepare and publish Chrome extensions safely."
+  default_prompt: "Use $hn-chrome-extension-publisher to audit, package, and prepare this Chrome extension for Chrome Web Store submission."
