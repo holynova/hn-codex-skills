@@ -19,6 +19,8 @@ const skillNames = [
   "hn-data-to-github-pages-gallery",
   "hn-stateful-cron-report-pipeline",
   "hn-xiaohei-draw",
+  "hn-project-publisher",
+  "hn-chrome-extension-publisher",
 ];
 
 function usage(exitCode = 0) {

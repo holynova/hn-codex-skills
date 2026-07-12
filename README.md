@@ -14,6 +14,8 @@ Personal Codex skills for recurring workflows.
 - `hn-data-to-github-pages-gallery`: turn structured data and image batches into searchable GitHub Pages galleries with batch switches and live verification.
 - `hn-stateful-cron-report-pipeline`: build recurring reports with local state, deterministic comparisons, strict digest formats, and verified first runs.
 - `hn-xiaohei-draw`: Ian-style Chinese article illustrations with the Xiaohei astronaut IP.
+- `hn-project-publisher`: initialize and publish projects to GitHub, master-branch GitHub Pages, and named portfolio sites.
+- `hn-chrome-extension-publisher`: audit, package, submit, and update Chrome extensions for the Chrome Web Store.
 
 ## Install With npx
 
@@ -33,6 +35,8 @@ npx github:holynova/hn-codex-skills install hn-opencli-batch-image-production
 npx github:holynova/hn-codex-skills install hn-data-to-github-pages-gallery
 npx github:holynova/hn-codex-skills install hn-stateful-cron-report-pipeline
 npx github:holynova/hn-codex-skills install hn-xiaohei-draw
+npx github:holynova/hn-codex-skills install hn-project-publisher
+npx github:holynova/hn-codex-skills install hn-chrome-extension-publisher
 ```
 
 Options:
@@ -57,6 +61,8 @@ Copy-Item -Recurse .\skills\hn-opencli-batch-image-production $HOME\.codex\skill
 Copy-Item -Recurse .\skills\hn-data-to-github-pages-gallery $HOME\.codex\skills\
 Copy-Item -Recurse .\skills\hn-stateful-cron-report-pipeline $HOME\.codex\skills\
 Copy-Item -Recurse .\skills\hn-xiaohei-draw $HOME\.codex\skills\
+Copy-Item -Recurse .\skills\hn-project-publisher $HOME\.codex\skills\
+Copy-Item -Recurse .\skills\hn-chrome-extension-publisher $HOME\.codex\skills\
 ```
 
 ## 中文说明
@@ -73,6 +79,8 @@ Copy-Item -Recurse .\skills\hn-xiaohei-draw $HOME\.codex\skills\
 - `hn-data-to-github-pages-gallery`: 将结构化数据、抓取结果和图片批次发布成可搜索、可筛选、可切换批次的 GitHub Pages 图库/数据网站。
 - `hn-stateful-cron-report-pipeline`: 构建带本地状态、历史对比、严格输出格式和首次验证的定时报告/监控任务。
 - `hn-xiaohei-draw`: 为中文文章生成 Ian 风格、宇航员小黑 IP 的正文配图。
+- `hn-project-publisher`: 初始化项目并发布到 GitHub、master 分支 GitHub Pages 和指定的多个作品集网站。
+- `hn-chrome-extension-publisher`: 审计、整理、打包、提交和升级发布 Chrome Web Store 插件。
 
 推荐安装方式：
 
