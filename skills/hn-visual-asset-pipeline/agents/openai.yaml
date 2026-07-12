@@ -1,4 +1,4 @@
 interface:
   display_name: "HN Visual Asset Pipeline"
-  short_description: "Create and verify icons, screenshots, and image assets."
-  default_prompt: "Use $hn-visual-asset-pipeline to create, organize, wire, and verify the visual assets for this project."
+  short_description: "Export verified raster image variants."
+  default_prompt: "Use $hn-visual-asset-pipeline to transform this existing raster master into the requested size and format variants, without generating artwork or changing project references."

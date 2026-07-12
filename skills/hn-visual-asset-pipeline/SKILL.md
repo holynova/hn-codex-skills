@@ -1,63 +1,56 @@
 ---
 name: hn-visual-asset-pipeline
-description: Create, normalize, verify, and organize product visual assets. Use when the user asks for icons, screenshots, generated images, image conversion, transparent PNGs, asset folders, multi-size exports, README/store visuals, image quality cleanup, or batching visual assets for an app, extension, website, or portfolio.
+description: Normalize an existing raster master image into explicitly requested project-ready variants. Use when the user asks to resize, crop, convert, compress, rename, or export an existing PNG, JPEG, or WebP source into a defined size and format matrix while preserving a separate master. This skill does not generate new artwork, capture screenshots, design icons, update application references, or create store and README materials.
 ---
 
 # HN Visual Asset Pipeline
 
-## Purpose
+## Responsibility
 
-Produce visual assets that are usable in a real project: correctly sized, named, placed, referenced, and verified. Cover icons, screenshots, generated images, transparent cutouts, store assets, README images, and grouped asset folders.
+Transform one existing raster master into a deterministic set of requested variants and verify every exported file. The input concept and artwork must already exist.
 
-## Operating Rules
+## Boundaries
 
-- Inspect existing assets and project conventions before generating or overwriting files.
-- Prefer deterministic resizing/conversion for existing assets; use image generation only when a new visual concept is needed.
-- Keep original/source assets separate from exported release assets.
-- Verify dimensions, file format, transparency, and visual quality after generation or conversion.
-- For app and extension icons, generate the full required size set from the best available master image.
-- Do not leave assets only in temporary or Codex-generated directories when the project needs them.
+- Do not generate, redraw, retouch, or choose a new visual direction.
+- Do not capture product screenshots or compose marketing/store graphics.
+- Do not update manifests, HTML, README files, metadata, or application code.
+- Do not infer an app-store or platform size matrix; require the user or project to define the requested outputs.
+- Never overwrite the master asset. Write variants to an explicit output directory.
 
 ## Workflow
 
-1. Define the asset job.
-   - Asset type: app icon, Chrome icon, screenshot, README image, store image, transparent cutout, batch conversion, gallery organization.
-   - Required sizes, formats, output paths, and naming scheme.
+1. Define the transform contract.
+   - Identify the master file, output directory, filename pattern, target dimensions, formats, crop/fit rule, transparency requirement, and compression target.
+   - Use `references/asset-checklist.md` to record the variant matrix.
 
-2. Inspect current assets.
-   - Find existing icons, screenshots, image folders, README references, manifest references, and build config.
+2. Inspect the master.
+   - Verify the file opens and record its dimensions, format, color mode, alpha channel, and orientation metadata.
+   - Stop if the requested variant would require inventing missing artwork or an unspecified crop.
 
-3. Produce or transform.
-   - Use deterministic scripts or platform tools for resizing, format conversion, cropping, compression, and alpha checks.
-   - Use image generation when the user needs a new icon, illustration, product visual, or style direction.
-   - Use `references/asset-checklist.md` to avoid missing formats and sizes.
+3. Export deterministically.
+   - Use a reproducible image-processing command or script.
+   - Apply the same declared crop/fit and resampling rule across the matrix.
+   - Preserve the master separately and avoid repeated lossy conversions.
 
-4. Wire assets into the project.
-   - Update README, manifest, HTML, metadata, or store material references when requested.
-   - Keep paths relative and repo-friendly.
+4. Verify every variant.
+   - Reopen each output and check filename, dimensions, format, file size, and transparency requirement.
+   - Visually inspect representative smallest and largest variants for clipping, padding, blur, or halos.
+   - Fail the job if any requested matrix entry is missing.
 
-5. Verify.
-   - List final files.
-   - Check dimensions and format.
-   - Open or inspect key assets visually.
-   - Confirm referenced files exist.
+5. Report the export set.
+   - Return the master path, output directory, transformation rule, variant count, and verification result.
+   - State that no project references or product artwork were changed.
 
-## Output Shape
+## Output
 
 ```text
-Assets created:
-- ...
-
-Updated references:
-- ...
-
-Verified:
-- ...
-
-Source/master asset:
-- ...
+Master: <path>
+Transform: <crop/fit, resampling, format>
+Variants: <count and output paths>
+Verification: pass | fail
+Project wiring: not performed
 ```
 
-## References
+## Reference Routing
 
-- Read `references/asset-checklist.md` before creating release-ready visual assets.
+- Read `references/asset-checklist.md` before exporting variants.

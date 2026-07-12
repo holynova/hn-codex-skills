@@ -1,34 +1,19 @@
-# Chrome Extension Release
+# Chrome Extension Archive Checks
 
-Use this checklist for Chrome Web Store preparation.
+Use only for inspecting an already-built Chrome extension archive.
 
-## Required Project Checks
+## Required Entries
 
-- `manifest.json` has correct `name`, `description`, `version`, `icons`, `permissions`, `host_permissions`, `action`, and content scripts.
-- Extension works after loading the built output directory, not only the source directory.
-- Permissions are minimal and explainable.
-- No development-only console noise, debug URLs, local hosts, or secrets.
+- `manifest.json` is at the archive root.
+- Every file referenced by the manifest exists in the archive.
+- Built JavaScript, CSS, icons, and static assets required at runtime are present.
+- The manifest version matches the intended build version.
 
-## Store Materials
+## Exclusions
 
-- Short description.
-- Detailed description focused on what the extension does.
-- Category and language.
-- At least one screenshot that shows the real extension in use.
-- Icon assets required by Chrome Web Store and extension manifest.
-- Privacy policy URL if required.
-- Support URL or support contact.
+- No `.git`, `node_modules`, tests, source-only configuration, local hosts, logs, secrets, or store-source screenshots.
+- Do not include the repository root when the built extension directory is the runtime root.
 
-## Package Verification
+## Inspection Boundary
 
-- Build the extension.
-- Zip the build output, not the whole repo, unless the repo is intentionally the extension root.
-- Inspect zip contents:
-  - `manifest.json` at the expected root.
-  - Icons included.
-  - Built JS/CSS/assets included.
-  - No `.git`, `node_modules`, tests, local config, screenshots source, or secrets.
-
-## Submission Boundary
-
-Preparing files is allowed. Uploading, submitting for review, changing public listing text, or accepting final store actions requires explicit user instruction and may require browser/computer-use confirmation.
+This check proves archive composition only. Loading the extension, testing browser behavior, uploading to Chrome Web Store, or editing the public listing belongs to other workflows.

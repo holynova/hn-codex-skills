@@ -1,41 +1,29 @@
-# UI QA
+# Built Frontend Browser Verification
 
-Use this checklist when the task touches frontend design, responsive layout, interactions, animations, screenshots, or share cards.
+Use this checklist only to verify the existing production build. Record defects; do not polish or modify the UI under this skill.
 
-## Responsive Checks
+## Viewports
 
-Check at least:
+Use the project's documented targets. When none exist, check representative narrow mobile and desktop viewports.
 
-- Mobile narrow: 375 x 812.
-- Mobile wider: 430 x 932.
-- Desktop: 1280 x 800 or current viewport.
+## Blocking Conditions
 
-Look for:
+- The primary workflow cannot be completed.
+- Required controls are unreachable, clipped, obscured, or unusable.
+- Content creates unintended horizontal scrolling.
+- Text needed to operate the product is truncated or unreadable.
+- Loading, empty, validation, success, or error states prevent recovery.
+- Keyboard or pointer interaction cannot reach a required action.
+- The built application is blank, crashes, or differs materially from the verified development path.
 
-- Text overflow in buttons, cards, tabs, and nav.
-- Controls wrapping awkwardly.
-- Content hidden behind fixed headers or panels.
-- Tap targets too small.
-- Horizontal scrolling caused by fixed widths.
+## Evidence
 
-## Visual Polish
+For each defect, record:
 
-- Match the existing product style.
-- Keep compact tools compact; avoid oversized hero typography inside panels.
-- Use stable dimensions for boards, canvases, toolbars, tiles, counters, and icon buttons.
-- Keep motion subtle and respect reduced-motion where possible.
-- Avoid decorative clutter when the product is a tool.
+- Production-build URL and viewport.
+- Starting state and exact interaction sequence.
+- Expected and observed behavior.
+- Console or network evidence when relevant.
+- The narrowest likely owner: implementation, UI, backend, configuration, or environment.
 
-## Interaction QA
-
-- Buttons show loading/disabled states for async actions.
-- Forms validate invalid and empty states.
-- Local storage import/export works with malformed input.
-- Share-card or screenshot generation uses the same fonts and captures the intended content.
-- Canvas output is nonblank and centered if the task is graphical.
-
-## Screenshot QA
-
-- Hide debug overlays and dev-only UI.
-- Capture the real app, not a blank loading state.
-- For README screenshots, prefer the main workflow over marketing-only screens.
+Passing browser verification means the primary workflow and required states were exercised without a blocking condition. It is not a general visual-quality approval.

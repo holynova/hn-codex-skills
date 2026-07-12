@@ -1,65 +1,60 @@
 ---
 name: hn-product-release-packager
-description: Prepare small apps, Chrome extensions, GitHub Pages projects, and public tools for release. Use when the user asks to publish, package, launch, submit to Chrome Web Store, create release materials, prepare README/screenshots/privacy pages/icons/store copy, add GitHub Actions releases, or turn a finished local project into a public product package.
+description: Assemble and inspect a release archive from an existing, already-built project output. Use when the user asks to create a distributable zip or package, verify archive contents, exclude development files and secrets, or prove that a release artifact contains the required runtime files. This skill does not create product copy, screenshots, icons, privacy pages, CI workflows, releases, or store submissions.
 ---
 
 # HN Product Release Packager
 
-## Purpose
+## Responsibility
 
-Turn a working project into a complete public release package. Treat docs, screenshots, icons, store listing copy, privacy/support pages, release zips, GitHub Pages, and GitHub Actions as first-class deliverables.
+Turn an existing build output into one reproducible release archive and verify the archive from disk. The deliverable is the package plus a manifest of what it contains and excludes.
 
-## Operating Rules
+## Boundaries
 
-- Inspect the current repo before changing anything: app type, build output, extension manifest, package scripts, README, deploy target, and git status.
-- Preserve the user's current implementation unless release requirements expose a real gap.
-- Separate local build readiness, public presentation, store submission materials, and automation.
-- Verify generated artifacts from disk instead of assuming a build or zip contains the right files.
-- Do not submit to a third-party store, publish a release, or push commits unless the user explicitly asks.
-- Keep public copy concise, concrete, and product-facing.
+- Require an existing build output or documented packaging command.
+- Do not implement or repair the product under this skill.
+- Do not create README copy, screenshots, icons, policy/support pages, store listings, CI workflows, tags, or releases.
+- Do not commit, push, upload, submit, or publish.
+- Never package secrets, local configuration, caches, test fixtures, dependency directories, or unrelated source files.
 
 ## Workflow
 
-1. Orient.
-   - Identify product type: static site, frontend app, browser extension, CLI, package, or mixed project.
-   - Read `package.json`, build scripts, existing README, extension `manifest.json`, deploy files, and current git status.
+1. Identify the package contract.
+   - Read repository instructions and the existing build/package configuration.
+   - Record the product type, input directory, output archive, required root files, and explicit exclusions.
+   - Use `references/release-inventory.md` to write the package manifest before creating the archive.
 
-2. Build the release inventory.
-   - Use `references/release-inventory.md`.
-   - List required and missing: README, screenshots, demo URL, repo URL, icons, privacy/support pages, store copy, zip/package, release notes, GitHub Actions.
+2. Confirm the input is ready.
+   - Verify the expected build output exists.
+   - If the repository defines a packaging command, use it rather than inventing another layout.
+   - Stop if building or fixing the product is still required; that belongs to a preceding workflow.
 
-3. Fill gaps.
-   - Create or update only the artifacts required for the target release path.
-   - Generate app icons and screenshots only when absent, outdated, or requested.
-   - Add GitHub Pages or release workflows only after confirming branch/output conventions.
+3. Create one release artifact.
+   - Package only the documented runtime files.
+   - Preserve the required archive root layout.
+   - Avoid nondeterministic extras such as caches, logs, local metadata, and editor files.
 
-4. Verify.
-   - Run relevant test, lint, typecheck, and build commands.
-   - Inspect zip/package contents.
-   - Open local pages or static files when presentation matters.
-   - Confirm public links are present where requested.
+4. Inspect the artifact from disk.
+   - Reopen or list the final archive rather than trusting the packaging command.
+   - Confirm every required entry exists and every denylisted class is absent.
+   - For Chrome extensions, read `references/chrome-extension-release.md` for archive-specific checks.
 
-5. Handoff.
-   - Report artifact paths, commands run, verification status, and what still needs user action such as manual store submission.
+5. Report the artifact boundary.
+   - Return the archive path, size, checksum when useful, included root entries, exclusions checked, and any blocker.
+   - State explicitly that no upload or publication was performed.
 
-## Output Shape
+## Output
 
 ```text
-Release package:
-- Target:
-- Added/updated:
-- Build artifact:
-- Public pages:
-- Store materials:
-
-Verified:
-- ...
-
-Manual steps remaining:
-- ...
+Package: <absolute path>
+Input: <build output>
+Required entries: pass | fail
+Excluded entries: pass | fail
+Inspection: <command and result>
+Publication: not performed
 ```
 
-## References
+## Reference Routing
 
-- Read `references/release-inventory.md` to decide what artifacts are required.
-- Read `references/chrome-extension-release.md` for Chrome Web Store packaging and submission materials.
+- Read `references/release-inventory.md` for the package manifest and denylist.
+- Read `references/chrome-extension-release.md` only when packaging a Chrome extension.
