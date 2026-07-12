@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN Project Publisher"
+  short_description: "Publish versioned projects to GitHub and portfolios."
+  default_prompt: "Use $hn-project-publisher to version, publish, and list this project across my portfolios."
