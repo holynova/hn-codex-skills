@@ -1,6 +1,6 @@
 ---
 name: hn-stateful-cron-report-pipeline
-description: Build and maintain stateful recurring reports and watchdogs. Use when the user asks for a daily or weekly cron report, source monitoring, yesterday comparison, compact Chinese digest, GitHub Trending/flysheep-style updates, local history JSON, strict Telegram output formats, failure summaries, first-run tests, or cron jobs that must save state before pushing results.
+description: Build and maintain stateful recurring reports and watchdogs. Use when the user asks for a daily or weekly cron report, source monitoring, yesterday comparison, compact Chinese digest, GitHub Trending/flysheep-style updates, local history JSON, strict Telegram output formats, failure summaries, first-run tests, or cron jobs that must save state before pushing results. Do not use for one-shot research or reports with no recurring state.
 ---
 
 # HN Stateful Cron Report Pipeline
@@ -9,44 +9,9 @@ description: Build and maintain stateful recurring reports and watchdogs. Use wh
 
 Create recurring report jobs that are durable, stateful, verifiable, and concise. This skill is for cron reports that fetch live data, compare against prior runs, save local history, and send a user-shaped digest without hallucinated results.
 
-## When to Use
-
-- The user asks for a daily/weekly report, monitor, digest, alert, or scheduled scrape.
-- The report needs to compare today with yesterday or detect newly seen items.
-- The output must follow a strict compact format, especially Chinese Telegram summaries.
-- The task needs local JSON history under `~/.hermes/` or project state files.
-- The job wraps a CLI/script such as `pnpm daily`, `game-tier`, `nlm`, or a browser-only scrape.
-- The user asks to modify an existing cron job and run it once for verification.
-
-Don't use for one-shot research with no recurring state.
-
 ## State Model
 
-Every stateful report needs explicit files:
-
-```text
-~/.hermes/<report-name>/
-  YYYY-MM-DD.json
-  history.json
-  last-run.json
-  logs/
-```
-
-For project-local jobs, keep state under the project if that is already the source of truth, and document the path in the cron prompt.
-
-Minimum per-item fields:
-
-```json
-{
-  "id": "stable-id-or-url",
-  "title": "Display title",
-  "url": "https://...",
-  "first_seen": "2026-01-01",
-  "last_seen": "2026-01-02",
-  "metadata": {},
-  "status": "new|seen|changed|failed"
-}
-```
+Read `references/report-state-schema.md` before selecting state paths or fields. Prefer the existing project state directory; otherwise choose an explicit user-owned path and record it in the recurring-job prompt.
 
 ## Workflow
 
@@ -115,3 +80,7 @@ Minimum per-item fields:
 - [ ] Output exactly matches the requested format.
 - [ ] Existing cron job was updated or new job created with self-contained prompt.
 - [ ] A one-shot run/test completed, or the blocker is reported honestly.
+
+## References
+
+- Read `references/report-state-schema.md` when creating or migrating report state.

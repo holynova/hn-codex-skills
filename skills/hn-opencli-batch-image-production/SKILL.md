@@ -1,6 +1,6 @@
 ---
 name: hn-opencli-batch-image-production
-description: Run reliable OpenCLI batch image production. Use when the user asks to generate many AI images with ChatGPT or Gemini, reuse the same prompt set across backends, handle quota or EMPTY_RESULT failures, validate image files, retry missing items, produce renamed copies, mapping CSV, contact sheet, zip packages, batch logs, or replace website/gallery images.
+description: Run reliable OpenCLI batch image production. Use when the user asks to generate many AI images with ChatGPT or Gemini, reuse the same prompt set across backends, handle quota or EMPTY_RESULT failures, validate image files, retry missing items, produce renamed copies, mapping CSV, contact sheet, zip packages, batch logs, or replace website/gallery images. Do not use for one-off hand-authored image prompts with no batch artifacts.
 ---
 
 # HN OpenCLI Batch Image Production
@@ -9,46 +9,9 @@ description: Run reliable OpenCLI batch image production. Use when the user asks
 
 Turn a batch of prompts into a verified, reusable image package. This skill is for long-running OpenCLI image jobs where reliability matters more than speed: fixed prompt sets, backend parity, retries, quality gates, resumability, renamed outputs, mapping tables, contact sheets, and optional website replacement.
 
-## When to Use
-
-- The user asks for 10+ generated images or a phased image batch.
-- The same prompt set must run through ChatGPT, Gemini, or multiple backends.
-- The task mentions OpenCLI, ChatGPT image, Gemini image, quota limits, EMPTY_RESULT, black images, placeholder images, or missing items.
-- The deliverable needs `images/`, `renamed/`, `mapping.csv`, `contact_sheet`, `zip`, `README.md`, or `batch.log`.
-- The generated images will later feed a GitHub Pages gallery, README, store listing, or portfolio.
-
-Don't use for one-off hand-authored image prompts with no batch artifacts.
-
 ## Project Layout
 
-Create or preserve this structure under `~/AI_outputs/<project_name>/`:
-
-```text
-~/AI_outputs/<project_name>/
-  README.md
-  prompts.txt
-  prompts.json
-  prompts.jsonl
-  images/
-  renamed/
-  mapping.csv
-  contact_sheet.jpg
-  batch.log
-  <project_name>.zip
-```
-
-For backend comparisons, add backend-specific folders instead of overwriting:
-
-```text
-chatgpt_images/
-gemini_images/
-renamed_chatgpt/
-renamed_gemini/
-mapping_chatgpt.csv
-mapping_gemini.csv
-contact_sheet_chatgpt.jpg
-contact_sheet_gemini.jpg
-```
+Read `references/batch-artifacts.md` before creating or changing the batch layout. Keep backend outputs separate instead of overwriting them.
 
 ## Workflow
 
@@ -130,3 +93,7 @@ contact_sheet_gemini.jpg
 - [ ] Failures are logged with IDs and reasons.
 - [ ] `renamed/`, `mapping.csv`, contact sheet, README, and zip are created.
 - [ ] If a website was updated, all referenced files exist and the live/cache-busted URL was verified.
+
+## References
+
+- Read `references/batch-artifacts.md` for the canonical project layout and backend-specific artifact names.

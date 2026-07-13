@@ -1,6 +1,6 @@
 ---
 name: hn-data-to-github-pages-gallery
-description: Convert structured data and image batches into verified GitHub Pages galleries or data sites. Use when the user asks to publish scraped data, AI image sets, recipe collections, checklists, showcases, card grids, searchable tables, batch toggles, placeholder-first galleries, mobile-friendly detail modals, or to append new data/images to an existing static site.
+description: Convert structured data and image batches into verified GitHub Pages galleries or data sites. Use when the user asks to publish scraped data, AI image sets, recipe collections, checklists, showcases, card grids, searchable tables, batch toggles, placeholder-first galleries, mobile-friendly detail modals, or to append new data/images to an existing static site. Do not use for applications that require a live backend or database unless the deliverable is a static export.
 ---
 
 # HN Data to GitHub Pages Gallery
@@ -8,16 +8,6 @@ description: Convert structured data and image batches into verified GitHub Page
 ## Purpose
 
 Transform raw data, prompt outputs, generated images, or scraped collections into a maintainable GitHub Pages site. The default product is a data-driven static gallery/table with search, filters, compact mobile controls, detail views, and verified live publishing.
-
-## When to Use
-
-- The user says to put a dataset, image set, scraped posts, recipes, artifacts, demos, or cards on a website.
-- The site needs search, filters, time sorting, batch toggles, big tables, card grids, detail modals, or check-in style interactions.
-- The user wants to append new data to an existing GitHub Pages project without losing old data.
-- The user allows placeholder images first and slower image replacement later.
-- The task mentions GitHub Pages, `data.json`, WebP conversion, mobile layout, or live URL verification.
-
-Don't use for backend-heavy apps that require a server or database unless the output is still a static export.
 
 ## Data Contract
 
@@ -99,11 +89,6 @@ Keep old data and new data distinguishable with `batch`, `source`, `first_seen`,
 4. **Publishing before live verification.** GitHub Pages can lag; verify with a cache-busting query.
 5. **Broken image optimism.** If images are pending, mark placeholders explicitly and avoid broken URLs.
 
-## Verification Checklist
+## References
 
-- [ ] Data parses and item count matches expectation.
-- [ ] Old and new batches remain separable.
-- [ ] Search, filter, sort, table/card switch, and detail modal work where present.
-- [ ] Mobile layout was checked or reasoned against compact controls.
-- [ ] Images are either verified or explicitly marked placeholders.
-- [ ] Git commit and cache-busted GitHub Pages URL were verified.
+- Read `references/static-gallery-checklist.md` before local and live verification.
