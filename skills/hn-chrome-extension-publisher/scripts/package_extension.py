@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import fnmatch
 import hashlib
 import json
 from pathlib import Path
@@ -12,6 +13,18 @@ import zipfile
 SKIP_DIRS = {".git", ".github", ".cache", "coverage", "node_modules", "test", "tests"}
 SKIP_FILES = {".DS_Store", "Thumbs.db"}
 SECRET_PATTERNS = (".env", ".pem", ".key", ".p12", ".pfx")
+SENSITIVE_NAMES = {
+    ".npmrc", ".pypirc", ".netrc", "id_rsa", "id_dsa", "id_ecdsa", "id_ed25519",
+    "credentials.json", "service-account.json", "service_account.json",
+}
+SENSITIVE_GLOBS = ("credentials*.json", "client_secret*.json", "service-account*.json", "service_account*.json")
+PRIVATE_KEY_MARKERS = (
+    b"-----BEGIN PRIVATE KEY-----",
+    b"-----BEGIN RSA PRIVATE KEY-----",
+    b"-----BEGIN DSA PRIVATE KEY-----",
+    b"-----BEGIN EC PRIVATE KEY-----",
+    b"-----BEGIN OPENSSH PRIVATE KEY-----",
+)
 VERSION_RE = re.compile(r"^(?:0|[1-9]\d*)(?:\.(?:0|[1-9]\d*)){0,3}$")
 
 
@@ -20,16 +33,32 @@ def fail(message):
     raise SystemExit(1)
 
 
-def is_secret(path):
+def secret_reason(path):
     name = path.name.lower()
-    return name.startswith(".env") or any(name.endswith(suffix) for suffix in SECRET_PATTERNS[1:])
+    if name.startswith(".env") or any(name.endswith(suffix) for suffix in SECRET_PATTERNS[1:]):
+        return "sensitive filename or extension"
+    if name in SENSITIVE_NAMES or any(fnmatch.fnmatch(name, pattern) for pattern in SENSITIVE_GLOBS):
+        return "known credential filename"
+
+    data = path.read_bytes()[:2 * 1024 * 1024]
+    if any(marker in data for marker in PRIVATE_KEY_MARKERS):
+        return "private-key content marker"
+    if path.suffix.lower() == ".json":
+        if re.search(rb'"private_key"\s*:\s*"-----BEGIN', data):
+            return "service-account private key"
+        if re.search(rb'"client_secret"\s*:\s*"[^"\r\n]{8,}"', data):
+            return "OAuth client secret"
+    return None
 
 
-def collect_files(source, output):
+def collect_files(source, output, include_source_maps=False):
     files = []
+    excluded = []
     for path in sorted(source.rglob("*")):
         relative = path.relative_to(source)
         if any(part in SKIP_DIRS for part in relative.parts):
+            if path.is_file():
+                excluded.append((relative.as_posix(), "development directory"))
             continue
         if path.is_symlink():
             fail(f"symlink is not allowed in the upload package: {relative}")
@@ -37,18 +66,24 @@ def collect_files(source, output):
             continue
         if path.resolve() == output:
             continue
-        if is_secret(path):
-            fail(f"possible secret or signing key found in extension root: {relative}")
+        reason = secret_reason(path)
+        if reason:
+            fail(f"possible secret or signing key found in extension root: {relative} ({reason})")
+        if path.suffix.lower() == ".map" and not include_source_maps:
+            excluded.append((relative.as_posix(), "source map; pass --include-source-maps to include"))
+            continue
         if path.suffix.lower() in {".zip", ".crx"}:
+            excluded.append((relative.as_posix(), "nested package"))
             continue
         files.append((path, relative.as_posix()))
-    return files
+    return files, excluded
 
 
 def main():
     parser = argparse.ArgumentParser(description="Create a Chrome Web Store ZIP from a built extension directory.")
     parser.add_argument("source", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--include-source-maps", action="store_true", help="Include .map files after explicit review.")
     args = parser.parse_args()
 
     source = args.source.resolve()
@@ -73,7 +108,7 @@ def main():
     if all(part == 0 for part in parts) or any(part > 65535 for part in parts):
         fail(f"invalid Chrome extension version: {version}")
 
-    files = collect_files(source, output)
+    files, excluded = collect_files(source, output, args.include_source_maps)
     if not any(name == "manifest.json" for _, name in files):
         fail("manifest.json would not be included at the ZIP root")
 
@@ -91,6 +126,10 @@ def main():
             fail("ZIP structure verification failed")
 
     digest = hashlib.sha256(output.read_bytes()).hexdigest()
+    if excluded:
+        print("Excluded files:")
+        for name, reason in excluded:
+            print(f"- {name}: {reason}")
     print(f"Package created: {output}")
     print(f"Version: {version}")
     print(f"Files: {len(files)}")

@@ -6,6 +6,7 @@ from pathlib import Path
 import re
 import struct
 import sys
+import zlib
 
 
 VERSION_RE = re.compile(r"^(?:0|[1-9]\d*)(?:\.(?:0|[1-9]\d*)){0,3}$")
@@ -30,27 +31,136 @@ def version_parts(value):
     return parts + [0] * (4 - len(parts))
 
 
+def png_scanlines(width, height, bit_depth, color_type, interlace):
+    channels = {0: 1, 2: 3, 3: 1, 4: 2, 6: 4}.get(color_type)
+    valid_depths = {
+        0: {1, 2, 4, 8, 16},
+        2: {8, 16},
+        3: {1, 2, 4, 8},
+        4: {8, 16},
+        6: {8, 16},
+    }
+    if channels is None or bit_depth not in valid_depths[color_type] or interlace not in {0, 1}:
+        return None
+
+    passes = [(0, 0, 1, 1)] if interlace == 0 else [
+        (0, 0, 8, 8), (4, 0, 8, 8), (0, 4, 4, 8), (2, 0, 4, 4),
+        (0, 2, 2, 4), (1, 0, 2, 2), (0, 1, 1, 2),
+    ]
+    rows = []
+    for x_start, y_start, x_step, y_step in passes:
+        pass_width = max(0, (width - x_start + x_step - 1) // x_step)
+        pass_height = max(0, (height - y_start + y_step - 1) // y_step)
+        if not pass_width or not pass_height:
+            continue
+        row_bytes = (pass_width * channels * bit_depth + 7) // 8
+        rows.extend([row_bytes] * pass_height)
+    return rows
+
+
 def image_size(path):
     data = path.read_bytes()
-    if data.startswith(b"\x89PNG\r\n\x1a\n") and len(data) >= 24:
-        return struct.unpack(">II", data[16:24])
-    if data.startswith(b"\xff\xd8"):
+    if data.startswith(b"\x89PNG\r\n\x1a\n"):
+        offset = 8
+        width = height = bit_depth = color_type = interlace = None
+        compressed = bytearray()
+        saw_header = saw_end = False
+        while offset + 12 <= len(data):
+            length = int.from_bytes(data[offset:offset + 4], "big")
+            chunk_type = data[offset + 4:offset + 8]
+            chunk_end = offset + 12 + length
+            if chunk_end > len(data):
+                return None
+            chunk_data = data[offset + 8:offset + 8 + length]
+            expected_crc = int.from_bytes(data[offset + 8 + length:chunk_end], "big")
+            actual_crc = zlib.crc32(chunk_type + chunk_data) & 0xFFFFFFFF
+            if actual_crc != expected_crc:
+                return None
+            if chunk_type == b"IHDR":
+                if saw_header or length != 13 or offset != 8:
+                    return None
+                width, height = struct.unpack(">II", chunk_data[:8])
+                if width < 1 or height < 1:
+                    return None
+                bit_depth, color_type, compression, filtering, interlace = chunk_data[8:13]
+                if compression != 0 or filtering != 0:
+                    return None
+                saw_header = True
+            elif chunk_type == b"IDAT":
+                compressed.extend(chunk_data)
+            elif chunk_type == b"IEND":
+                if length != 0:
+                    return None
+                saw_end = True
+                offset = chunk_end
+                break
+            offset = chunk_end
+        if not (saw_header and saw_end and compressed) or offset != len(data):
+            return None
+        rows = png_scanlines(width, height, bit_depth, color_type, interlace)
+        if rows is None:
+            return None
+        expected_size = sum(row_bytes + 1 for row_bytes in rows)
+        if expected_size > 100 * 1024 * 1024:
+            return None
+        try:
+            decompressor = zlib.decompressobj()
+            decoded = decompressor.decompress(bytes(compressed), expected_size + 1)
+        except zlib.error:
+            return None
+        if len(decoded) != expected_size or not decompressor.eof or decompressor.unused_data:
+            return None
+        offset = 0
+        for row_bytes in rows:
+            if decoded[offset] > 4:
+                return None
+            offset += row_bytes + 1
+        return width, height
+    if data.startswith(b"\xff\xd8") and data.endswith(b"\xff\xd9"):
         index = 2
-        while index + 9 < len(data):
+        width = height = None
+        saw_scan = False
+        while index < len(data) - 2:
             if data[index] != 0xFF:
+                return None
+            while index < len(data) and data[index] == 0xFF:
                 index += 1
-                continue
-            marker = data[index + 1]
-            index += 2
-            if marker in {0xD8, 0xD9}:
+            if index >= len(data):
+                return None
+            marker = data[index]
+            index += 1
+            if marker == 0xD9:
+                break
+            if marker in {0x01, *range(0xD0, 0xD8)}:
                 continue
             if index + 2 > len(data):
-                break
+                return None
             length = int.from_bytes(data[index:index + 2], "big")
+            if length < 2 or index + length > len(data):
+                return None
             if marker in {0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7, 0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF}:
-                return int.from_bytes(data[index + 5:index + 7], "big"), int.from_bytes(data[index + 3:index + 5], "big")
+                if length < 7:
+                    return None
+                height = int.from_bytes(data[index + 3:index + 5], "big")
+                width = int.from_bytes(data[index + 5:index + 7], "big")
+            if marker == 0xDA:
+                saw_scan = True
+                break
             index += length
+        return (width, height) if saw_scan and width and height else None
     return None
+
+
+def resolve_inside(root, relative):
+    if not isinstance(relative, str) or not relative or Path(relative).is_absolute():
+        return None
+    root = root.resolve()
+    candidate = (root / relative).resolve()
+    try:
+        candidate.relative_to(root)
+    except ValueError:
+        return None
+    return candidate
 
 
 def referenced_paths(manifest):
@@ -120,19 +230,27 @@ def main():
         errors.append("manifest icons must include a 128x128 icon")
     else:
         for size_text, relative in icons.items():
-            icon_path = extension / relative
+            icon_path = resolve_inside(extension, relative)
+            if icon_path is None:
+                errors.append(f"manifest icon path escapes extension root: {relative}")
+                continue
             if not icon_path.is_file():
                 errors.append(f"manifest icon is missing: {relative}")
                 continue
             dimensions = image_size(icon_path)
-            if size_text.isdigit() and dimensions and dimensions != (int(size_text), int(size_text)):
+            if dimensions is None:
+                errors.append(f"manifest icon is not a valid PNG or JPEG image: {relative}")
+            elif size_text.isdigit() and dimensions != (int(size_text), int(size_text)):
                 errors.append(f"manifest icon {relative} is {dimensions[0]}x{dimensions[1]}, expected {size_text}x{size_text}")
         for recommended in ("16", "32", "48"):
             if recommended not in icons:
                 warnings.append(f"recommended manifest icon size is missing: {recommended}")
 
     for label, relative in referenced_paths(manifest):
-        if not (extension / relative).is_file():
+        referenced = resolve_inside(extension, relative)
+        if referenced is None:
+            errors.append(f"referenced path escapes extension root for {label}: {relative}")
+        elif not referenced.is_file():
             errors.append(f"referenced file is missing for {label}: {relative}")
 
     for document, sections in REQUIRED_DOCUMENT_SECTIONS.items():
