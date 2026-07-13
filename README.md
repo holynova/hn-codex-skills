@@ -7,7 +7,6 @@ Personal Codex skills for recurring workflows.
 - `hn-windows-stability-doctor`: Windows crash, freeze, restart, disk, memory, driver, and stability diagnosis.
 - `hn-frontend-project-shipper`: frontend project polish, QA, docs, screenshots, GitHub, and release workflow.
 - `hn-agent-workflow-productizer`: productize manual agent procedures into safe workflow systems.
-- `hn-product-release-packager`: public release packaging for apps, Chrome extensions, GitHub Pages, docs, store materials, and release automation.
 - `hn-tool-ui-polisher`: usability audit and polish for compact tool UIs.
 - `hn-visual-asset-pipeline`: icons, screenshots, generated images, image conversion, and project-ready asset organization.
 - `hn-opencli-batch-image-production`: reliable OpenCLI ChatGPT/Gemini batch image generation, validation, retries, mapping files, contact sheets, and zip delivery.
@@ -54,7 +53,6 @@ Copy the wanted skill folder into your Codex skills directory:
 Copy-Item -Recurse .\skills\hn-windows-stability-doctor $HOME\.codex\skills\
 Copy-Item -Recurse .\skills\hn-frontend-project-shipper $HOME\.codex\skills\
 Copy-Item -Recurse .\skills\hn-agent-workflow-productizer $HOME\.codex\skills\
-Copy-Item -Recurse .\skills\hn-product-release-packager $HOME\.codex\skills\
 Copy-Item -Recurse .\skills\hn-tool-ui-polisher $HOME\.codex\skills\
 Copy-Item -Recurse .\skills\hn-visual-asset-pipeline $HOME\.codex\skills\
 Copy-Item -Recurse .\skills\hn-opencli-batch-image-production $HOME\.codex\skills\
@@ -72,7 +70,6 @@ Copy-Item -Recurse .\skills\hn-chrome-extension-publisher $HOME\.codex\skills\
 - `hn-windows-stability-doctor`: 诊断 Windows 蓝屏、死机、重启、硬盘、内存、驱动和稳定性问题。
 - `hn-frontend-project-shipper`: 把前端项目从修改、调试、移动端 QA、截图、README 推进到发布。
 - `hn-agent-workflow-productizer`: 把手工 agent 流程产品化，设计状态机、沙盒权限、验证点和失败恢复。
-- `hn-product-release-packager`: 将小应用、Chrome 插件、GitHub Pages 项目整理成可发布包，包括文档、截图、图标、隐私页、商店材料和 release 自动化。
 - `hn-tool-ui-polisher`: 审查和打磨工具型 UI，重点处理布局、控件分组、状态反馈、移动端和可用性。
 - `hn-visual-asset-pipeline`: 生成、转换、整理并验证图标、截图、透明 PNG、README/商店素材等视觉资产。
 - `hn-opencli-batch-image-production`: 用 OpenCLI 稳定批量生成 ChatGPT/Gemini 图片，处理重试、限流、补图、验图、重命名、映射表、contact sheet 和 zip 交付。

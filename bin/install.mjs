@@ -12,7 +12,6 @@ const skillNames = [
   "hn-windows-stability-doctor",
   "hn-frontend-project-shipper",
   "hn-agent-workflow-productizer",
-  "hn-product-release-packager",
   "hn-tool-ui-polisher",
   "hn-visual-asset-pipeline",
   "hn-opencli-batch-image-production",
@@ -111,46 +110,114 @@ function assertSafeTarget(skillsDir, target) {
   }
 }
 
-function installSkill(name, skillsDir, options) {
-  const source = path.join(sourceSkillsDir, name);
-  const target = path.join(skillsDir, name);
+function createInstallPlan(names, skillsDir, options) {
+  return names.map((name) => {
+    const source = path.join(sourceSkillsDir, name);
+    const target = path.join(skillsDir, name);
+    assertSafeTarget(skillsDir, target);
 
-  if (!fs.existsSync(source)) {
-    throw new Error(`Missing bundled skill at ${source}`);
-  }
-  assertSafeTarget(skillsDir, target);
+    if (!fs.existsSync(source) || !fs.statSync(source).isDirectory()) {
+      throw new Error(`Missing bundled skill at ${source}`);
+    }
+    if (!fs.existsSync(path.join(source, "SKILL.md"))) {
+      throw new Error(`Bundled skill is missing SKILL.md: ${source}`);
+    }
+    if (!fs.existsSync(path.join(source, "agents", "openai.yaml"))) {
+      throw new Error(`Bundled skill is missing agents/openai.yaml: ${source}`);
+    }
+    if (fs.existsSync(target) && !options.force) {
+      throw new Error(`Target already exists: ${target}. Re-run with --force to replace it.`);
+    }
+    return { name, source, target, staging: null, backup: null };
+  });
+}
 
-  console.log(`Source: ${source}`);
-  console.log(`Target: ${target}`);
-
-  if (options.dryRun) {
-    return;
-  }
-
-  if (fs.existsSync(target) && !options.force) {
-    throw new Error(`Target already exists: ${target}. Re-run with --force to replace it.`);
-  }
-
-  fs.mkdirSync(skillsDir, { recursive: true });
-  if (fs.existsSync(target)) {
+function removeIfExists(target) {
+  if (target && fs.existsSync(target)) {
     fs.rmSync(target, { recursive: true, force: true });
   }
-  fs.cpSync(source, target, { recursive: true });
-  console.log(`Installed ${name}.`);
+}
+
+function stageInstallPlan(plan, skillsDir) {
+  fs.mkdirSync(skillsDir, { recursive: true });
+  const token = `${process.pid}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  try {
+    for (const item of plan) {
+      item.staging = path.join(skillsDir, `.${item.name}.install-${token}`);
+      item.backup = path.join(skillsDir, `.${item.name}.backup-${token}`);
+      removeIfExists(item.staging);
+      removeIfExists(item.backup);
+      fs.cpSync(item.source, item.staging, { recursive: true, errorOnExist: true, force: false });
+      if (!fs.existsSync(path.join(item.staging, "SKILL.md"))) {
+        throw new Error(`Staged skill is incomplete: ${item.name}`);
+      }
+    }
+  } catch (error) {
+    for (const item of plan) removeIfExists(item.staging);
+    throw error;
+  }
+}
+
+function applyInstallPlan(plan) {
+  const applied = [];
+  try {
+    for (const item of plan) {
+      if (fs.existsSync(item.target)) {
+        fs.renameSync(item.target, item.backup);
+      } else {
+        item.backup = null;
+      }
+      try {
+        fs.renameSync(item.staging, item.target);
+      } catch (error) {
+        if (item.backup && fs.existsSync(item.backup)) {
+          fs.renameSync(item.backup, item.target);
+        }
+        throw error;
+      }
+      applied.push(item);
+    }
+  } catch (error) {
+    for (const item of [...applied].reverse()) {
+      removeIfExists(item.target);
+      if (item.backup && fs.existsSync(item.backup)) {
+        fs.renameSync(item.backup, item.target);
+      }
+    }
+    for (const item of plan) removeIfExists(item.staging);
+    throw new Error(`Installation failed and was rolled back: ${error.message}`);
+  }
+
+  for (const item of applied) {
+    if (item.backup && fs.existsSync(item.backup)) {
+      try {
+        fs.rmSync(item.backup, { recursive: true, force: true });
+      } catch (error) {
+        console.warn(`Installed ${item.name}, but could not remove backup ${item.backup}: ${error.message}`);
+      }
+    }
+    console.log(`Installed ${item.name}.`);
+  }
 }
 
 function main() {
   const args = parseArgs(process.argv.slice(2));
   const skillsDir = args.skillsDir || defaultSkillsDir();
   const selected = args.selectedSkill ? [args.selectedSkill] : skillNames;
+  const plan = createInstallPlan(selected, skillsDir, args);
 
-  for (const name of selected) {
-    installSkill(name, skillsDir, args);
+  for (const item of plan) {
+    console.log(`Source: ${item.source}`);
+    console.log(`Target: ${item.target}`);
   }
 
   if (args.dryRun) {
     console.log("Dry run complete. No files copied.");
+    return;
   }
+
+  stageInstallPlan(plan, skillsDir);
+  applyInstallPlan(plan);
 }
 
 try {

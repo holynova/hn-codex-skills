@@ -13,7 +13,11 @@
   ],
   "scripts": {
     "install-skills": "node ./bin/install.mjs install",
-    "check": "node ./bin/install.mjs --dry-run"
+    "check": "node ./bin/install.mjs --dry-run --path ./node_modules/.hn-codex-skills-check",
+    "test": "node --test tests/*.test.mjs && python3 -m unittest discover -s tests -p 'test_*.py'"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "keywords": [
     "codex",
