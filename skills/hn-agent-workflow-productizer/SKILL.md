@@ -1,6 +1,6 @@
 ---
 name: hn-agent-workflow-productizer
-description: Convert fragile manual agent procedures into safe, stateful product workflows. Use when the user wants to productize a prompt-driven process, design an agent sandbox, define deterministic rails, add side-effect verification, create API/Skill boundaries, model workflow state, recover from failures, or decide which parts belong to code versus agent judgment.
+description: 将脆弱的手工 Agent 流程转化为安全、有状态的产品工作流。用于用户希望产品化提示词驱动流程、设计 Agent 沙盒、定义确定性约束、增加副作用验证、划分 API 与 Skill 边界、建模工作流状态、设计失败恢复，或判断哪些环节应由代码执行、哪些应交给 Agent 判断。
 ---
 
 # HN Agent Workflow Productizer

@@ -1,6 +1,6 @@
 ---
 name: hn-windows-stability-doctor
-description: Diagnose Windows stability problems and produce evidence-based repair plans. Use when the user reports blue screens, unexpected restarts, freezes, dump files, WHEA/NVMe resets, memory corruption, driver crashes, download-related crashes, BIOS/EXPO/PBO/Curve Optimizer concerns, disk-health suspicion, startup/app conflicts, or asks to verify whether a prior repair fixed a Windows crash problem.
+description: 诊断 Windows 稳定性问题并制定基于证据的修复方案。用于用户报告蓝屏、意外重启、卡死、转储文件、WHEA 或 NVMe 重置、内存损坏、驱动崩溃、下载相关崩溃、BIOS、EXPO、PBO、Curve Optimizer 风险、磁盘健康疑虑、启动项或应用冲突，或要求验证此前修复是否真正解决 Windows 崩溃问题。
 ---
 
 # HN Windows Stability Doctor

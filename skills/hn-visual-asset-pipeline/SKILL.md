@@ -1,6 +1,6 @@
 ---
 name: hn-visual-asset-pipeline
-description: Create, normalize, verify, and organize product visual assets. Use when the user asks for icons, screenshots, generated images, image conversion, transparent PNGs, asset folders, multi-size exports, README/store visuals, image quality cleanup, or batching visual assets for an app, extension, website, or portfolio.
+description: 创建、规范化、验证并整理产品视觉资产。用于用户要求制作图标、截图、生成图片、转换图片、透明 PNG、资产目录、多尺寸导出、README 或商店视觉素材、清理图片质量，或为应用、扩展、网站和作品集批量处理视觉资产。
 ---
 
 # HN Visual Asset Pipeline

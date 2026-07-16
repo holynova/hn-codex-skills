@@ -1,6 +1,6 @@
 ---
 name: hn-chrome-extension-publisher
-description: Audit, prepare, package, publish, and update Chrome extensions for the Chrome Web Store. Use when the user asks to release or upgrade a Chrome extension, inspect existing extension files and store materials, create listing descriptions, logos/icons, screenshots, promotional images, permission and privacy disclosures, publish a privacy policy with GitHub Pages, build a store-ready ZIP, or get help completing and submitting the Chrome Web Store Developer Dashboard with Computer Use or Chrome automation.
+description: 审核、准备、打包、发布和升级 Chrome 网上应用店扩展。用于用户要求发布或升级 Chrome 扩展、检查现有扩展文件与商店材料、编写商店描述、制作 Logo、图标、截图和宣传图、整理权限与隐私披露、通过 GitHub Pages 发布隐私政策、生成可提交的 ZIP，或使用 Computer Use、Chrome 自动化协助填写并提交开发者后台。
 ---
 
 # HN Chrome Extension Publisher

@@ -1,4 +1,4 @@
 interface:
-  display_name: "HN Tool UI Polisher"
-  short_description: "Polish compact utility UIs for real use."
-  default_prompt: "Use $hn-tool-ui-polisher to audit and polish this tool UI, then verify desktop and mobile behavior."
+  display_name: "HN 工具界面打磨"
+  short_description: "审核并打磨紧凑型工具界面，使其专业且真正易用"
+  default_prompt: "使用 $hn-tool-ui-polisher 审核并打磨这个工具界面，然后验证桌面端和移动端表现。"

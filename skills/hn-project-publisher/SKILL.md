@@ -1,6 +1,6 @@
 ---
 name: hn-project-publisher
-description: Initialize, version, and publish personal web projects end to end with npm, Git, GitHub, GitHub Pages from the master branch, a concise bilingual README, screenshots, visible repository and version labels, and portfolio listings. Use when the user asks to publish, republish, release, push, deploy, put a project online, enable GitHub Pages, bump a public project version, add a project to a GitHub profile or portfolio, or complete the full public-launch workflow for a local project.
+description: 端到端初始化、版本化并发布个人 Web 项目，包括 npm、Git、GitHub、从 master 分支发布 GitHub Pages、简洁的中英文 README、截图、页面可见的仓库与版本标识，以及作品集收录。用于用户要求发布、重新发布、创建版本、推送、部署、上线项目、启用 GitHub Pages、提升公开项目版本号、将项目加入 GitHub 主页或其他作品集，或完成本地项目的完整公开发布流程。
 ---
 
 # HN Project Publisher

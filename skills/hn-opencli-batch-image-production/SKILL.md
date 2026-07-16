@@ -1,6 +1,6 @@
 ---
 name: hn-opencli-batch-image-production
-description: Run reliable OpenCLI batch image production. Use when the user asks to generate many AI images with ChatGPT or Gemini, reuse the same prompt set across backends, handle quota or EMPTY_RESULT failures, validate image files, retry missing items, produce renamed copies, mapping CSV, contact sheet, zip packages, batch logs, or replace website/gallery images. Do not use for one-off hand-authored image prompts with no batch artifacts.
+description: 使用 OpenCLI 可靠地批量生产图片。用于用户要求通过 ChatGPT 或 Gemini 生成大量 AI 图片、在不同后端复用同一组提示词、处理配额或 EMPTY_RESULT 失败、验证图片文件、重试缺失项目、生成重命名副本、映射 CSV、联系表、ZIP 包、批处理日志，或替换网站与图库图片。不要用于无需批量产物的一次性手写生图提示词。
 ---
 
 # HN OpenCLI Batch Image Production

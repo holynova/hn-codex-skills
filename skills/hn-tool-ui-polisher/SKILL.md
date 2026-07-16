@@ -1,6 +1,6 @@
 ---
 name: hn-tool-ui-polisher
-description: Audit and polish compact tool UIs for real usability. Use when the user asks for UI expert feedback, layout fixes, interaction polish, responsive QA, better controls, clearer states, aligned panels, copy feedback, or making a utility app feel professional and ready to ship.
+description: 审核并打磨紧凑型工具界面，使其真正易用。用于用户要求 UI 专家反馈、修复布局、优化交互、响应式质量检查、改进控件、增强状态表达、对齐面板、审查界面文案，或让工具应用达到专业且可发布的完成度。
 ---
 
 # HN Tool UI Polisher

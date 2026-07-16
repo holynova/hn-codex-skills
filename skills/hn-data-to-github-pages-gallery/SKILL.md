@@ -1,6 +1,6 @@
 ---
 name: hn-data-to-github-pages-gallery
-description: Convert structured data and image batches into verified GitHub Pages galleries or data sites. Use when the user asks to publish scraped data, AI image sets, recipe collections, checklists, showcases, card grids, searchable tables, batch toggles, placeholder-first galleries, mobile-friendly detail modals, or to append new data/images to an existing static site. Do not use for applications that require a live backend or database unless the deliverable is a static export.
+description: 将结构化数据和批量图片转换为经过验证的 GitHub Pages 图库或数据网站。用于用户要求发布抓取数据、AI 图片集、食谱合集、清单、作品展示、卡片网格、可搜索表格、批次切换、占位图优先的图库、移动端详情弹窗，或向现有静态网站追加数据和图片。除非交付物是静态导出，否则不要用于依赖实时后端或数据库的应用。
 ---
 
 # HN Data to GitHub Pages Gallery

@@ -1,6 +1,6 @@
 ---
 name: hn-stateful-cron-report-pipeline
-description: Build and maintain stateful recurring reports and watchdogs. Use when the user asks for a daily or weekly cron report, source monitoring, yesterday comparison, compact Chinese digest, GitHub Trending/flysheep-style updates, local history JSON, strict Telegram output formats, failure summaries, first-run tests, or cron jobs that must save state before pushing results. Do not use for one-shot research or reports with no recurring state.
+description: 构建并维护有状态的周期报告和监控任务。用于用户要求每日或每周 cron 报告、来源监控、昨日对比、精简中文摘要、GitHub Trending 或 flysheep 风格更新、本地历史 JSON、严格的 Telegram 输出格式、失败摘要、首次运行测试，或必须先保存状态再推送结果的 cron 任务。不要用于没有周期状态的一次性研究或报告。
 ---
 
 # HN Stateful Cron Report Pipeline

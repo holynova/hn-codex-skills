@@ -1,4 +1,4 @@
 interface:
-  display_name: "HN Data to GitHub Pages Gallery"
-  short_description: "Turn data and image batches into static gallery sites."
-  default_prompt: "Use $hn-data-to-github-pages-gallery to normalize this dataset, build/update a GitHub Pages gallery, and verify the live site."
+  display_name: "HN GitHub Pages 数据图库"
+  short_description: "把数据和批量图片制作成经过验证的静态图库网站"
+  default_prompt: "使用 $hn-data-to-github-pages-gallery 规范化这份数据，构建或更新 GitHub Pages 图库并验证线上网站。"

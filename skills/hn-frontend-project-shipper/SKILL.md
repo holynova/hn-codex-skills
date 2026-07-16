@@ -1,6 +1,6 @@
 ---
 name: hn-frontend-project-shipper
-description: Ship small frontend, web app, portfolio, GitHub Pages, and UI demo projects end to end. Use when the user asks to build, polish, fix, locally run, QA, screenshot, update README, add repository/page links, improve responsive layout, create share cards, add subtle motion, commit, publish, or prepare a frontend project for GitHub release.
+description: 端到端交付小型前端、Web 应用、作品集、GitHub Pages 和 UI 演示项目。用于用户要求构建、打磨、修复、本地运行、质量检查、截图、更新 README、添加仓库或页面链接、改善响应式布局、制作分享卡片、增加适度动效、提交、发布，或为 GitHub Release 准备前端项目。
 ---
 
 # HN Frontend Project Shipper

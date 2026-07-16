@@ -1,4 +1,4 @@
 interface:
-  display_name: "HN Frontend Project Shipper"
-  short_description: "Ship frontend fixes, QA, docs, and releases."
-  default_prompt: "Use $hn-frontend-project-shipper to polish, verify, document, and publish this frontend project."
+  display_name: "HN 前端项目交付"
+  short_description: "完成前端项目打磨、质量检查、文档整理与正式发布"
+  default_prompt: "使用 $hn-frontend-project-shipper 打磨、验证、记录并发布这个前端项目。"

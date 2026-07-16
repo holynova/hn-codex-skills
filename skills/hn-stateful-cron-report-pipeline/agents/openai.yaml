@@ -1,4 +1,4 @@
 interface:
-  display_name: "HN Stateful Cron Report Pipeline"
-  short_description: "Build stateful recurring reports and digests."
-  default_prompt: "Use $hn-stateful-cron-report-pipeline to create or update this recurring report with state files, comparison logic, strict output, and a verified first run."
+  display_name: "HN 有状态定时报告流水线"
+  short_description: "构建带状态、对比逻辑和严格输出的周期报告任务"
+  default_prompt: "使用 $hn-stateful-cron-report-pipeline 创建或更新这个周期报告，包含状态文件、对比逻辑、严格输出和首次运行验证。"
