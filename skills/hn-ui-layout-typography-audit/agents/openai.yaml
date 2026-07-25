@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN UI Layout & Type Audit"
+  short_description: "Audit UI hierarchy, spacing, layout, and typography."
+  default_prompt: "Use $hn-ui-layout-typography-audit to inspect this UI and provide prioritized layout and typography fixes."

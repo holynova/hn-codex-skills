@@ -15,6 +15,7 @@ Personal Codex skills for recurring workflows.
 - `hn-xiaohei-draw`: Ian-style Chinese article illustrations with the Xiaohei astronaut IP.
 - `hn-project-publisher`: initialize and publish projects to GitHub, master-branch GitHub Pages, and named portfolio sites.
 - `hn-chrome-extension-publisher`: audit, package, submit, and update Chrome extensions for the Chrome Web Store.
+- `hn-ui-layout-typography-audit`: audit and build web/UI layouts using practical hierarchy, spacing, alignment, contrast, color, and typography checks.
 
 ## Install With npx
 
@@ -36,6 +37,7 @@ npx github:holynova/hn-codex-skills install hn-stateful-cron-report-pipeline
 npx github:holynova/hn-codex-skills install hn-xiaohei-draw
 npx github:holynova/hn-codex-skills install hn-project-publisher
 npx github:holynova/hn-codex-skills install hn-chrome-extension-publisher
+npx github:holynova/hn-codex-skills install hn-ui-layout-typography-audit
 ```
 
 Options:
@@ -61,6 +63,7 @@ Copy-Item -Recurse .\skills\hn-stateful-cron-report-pipeline $HOME\.codex\skills
 Copy-Item -Recurse .\skills\hn-xiaohei-draw $HOME\.codex\skills\
 Copy-Item -Recurse .\skills\hn-project-publisher $HOME\.codex\skills\
 Copy-Item -Recurse .\skills\hn-chrome-extension-publisher $HOME\.codex\skills\
+Copy-Item -Recurse .\skills\hn-ui-layout-typography-audit $HOME\.codex\skills\
 ```
 
 ## 中文说明
@@ -78,6 +81,7 @@ Copy-Item -Recurse .\skills\hn-chrome-extension-publisher $HOME\.codex\skills\
 - `hn-xiaohei-draw`: 为中文文章生成 Ian 风格、宇航员小黑 IP 的正文配图。
 - `hn-project-publisher`: 初始化项目并发布到 GitHub、master 分支 GitHub Pages 和指定的多个作品集网站。
 - `hn-chrome-extension-publisher`: 审计、整理、打包、提交和升级发布 Chrome Web Store 插件。
+- `hn-ui-layout-typography-audit`: 用信息层级、分组、对齐、重复、对比、留白、色彩和字体检查来审查或创建网页与用户界面。
 
 推荐安装方式：
 
