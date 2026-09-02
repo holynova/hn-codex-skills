@@ -21,6 +21,7 @@ const skillNames = [
   "hn-project-publisher",
   "hn-chrome-extension-publisher",
   "hn-ui-layout-typography-audit",
+  "hospital-record-collector",
 ];
 
 function usage(exitCode = 0) {
