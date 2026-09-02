@@ -1,0 +1,7 @@
+interface:
+  display_name: "Hospital Records Capture"
+  short_description: "采集微信医院电子发票和电子病历高清截图并分类保存到指定文件夹"
+  default_prompt: "使用 $hospital-record-collector：请先打开并登录微信，再提供资料类型、时间范围和保存文件夹。"
+
+policy:
+  allow_implicit_invocation: true
