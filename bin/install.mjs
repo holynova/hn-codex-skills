@@ -10,19 +10,13 @@ const repoRoot = path.resolve(__dirname, "..");
 const sourceSkillsDir = path.join(repoRoot, "skills");
 const skillNames = [
   "hn-windows-stability-doctor",
-  "hn-frontend-project-shipper",
-  "hn-agent-workflow-productizer",
   "hn-tool-ui-polisher",
   "hn-visual-asset-pipeline",
-  "hn-opencli-batch-image-production",
-  "hn-data-to-github-pages-gallery",
-  "hn-stateful-cron-report-pipeline",
   "hn-xiaohei-draw",
   "hn-project-publisher",
   "hn-chrome-extension-publisher",
   "hn-ui-layout-typography-audit",
   "hospital-record-collector",
-  "hn-github-works",
   "hn-poem",
   "hn-web-analytics",
   "hn-share-card",
@@ -35,7 +29,7 @@ function usage(exitCode = 0) {
 
 Examples:
   npx github:holynova/hn-codex-skills install
-  npx github:holynova/hn-codex-skills install hn-frontend-project-shipper
+  npx github:holynova/hn-codex-skills install hn-project-publisher
   npx github:holynova/hn-codex-skills install --force
 
 Options:

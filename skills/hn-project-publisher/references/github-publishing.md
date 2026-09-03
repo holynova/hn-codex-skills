@@ -19,12 +19,54 @@ For a project without npm or Git metadata:
 
 ```bash
 npm init -y
-git init -b master
+git init -b master   # 或 git init -b main
 ```
 
-Add `.gitignore` before staging. Never commit `.env*`, credentials, dependencies, caches, logs, or OS files.
+Add `.gitignore` before staging. Never commit `.env*`, credentials, dependencies (`node_modules`), caches, logs, or OS files.
 
-If Git already exists, inspect history and remote state. Renaming a shared branch is a public migration, not initialization.
+If Git already exists, inspect history and remote state. Support both `master` and `main` branches.
+
+## Page Enhancements (UI Repo Link & Umami Tracking)
+
+Before packaging or building the page, ensure the following two items are injected into the HTML/UI:
+
+### 1. Visible GitHub Repo Link
+Place a clearly visible link or button to the GitHub repository in the page's header, navigation, or footer:
+```html
+<a href="https://github.com/OWNER/REPO" target="_blank" rel="noopener noreferrer" class="github-link" aria-label="GitHub Repository">
+  <!-- GitHub icon or text -->
+  GitHub
+</a>
+```
+
+### 2. Umami Analytics Tracking
+Add the standardized Umami tracking snippet inside the `<head>` of `index.html` (or root template/layout):
+```html
+<!-- Umami Analytics -->
+<script defer src="https://cloud.umami.is/script.js" data-website-id="e01c9f78-4607-4e60-b01c-77c8190b12b4"></script>
+```
+
+## Screenshot & QR Code Generation
+
+### Screenshot Guidelines
+- **Wait for valid content**: Ensure the project is running and fully loaded with real content before taking a screenshot. Never capture a loading spinner, skeleton screen, or blank layout.
+- **Mobile vs Desktop Viewport**: If the project is a mobile application, capture the screenshot using a mobile device viewport width (375px~430px), **never** use PC desktop stretched width.
+- Save screenshot to `assets/screenshot.png` (or relative path in repository).
+
+### QR Code for GitHub Pages
+Generate a mobile QR code pointing to the live GitHub Pages URL so users can scan directly from their mobile phones:
+```bash
+mkdir -p assets
+npx qrcode -o assets/qr.png "https://OWNER.github.io/REPO/"
+```
+
+## Cloudflare Custom Domain Convention
+
+Every project automatically deploys to Cloudflare with its dedicated subdomain:
+```text
+https://<repo-name>.xiaosang.cc
+```
+Include this dedicated domain in the README and project demo links alongside the GitHub Pages URL.
 
 ## Version Every Publication
 
@@ -48,8 +90,8 @@ Run the bundled version validator against the deployable file or build directory
 
 ## Prepare Pages Source
 
-- Static HTML already runnable from the repository root: use `master:/`.
-- Vite or another static build: set the public base to `/<repo>/`, emit into `docs/`, and commit `docs/`; use `master:/docs`.
+- Static HTML already runnable from the repository root: use `master:/` (or `main:/`).
+- Vite or another static build: set the public base to `/<repo>/`, emit into `docs/`, and commit `docs/`; use `master:/docs` (or `main:/docs`).
 - User/organization Pages repository named `OWNER.github.io`: use base `/`.
 - SSR, backend, or filesystem-dependent apps cannot run directly on branch-based GitHub Pages. Stop and explain the incompatibility instead of publishing a broken page.
 
@@ -63,8 +105,8 @@ Prefer an existing correct `origin`. For a new repository:
 gh repo create OWNER/REPO --public --source=. --remote=origin --description "DESCRIPTION"
 git add <intentional paths>
 git commit -m "Publish project"
-git push -u origin master
-gh repo edit OWNER/REPO --default-branch master
+git push -u origin <branch>    # master or main
+gh repo edit OWNER/REPO --default-branch <branch>
 ```
 
 If the first commit must exist before repository creation, commit locally first and use `gh repo create ... --push`. Never use a force push unless the user explicitly requests history replacement.
@@ -77,7 +119,7 @@ gh repo edit OWNER/REPO --description "DESCRIPTION" --homepage "https://OWNER.gi
 
 ## Enable Or Update Pages
 
-Create Pages when it does not exist:
+Create Pages when it does not exist (using `master` or `main`):
 
 ```bash
 gh api --method POST repos/OWNER/REPO/pages \
@@ -93,7 +135,7 @@ gh api --method PUT repos/OWNER/REPO/pages \
   -f 'source[path]=/docs'
 ```
 
-If the installed GitHub CLI cannot encode the nested fields correctly, send JSON with `--input -`; do not guess repeatedly against the live API.
+If the default branch is `main`, replace `source[branch]=master` with `source[branch]=main`.
 
 ## Verify
 

@@ -31,7 +31,7 @@ test("installs every bundled skill into an isolated directory", () => withTempDi
   assert.equal(result.status, 0, result.stderr);
   const installed = fs.readdirSync(target, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."));
-  assert.equal(installed.length, 17);
+  assert.equal(installed.length, 11);
   for (const entry of installed) {
     assert.ok(fs.existsSync(path.join(target, entry.name, "SKILL.md")));
     assert.ok(fs.existsSync(path.join(target, entry.name, "agents", "openai.yaml")));
@@ -40,7 +40,7 @@ test("installs every bundled skill into an isolated directory", () => withTempDi
 
 test("preflights all conflicts before installing any skill", () => withTempDir((temp) => {
   const target = path.join(temp, "skills");
-  const conflict = path.join(target, "hn-frontend-project-shipper");
+  const conflict = path.join(target, "hn-project-publisher");
   fs.mkdirSync(conflict, { recursive: true });
   fs.writeFileSync(path.join(conflict, "user-marker.txt"), "preserve me");
 
@@ -53,15 +53,32 @@ test("preflights all conflicts before installing any skill", () => withTempDir((
 
 test("force replacement leaves no staging or backup directories", () => withTempDir((temp) => {
   const target = path.join(temp, "skills");
-  const existing = path.join(target, "hn-agent-workflow-productizer");
+  const existing = path.join(target, "hn-tool-ui-polisher");
   fs.mkdirSync(existing, { recursive: true });
   fs.writeFileSync(path.join(existing, "user-marker.txt"), "old copy");
 
   const result = runInstaller([
-    "install", "hn-agent-workflow-productizer", "--path", target, "--force",
+    "install", "hn-tool-ui-polisher", "--path", target, "--force",
   ]);
   assert.equal(result.status, 0, result.stderr);
   assert.equal(fs.existsSync(path.join(existing, "user-marker.txt")), false);
   assert.ok(fs.existsSync(path.join(existing, "SKILL.md")));
   assert.deepEqual(fs.readdirSync(target).filter((name) => name.startsWith(".")), []);
+}));
+
+test("prevents installing archived skills in backup directory", () => withTempDir((temp) => {
+  const target = path.join(temp, "skills");
+  const archivedSkills = [
+    "hn-frontend-project-shipper",
+    "hn-agent-workflow-productizer",
+    "hn-data-to-github-pages-gallery",
+    "hn-github-works",
+    "hn-opencli-batch-image-production",
+    "hn-stateful-cron-report-pipeline",
+  ];
+  for (const skill of archivedSkills) {
+    const result = runInstaller(["install", skill, "--path", target]);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /Unknown skill/);
+  }
 }));
