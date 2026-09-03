@@ -20,6 +20,8 @@ const skillNames = [
   "hn-xiaohei-draw",
   "hn-project-publisher",
   "hn-chrome-extension-publisher",
+  "hn-ui-layout-typography-audit",
+  "hospital-record-collector",
   "hn-github-works",
   "hn-poem",
   "hn-web-analytics",
