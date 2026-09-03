@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN 网站分享卡片"
+  short_description: "把网站结果生成带二维码的可下载和系统分享图片卡片"
+  default_prompt: "使用 $hn-share-card 为这个网站的结果增加可复用的分享卡片，并完成移动端验证。"

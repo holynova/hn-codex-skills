@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN 低相关现代诗"
+  short_description: "使用低相关并置与四种意象公式创作现代汉语短诗组，并避免模板化重复"
+  default_prompt: "使用 $hn-poem 围绕我的输入创作四首彼此独立、意象陌生而具体的现代汉语短诗。"

@@ -20,6 +20,10 @@ const skillNames = [
   "hn-xiaohei-draw",
   "hn-project-publisher",
   "hn-chrome-extension-publisher",
+  "hn-github-works",
+  "hn-poem",
+  "hn-web-analytics",
+  "hn-share-card",
 ];
 
 function usage(exitCode = 0) {

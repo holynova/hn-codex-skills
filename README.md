@@ -15,6 +15,10 @@ Personal Codex skills for recurring workflows.
 - `hn-xiaohei-draw`: Ian-style Chinese article illustrations with the Xiaohei astronaut IP.
 - `hn-project-publisher`: initialize and publish projects to GitHub, master-branch GitHub Pages, and named portfolio sites.
 - `hn-chrome-extension-publisher`: audit, package, submit, and update Chrome extensions for the Chrome Web Store.
+- `hn-github-works`: build a real GitHub repository scanner, deployment verifier, screenshot pipeline, curation flow, and static portfolio exporter.
+- `hn-poem`: write four varied modern Chinese short poems using low-association juxtaposition and disciplined image construction.
+- `hn-web-analytics`: add centralized Umami-based PV, UV, source, device, and custom event analytics to multiple websites.
+- `hn-share-card`: turn a website result or project into a QR-enabled image share card with download and native-share fallbacks.
 
 ## Install With npx
 
@@ -36,6 +40,10 @@ npx github:holynova/hn-codex-skills install hn-stateful-cron-report-pipeline
 npx github:holynova/hn-codex-skills install hn-xiaohei-draw
 npx github:holynova/hn-codex-skills install hn-project-publisher
 npx github:holynova/hn-codex-skills install hn-chrome-extension-publisher
+npx github:holynova/hn-codex-skills install hn-github-works
+npx github:holynova/hn-codex-skills install hn-poem
+npx github:holynova/hn-codex-skills install hn-web-analytics
+npx github:holynova/hn-codex-skills install hn-share-card
 ```
 
 Options:
@@ -61,6 +69,10 @@ Copy-Item -Recurse .\skills\hn-stateful-cron-report-pipeline $HOME\.codex\skills
 Copy-Item -Recurse .\skills\hn-xiaohei-draw $HOME\.codex\skills\
 Copy-Item -Recurse .\skills\hn-project-publisher $HOME\.codex\skills\
 Copy-Item -Recurse .\skills\hn-chrome-extension-publisher $HOME\.codex\skills\
+Copy-Item -Recurse .\skills\hn-github-works $HOME\.codex\skills\
+Copy-Item -Recurse .\skills\hn-poem $HOME\.codex\skills\
+Copy-Item -Recurse .\skills\hn-web-analytics $HOME\.codex\skills\
+Copy-Item -Recurse .\skills\hn-share-card $HOME\.codex\skills\
 ```
 
 ## 中文说明
@@ -78,6 +90,10 @@ Copy-Item -Recurse .\skills\hn-chrome-extension-publisher $HOME\.codex\skills\
 - `hn-xiaohei-draw`: 为中文文章生成 Ian 风格、宇航员小黑 IP 的正文配图。
 - `hn-project-publisher`: 初始化项目并发布到 GitHub、master 分支 GitHub Pages 和指定的多个作品集网站。
 - `hn-chrome-extension-publisher`: 审计、整理、打包、提交和升级发布 Chrome Web Store 插件。
+- `hn-github-works`: 开发可扫描 GitHub 仓库与 Pages、自动截图、摘要分类、人工策展并导出静态作品站的作品集生成器。
+- `hn-poem`: 使用低相关并置和四种意象构造方式，一次创作四首避免模板化重复的现代汉语短诗。
+- `hn-web-analytics`: 为多个网站接入集中式 Umami PV、UV、来源、设备和自定义事件统计后台。
+- `hn-share-card`: 将网站结果或整个项目生成带二维码的图片分享卡片，支持下载、复制链接和系统分享回退。
 
 推荐安装方式：
 
