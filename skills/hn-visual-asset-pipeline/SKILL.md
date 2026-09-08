@@ -22,7 +22,7 @@ Produce visual assets that are usable in a real project: correctly sized, named,
 
 1. Define the asset job.
    - Asset type: app icon, Chrome icon, screenshot, README image, store image, transparent cutout, batch conversion, gallery organization.
-   - Required sizes, formats, output paths, and naming scheme.
+   - Infer required sizes, formats, output paths, and naming from the request, manifest, existing assets, and project conventions. State reasonable defaults for reversible exports and continue; ask only about a material missing requirement or an overwrite outside the authorized scope.
 
 2. Inspect current assets.
    - Find existing icons, screenshots, image folders, README references, manifest references, and build config.

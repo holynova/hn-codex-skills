@@ -1,6 +1,8 @@
 # Portfolio Updates
 
-当发布流程执行到作品集同步步骤时，同步更新用户指定的两大作品集目标：
+当发布范围包含作品集同步时，更新已授权的两大作品集目标。复用主流程的目标、授权和验证结果；某个目标缺少访问权限或失败时记录待完成项，并继续另一个可独立完成的目标。不要因本参考存在就扩展局部任务的发布范围。仅将已验证地址作为可用演示链接，域名尚未就绪时明确标注或暂不加入在线链接。
+
+先核对每个目标仓库的远端、实际发布分支与工作区改动；以下 `<verified-branch>` 是核对后替换的占位符，不固定使用 `master`，也不混入无关改动。
 
 ## Canonical Entry
 
@@ -31,7 +33,7 @@ GitHub 个人主页由仓库 `holynova/holynova` 的根目录 `README.md` 驱动
    ```bash
    git add README.md portfolio-<repo>.png
    git commit -m "feat: add <repo> to portfolio showcase"
-   git push origin master
+   git push origin <verified-branch>
    ```
 6. 访问 `https://github.com/holynova` 验证新条目与链接是否正常呈现。
 
@@ -62,6 +64,6 @@ GitHub 个人主页由仓库 `holynova/holynova` 的根目录 `README.md` 驱动
    ```bash
    git add data/repos.json screenshots/<repo-name>.png
    git commit -m "feat: add <repo-name> showcase"
-   git push origin master
+   git push origin <verified-branch>
    ```
 6. 打开 `https://holynova.github.io/` 验证作品卡片展示与双端链接。

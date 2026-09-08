@@ -14,7 +14,8 @@ Make a utility UI easier to use, scan, and trust. Focus on workflow clarity, con
 - Start from the real running UI when possible. Use screenshots or browser inspection before large visual changes.
 - Treat tool surfaces as work surfaces: compact, dense when useful, clear hierarchy, no marketing hero unless the user asked for a landing page.
 - Prefer familiar controls: icons for tools, segmented controls for modes, checkboxes/toggles for binary settings, selects/menus for option sets, sliders/inputs for numeric values.
-- Every async or destructive command needs visible feedback: loading, success, failure, disabled state, or confirmation.
+- These are product UI rules, not agent permission gates: async commands need appropriate loading, success, failure, or disabled feedback. Use confirmation for destructive product actions when warranted by their consequences, not for every routine interaction.
+- For feedback or audit-only requests, report findings and proposed edits without changing code. When fixes or polish are requested, implement the in-scope changes and verify them without another generic approval. If combined with `hn-ui-layout-typography-audit`, reuse the same scope, evidence, and checks rather than running a second intake.
 - Verify text fit, panel alignment, scroll behavior, and mobile layout after changes.
 - Keep the existing product identity unless the user explicitly asks for a new visual direction.
 
@@ -28,7 +29,7 @@ Make a utility UI easier to use, scan, and trust. Focus on workflow clarity, con
    - Use `references/tool-ui-audit.md`.
    - Sort issues by user impact: broken layout, unclear state, inefficient workflow, weak visual hierarchy, polish.
 
-3. Implement polish.
+3. Implement polish when requested; otherwise report these as proposed changes.
    - Reduce control ambiguity.
    - Align input/output panels.
    - Add copy/success/error feedback.

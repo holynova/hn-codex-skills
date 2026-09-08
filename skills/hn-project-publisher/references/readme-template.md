@@ -7,7 +7,7 @@
 2. **GitHub Repo 链接**
 3. **GitHub Pages 在线访问链接**
 4. **手机扫码访问二维码**：生成并包含二维码图片（如 `assets/qr.png`），方便手机直接扫码打开 Pages。
-5. **Cloudflare 专属域名**：加入自动发布的专属域名 `https://<repo-name>.xiaosang.cc`。
+5. **Cloudflare 专属域名**：记录约定的 `https://<repo-name>.xiaosang.cc`；只有配置并验证后才作为在线体验链接。尚未验证时在草稿中明确标注待配置/待验证，不写成已自动发布。
 
 ````markdown
 # Project Name / 项目名
