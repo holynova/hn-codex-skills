@@ -1,6 +1,6 @@
 ---
 name: hn-project-publisher
-description: 端到端初始化、版本化并完整发布个人 Web 项目。涵盖 npm/Git 初始化、页面可见 GitHub 链接与 Umami 埋点检测（项目 ID e01c9f78-4607-4e60-b01c-77c8190b12b4）、简洁中英文 README（各不超过 500 字，含有效内容延迟截图/移动端视口、Repo/Pages 链接、Pages 二维码与 Cloudflare 专属域名 <repo-name>.xiaosang.cc）、推送到 GitHub、通过 master 或 main 分支发布 GitHub Pages，并同步收录到 GitHub 个人首页与作品集主站。
+description: 端到端初始化、版本化并完整发布个人 Web 项目。涵盖 npm/Git 初始化、页面可见 GitHub 链接与 Umami 埋点检测（项目 ID e01c9f78-4607-4e60-b01c-77c8190b12b4）、简洁中英文 README（各不超过 500 字，含有效内容延迟截图/移动端视口、Repo/Pages 链接、Pages 二维码与 Cloudflare 专属域名 仓库名.xiaosang.cc）、推送到 GitHub、通过 master 或 main 分支发布 GitHub Pages，并同步收录到 GitHub 个人首页与作品集主站。
 ---
 
 # HN Project Publisher
@@ -18,10 +18,13 @@ description: 端到端初始化、版本化并完整发布个人 Web 项目。�
 
 ## Rules
 
+- **范围与既有授权**：以上是用户要求完整个人项目发布时的流程；若只要求准备材料、审阅或局部修复，完成该范围，不自动推送、发布、接入统计或修改作品集。使用当前请求与既有授权确定发布目标及动作；不重复确认已明确授权且范围未变的操作。缺少某个外部动作的授权时，先准备可审阅的具体改动，只暂停该动作并继续独立工作。
+- **单一流程归属**：本 Skill 负责网站发布，Chrome 商店提交由 `hn-chrome-extension-publisher` 负责；辅助 UI、资产和统计 Skill 复用同一范围与已有决定，不追加初始化访谈或重复部署。个人域名、账户与统一 Umami ID 是本流程的默认约定；已有明确项目配置或用户指定目标优先，不默默覆盖。
+
 - **检查先行**：先检查 `package.json`、lockfile、框架配置、`.gitignore`、README、git status 与远端 remotes。
 - **保护既有元数据**：只初始化缺漏的 npm 或 Git 状态；已有提交历史与远程配置不要盲目覆盖。
 - **分支规范**：支持使用 `master` 或 `main` 分支进行初始化与发布。
-- **页面埋点与链接**：每个发布的 Web 项目必须在 `<head>` 中嵌入指定 Umami 埋点，且在 UI 中必须提供明确的 GitHub 链接。
+- **页面埋点与链接**：完整发布范围内的 Web 项目在根布局接入一次约定的 Umami 埋点，并在 UI 中提供明确的 GitHub 链接；复用既有 tracker，不重复注入。用户明确排除统计时尊重范围并记录。
 - **截图与视口规则**：
   - 必须等待页面加载出真实、有效的数据与内容后再截图，严禁使用初始空白、Loading 骨架屏进行截图。
   - 若项目为移动端应用/适配页面，**严禁使用 PC 桌面拉伸宽度截图**，必须采用移动端视口宽度（375px~430px）截图。
@@ -63,14 +66,14 @@ description: 端到端初始化、版本化并完整发布个人 Web 项目。�
      ```
 
 5. **推送到 GitHub（Requirement 5）**
-   - 暂存并提交本地修改：`git add -A && git commit -m "feat: complete public release"`。
-   - 创建或关联 GitHub 仓库并推送：
+   - 先检查 diff，只暂存本次发布涉及的明确文件，再提交；不要用 `git add -A` 混入用户已有或无关修改。
+   - 已有远端时核对目标并复用，只推送本次发布分支，不重建仓库或改写历史。以下创建示例仅用于尚无目标仓库且创建公开仓库在授权范围内的情况：
      ```bash
      gh repo create holynova/<repo> --public --source=. --remote=origin --push
      ```
 
 6. **启用并配置 GitHub Pages（Requirement 6）**
-   - 调用 GitHub API 启用 Pages（分支为 `master` 或 `main`，路径为 `/` 或 `/docs`）：
+   - 先读取现有 Pages 配置，复用已确定的分支或 Actions 发布方式；只在尚未启用且授权覆盖时创建。以下示例中的 `master` 必须替换为实际发布分支，路径采用已准备的 `/` 或 `/docs`，不要把示例值覆盖到已有配置：
      ```bash
      gh api --method POST repos/holynova/<repo>/pages -f 'source[branch]=master' -f 'source[path]=/'
      ```
@@ -78,7 +81,8 @@ description: 端到端初始化、版本化并完整发布个人 Web 项目。�
      ```bash
      gh repo edit holynova/<repo> --homepage "https://holynova.github.io/<repo>/"
      ```
-   - 轮询等待 Pages 构建完成并验证 HTTP 访问状态。
+   - 有限重试检查 Pages 构建与 HTTP 状态；构建失败先检查日志，权限或服务阻塞则保留成果并报告，不无限轮询，也不把命令成功当成站点已上线。
+   - **专属域名**：读取现有 Cloudflare/DNS 与站点域名配置，先检查约定的域名是否已正确指向本项目。缺少配置时准备具体 DNS/托管变更，在目标与动作已获授权且工具可用时执行，保留无关记录；否则报告域名配置待处理并继续独立发布工作。验证 HTTPS、实际项目内容及资源路径，而非仅检查域名返回 200。若自定义域名使 Pages 重定向，核对 base path、README 和二维码在最终地址仍可用。未验证的域名只能标注为待配置/待验证，不能宣称已自动发布。
 
 7. **同步收录两大作品集（Requirement 7）**
    - 阅读并执行 [references/portfolio-updates.md](references/portfolio-updates.md)：
@@ -87,7 +91,7 @@ description: 端到端初始化、版本化并完整发布个人 Web 项目。�
    - 验证两大主页上该项目均可正常展示与跳转。
 
 8. **交付汇报**
-   - 报告发布结果：版本号、GitHub 仓库地址、GitHub Pages 地址、Cloudflare 专属域名、README 验证状态、Umami 埋点确认、截图与二维码状态、两大作品集收录状态。
+   - 按实际结果报告版本号、GitHub、Pages、Cloudflare 域名、README 校验、Umami、截图、二维码和两大作品集状态。区分已准备、已推送、已部署、已验证、待授权和受阻；任一范围内必需项未完成时明确列出，不能套用全成功模板。未要求的步骤标为不在范围。
 
 ## Output
 

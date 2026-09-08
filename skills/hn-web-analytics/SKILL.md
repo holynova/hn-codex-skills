@@ -29,7 +29,7 @@ description: 为多个静态站点、Astro、React、Vue、Next.js 或其他前�
 
 - 自托管时准备一个稳定的 `https://stats.example.com`，使用官方 Docker/PostgreSQL 方案，并单独保存管理员凭据、数据库凭据和备份策略。
 - 在 Umami 中为每个生产站点创建一个 website，记录 `websiteId`、hostname 白名单和部署环境；不要在仓库提交管理员 token 或数据库密码。
-- 如果已有集中式 Umami，不重复创建实例，先核对版本、数据保留、时区、权限和域名过滤。
+- 如果已有集中式 Umami，不重复创建实例，先核对版本、数据保留、时区、权限和域名过滤。`hn-project-publisher` 的统一 Cloud website ID 属于其个人发布约定；该流程内复用它及既有实例，不因本 Skill 的自托管默认值而另建服务或替换 ID。用户明确要求迁移时再按迁移范围执行。
 - 若用户只想快速试用，使用 Umami Cloud，但把 API key 留在服务端或 CI secret 中。
 
 ### 3. 接入根布局
@@ -62,11 +62,11 @@ umami.track("share_card_download", { result_id: "stable-id", format: "png" });
 
 ### 5. 验证数据链路
 
-按以下顺序验证：
+按以下顺序验证。先确定测试环境与 hostname 过滤：本地验证使用已有 staging website 或已授权的测试配置，不直接等待被生产白名单排除的 localhost 流量入库，也不为测试自动放开生产过滤。缺少后台访问时完成本地构建和请求检查，明确后台入库尚未验证；继续独立工作，不虚报端到端成功。
 
 1. `npm run build` 或项目等价构建通过，tracker 位于最终 HTML/JS 的正确根布局。
 2. 使用真实浏览器访问生产样式的本地站点，确认 tracker 请求返回 2xx，且无 CSP、CORS、404 或重复加载。
-3. 打开 2 个路径并触发 2 个自定义事件，等待 Umami dashboard 出现 PV/UV 和事件。
+3. 在允许的测试域名中打开实际存在的路径并触发已实现的事件；有两个路径和两类事件时各验证两个，不为凑数量新增路由或埋点。查看对应 dashboard 的 PV/UV 和事件；若有限重试后仍未出现，检查请求、域名过滤和服务状态并报告未验证项，不无限等待。
 4. 在 SPA 中前进、后退、刷新，确认导航不会产生重复 pageview。
 5. 用桌面和窄移动端各验证一次；如果站点有分享卡片，同时验证 `share_card_open`、`share_card_download` 等事件。
 6. 记录统计实例地址、website 列表、事件字典、验证时间和任何广告拦截/隐私限制。

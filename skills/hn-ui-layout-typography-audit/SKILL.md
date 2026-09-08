@@ -12,7 +12,8 @@ Turn layout and typography principles into specific, testable interface decision
 - Use for existing UIs, screenshots, designs, rendered pages, or code that can be run and inspected.
 - Use for new websites and interfaces before implementation and again after rendering.
 - Preserve the existing brand, product intent, and accessibility requirements unless the user requests a visual rebrand.
-- Use `hn-tool-ui-polisher` as well when the task also needs interaction states, control behavior, workflow feedback, or tool-specific usability work.
+- Use `hn-tool-ui-polisher` as well when the task also needs interaction states, control behavior, workflow feedback, or tool-specific usability work. Share one task scope, findings list, and verification pass; do not restart intake or duplicate approvals when switching references.
+- An audit-only request ends with findings and proposed edits. Implement when the user requests a build or fixes; an audit-and-fix request authorizes continuing into the in-scope repairs without another generic confirmation. Preserve explicit approval requirements for scope or brand changes.
 
 ## Workflow
 
@@ -25,7 +26,7 @@ Turn layout and typography principles into specific, testable interface decision
    - Start with the visual center and reading order, then audit proximity, alignment, repetition, contrast, whitespace, color, and typography.
    - Classify findings as blocking, important, or polish. State the visible evidence and the expected user impact; do not give vague feedback such as “make it cleaner.”
 
-3. Create or repair the interface.
+3. Create or repair the interface when implementation is requested; for audit-only work, present these as proposed corrections.
    - Group related content before changing styles.
    - Establish a small spacing scale, a clear alignment system, a limited type hierarchy, and a limited color system.
    - Make contrast deliberate: preserve sameness for one semantic level and create obvious differences between levels.
@@ -38,7 +39,7 @@ Turn layout and typography principles into specific, testable interface decision
 
 ## Creation Gate
 
-Before implementing a new interface, confirm all of the following:
+Before implementing a new interface, resolve the following as an internal design checklist using the request and existing product evidence. This is not a user approval gate; ask only about unresolved choices that materially affect scope or protected brand constraints:
 
 - Name one primary focal point and the next two pieces of information a reader should see.
 - Define content groups and make within-group spacing smaller than between-group spacing.
@@ -62,7 +63,7 @@ Verified
 - Remaining tradeoffs or constraints.
 ```
 
-For a new build, provide the creation gate and a concise pre-implementation checklist before coding. Do not treat a complete redesign as the default remedy; fix the information structure first.
+For a new build, briefly state the design decisions and proceed to implementation; do not end the turn at the checklist or wait for confirmation of internal layout choices. Do not treat a complete redesign as the default remedy; fix the information structure first.
 
 ## Reference
 

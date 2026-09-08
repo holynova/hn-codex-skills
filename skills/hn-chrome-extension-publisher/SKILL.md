@@ -17,7 +17,7 @@ Turn an existing Chrome extension project into a verified Chrome Web Store submi
 - Derive descriptions, privacy claims, permission justifications, and screenshots from verified behavior. Never invent features, user counts, endorsements, security claims, or data practices.
 - Never commit or package credentials, OAuth secrets, private keys, cookies, `.env` files, developer-dashboard exports, or unrelated source material.
 - Prepare files and materials without additional approval. Do not open the Developer Dashboard, upload, change a live listing, submit for review, publish, unpublish, or alter rollout until the user explicitly authorizes that external action.
-- After all materials pass local checks, ask whether the user wants Computer Use or an authenticated Chrome workflow to fill the dashboard, upload the package, and submit it. Respect a no answer and provide a manual handoff.
+- Reuse explicit authorization that already covers the same publisher, item, version, and external actions. After preparing and checking the materials, ask only for actions not yet authorized; local preparation alone does not authorize dashboard access, upload, submission, or public privacy-page deployment. Respect a no answer and provide a manual handoff. A pending approval blocks only its dependent actions; continue independent preparation and verification.
 - Let the user handle login, CAPTCHA, two-step verification, developer registration fees, legal attestations they must personally make, and any unexpected account or payment prompt.
 
 ## Workflow
@@ -48,7 +48,7 @@ Turn an existing Chrome extension project into a verified Chrome Web Store submi
 5. Prepare privacy and support pages.
    - Map actual permissions and data flows before writing any privacy statement.
    - Create a plain-language privacy policy that matches dashboard declarations, including local-only processing when applicable.
-   - Publish it at a stable public HTTPS URL. Prefer an existing project site; GitHub Pages is an acceptable default.
+   - Prepare the page and a concrete deployment target first. Publish at a stable public HTTPS URL only within the user's authorization; prefer an existing project site, with GitHub Pages as a default. Reuse existing authorization for the unchanged target. If authorization or access is missing, keep the page ready locally and continue packaging; report the live URL as pending rather than blocking all preparation.
    - Open the live page and verify title, extension identity, data practices, contact route, and all links. Read [references/privacy-page.md](references/privacy-page.md).
 
 6. Package and inspect.
@@ -58,10 +58,10 @@ Turn an existing Chrome extension project into a verified Chrome Web Store submi
    - Inspect the produced ZIP, record its version, size, and SHA-256, and install/test the exact packaged contents when practical.
    - Keep screenshots, listing documents, privacy-page source, source maps not intentionally shipped, tests, and private keys outside the upload ZIP.
 
-7. Present readiness and ask for submission authorization.
+7. Present readiness and resolve any missing submission authorization.
    - Report all passed checks, warnings, unresolved policy decisions, material paths, privacy URL, package path/hash, and version transition.
-   - Ask directly: “材料已经准备并验证完成。是否授权我使用 Computer Use 或已登录的 Chrome，填写 Chrome Web Store 表单、上传此版本，并点击 Submit for review？”
-   - Do not continue into the dashboard until the user answers.
+   - Compare the concrete release and actions with existing authorization. If any are uncovered, ask once for those actions, naming the publisher/item, version, package, and submission or rollout scope. Do not repeat approval already granted for unchanged scope.
+   - Enter the dashboard only when access is explicitly authorized. Upload, submission, publication, and rollout each require applicable authorization; a missing answer or tool failure grants none. Do not claim submission readiness while a required live privacy URL or other release check is unresolved.
 
 8. Submit only after authorization.
    - Read [references/dashboard-submission.md](references/dashboard-submission.md).

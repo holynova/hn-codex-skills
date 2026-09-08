@@ -17,13 +17,13 @@ Diagnose Windows instability from evidence before recommending fixes. Treat cras
 - Never treat one signal as proof. Correlate at least two sources when possible, such as dump bugcheck + System log + hardware sensor/SMART.
 - If dump analysis can freeze the machine, copy dumps to a working folder and inspect metadata first. Analyze one dump at a time.
 - Separate "likely root cause", "possible contributor", and "not supported by evidence".
-- Finish with a verification checklist the user can run after the fix.
+- Run safe, available verification yourself when direct action is authorized. Provide the user only checks that require their access, reboot, physical interaction, or later observation, and distinguish those pending checks from completed verification; do not use a checklist as a substitute for work you can perform.
 - For repeated Codex environment friction, use the preflight checklist before deeper diagnosis.
 
 ## Workflow
 
 1. Scope the incident.
-   - Ask only for missing essentials: crash time, symptom, recent changes, and whether a dump exists.
+   - First inspect available logs, timestamps, dump files, and prior user answers. Ask only for missing essentials that cannot be obtained from that evidence: crash time, symptom, recent changes, and whether a dump exists.
    - If the user asked for direct action on the current machine, gather evidence with commands instead of giving abstract advice.
 
 2. Build the evidence table.
@@ -36,7 +36,7 @@ Diagnose Windows instability from evidence before recommending fixes. Treat cras
    - Memory/CPU stability: memory corruption, WHEA, random modules, EXPO/PBO/Curve Optimizer enabled, stress/load correlation.
    - App/runtime: specific app install, anti-cheat, downloader, model runtime, GPU runtime, extension/service conflict.
 
-4. Recommend the smallest repair set.
+4. Prepare the smallest repair set, and apply only actions covered by the request and applicable approvals.
    - For each fix, explain why it matches evidence, risk level, rollback path, and verification method.
    - Defer high-risk firmware/BIOS steps unless the evidence points there or lower-risk repairs failed.
 

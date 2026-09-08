@@ -44,7 +44,7 @@ pnpm.cmd build
 
 ## Optional Repairs
 
-Only apply with user approval when the task asks to fix the environment.
+Only apply with user approval when the task asks to fix the environment. Approval must cover the proposed change, especially the persistent execution-policy change. Reuse an explicit approval already covering the same scope rather than asking twice; otherwise present the exact command and effect first. A pending repair approval does not block read-only diagnosis or use of the existing `.cmd` shims.
 
 ```powershell
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned

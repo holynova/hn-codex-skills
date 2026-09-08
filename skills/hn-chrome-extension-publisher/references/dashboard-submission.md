@@ -4,7 +4,7 @@ Enter this phase only after local materials pass and the user explicitly authori
 
 ## Authorization Prompt
 
-Ask whether authorization covers all of the following:
+Check existing explicit authorization against the actions below. Ask only about uncovered actions, after presenting the concrete publisher/item, version, and package; do not ask again for unchanged scope:
 
 - opening the Chrome Web Store Developer Dashboard in the user's authenticated browser
 - selecting the publisher and item
@@ -13,7 +13,7 @@ Ask whether authorization covers all of the following:
 - uploading icons, screenshots, and promotional images
 - clicking `Submit for review`
 
-If the user authorizes preparation but not final submission, fill and upload, save the draft, and stop before `Submit for review`.
+Local material preparation does not authorize dashboard access or upload. If the user explicitly authorizes dashboard filling and upload but not final submission, perform only those actions, save the draft, and stop before `Submit for review`. Continue independent authorized work while any remaining approval is pending; silence and tool failure are not consent.
 
 ## Computer Use
 
