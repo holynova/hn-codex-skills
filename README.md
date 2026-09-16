@@ -4,6 +4,16 @@
 
 本仓库用于沉淀个人的高频工程发版、界面打磨、内容创作与系统诊断工作流，避免每次与 AI 对话时重复说明复杂规则。内置安装脚本，支持通过 `npx` 一键分发到任意环境的 Codex 中。
 
+## 先试一个技能
+
+需要 Node.js 18 或更高版本。按名称安装一个当前维护的技能：
+
+```bash
+npx github:holynova/hn-codex-skills install hn-ui-layout-typography-audit
+```
+
+默认安装到 `~/.codex/skills`。下方目录帮助你选择工作流；全量安装、自定义目录和覆盖选项见 [安装方式](#-安装方式-installation)。
+
 ---
 
 ## 📦 现收录技能目录 (Curated Bundled Skills)
