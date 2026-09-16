@@ -2,6 +2,11 @@
 
 > 个人精选 Codex Skills 体系 · 高频工程与创作工作流沉淀
 
+<p align="center">
+  <img src="assets/readme/hero.svg" width="100%" alt="HN Codex Skills: &gt; 个人精选 Codex Skills 体系 · 高频工程与创作工作流沉淀">
+</p>
+
+
 本仓库用于沉淀个人的高频工程发版、界面打磨、内容创作与系统诊断工作流，避免每次与 AI 对话时重复说明复杂规则。内置安装脚本，支持通过 `npx` 一键分发到任意环境的 Codex 中。
 
 ## 先试一个技能
