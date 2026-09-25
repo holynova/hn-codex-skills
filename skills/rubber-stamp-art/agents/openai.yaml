@@ -1,0 +1,4 @@
+interface:
+  display_name: "橡皮图章与木刻版画"
+  short_description: "把文字或图片转成宣纸质感的手工橡皮图章艺术提示词"
+  default_prompt: "使用 $rubber-stamp-art 根据这个主题或图片创作手工橡皮图章与木刻版画风格的图像提示词。"

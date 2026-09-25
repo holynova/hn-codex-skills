@@ -20,6 +20,7 @@ const skillNames = [
   "hn-poem",
   "hn-web-analytics",
   "hn-share-card",
+  "rubber-stamp-art",
 ];
 
 function usage(exitCode = 0) {

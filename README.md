@@ -8,7 +8,7 @@
 
 ## 📦 现收录技能目录 (Curated Bundled Skills)
 
-经过架构重构与职责收敛，本仓库精选并维护 **11 个核心高频技能**（其余重叠/历史流程已安全隔离至 `backup/` 文件夹中）：
+经过架构重构与职责收敛，本仓库精选并维护 **12 个核心高频技能**（其余重叠/历史流程已安全隔离至 `backup/` 文件夹中）：
 
 ### 🚀 发布与交付 (Publishing & Releasing)
 - **`hn-project-publisher`**：**全流程 Web 项目发布总控**。涵盖 NPM/Git 初始化、页面显式 Repo 链接、Umami 流量埋点（固定项目 ID `e01c9f78-4607-4e60-b01c-77c8190b12b4`）、简洁中英文 README（各 $\le 500$ 字，含移动端有效内容延迟截图、Pages 扫码二维码、Cloudflare 专属域名 `<repo-name>.xiaosang.cc`）、推送 GitHub、GitHub Pages 双分支部署及同步收录两大作品集。
@@ -22,6 +22,7 @@
 ### ✍️ 内容创作与艺术表达 (Creative & Content)
 - **`hn-xiaohei-draw`**：**“宇航员小黑”IP 正文配图系统**。生成具有 Ian 风格白底手绘线稿、红橙蓝局部重点标注、可爱宇航员小黑角色的中文技术与方法论配图。
 - **`hn-poem`**：**现代汉语短诗生成体系**。采用“低相关并置”理论，一次创作四首分别采用错搭替换、强制等同、重新解释与能力越权的陌生化短诗。
+- **`rubber-stamp-art`**：**橡皮图章与木刻版画创作**。根据文字、诗词、地标或用户图片生成宣纸质感、矿物印泥配色与手工刻痕风格的印章艺术提示词。
 
 ### 📊 数据埋点与交互分享 (Analytics & Sharing)
 - **`hn-web-analytics`**：**集中式 Umami 统计接入**。为多个静态站点、Astro、React、Vue 前端统一埋入隐私友好的 PV、UV 与自定义事件统计代码。
@@ -36,7 +37,7 @@
 ## ⚡ 安装方式 (Installation)
 
 ### 1. 全量安装 (Install All Bundled Skills)
-直接通过 npx 将所有 11 个精选技能安装到本地 Codex（默认路径为 `~/.codex/skills`）：
+直接通过 npx 将所有 12 个精选技能安装到本地 Codex（默认路径为 `~/.codex/skills`）：
 
 ```bash
 npx github:holynova/hn-codex-skills install
@@ -72,6 +73,9 @@ npx github:holynova/hn-codex-skills install hn-xiaohei-draw
 # 安装现代汉语短诗生成技能
 npx github:holynova/hn-codex-skills install hn-poem
 
+# 安装橡皮图章与木刻版画创作技能
+npx github:holynova/hn-codex-skills install rubber-stamp-art
+
 # 安装 Umami 数据统计接入技能
 npx github:holynova/hn-codex-skills install hn-web-analytics
 
@@ -98,7 +102,7 @@ npx github:holynova/hn-codex-skills install --path /custom/skills/dir
 hn-codex-skills/
 ├── bin/
 │   └── install.mjs        # npx 自动化安装器 CLI
-├── skills/                # 11 个当前正式发布的活跃技能
+├── skills/                # 12 个当前正式发布的活跃技能
 │   ├── hn-chrome-extension-publisher/
 │   ├── hn-project-publisher/
 │   ├── hn-ui-layout-typography-audit/
