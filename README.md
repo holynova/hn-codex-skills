@@ -14,6 +14,7 @@ Personal Codex skills for recurring workflows.
 - `hn-data-to-github-pages-gallery`: turn structured data and image batches into searchable GitHub Pages galleries with batch switches and live verification.
 - `hn-stateful-cron-report-pipeline`: build recurring reports with local state, deterministic comparisons, strict digest formats, and verified first runs.
 - `hn-xiaohei-draw`: Ian-style Chinese article illustrations with the Xiaohei astronaut IP.
+- `rubber-stamp-art`: AI rubber stamp and woodblock relief art generator with 4:5 Xuan paper ratio and mineral ink palette.
 
 ## Install With npx
 
@@ -73,6 +74,7 @@ Copy-Item -Recurse .\skills\hn-xiaohei-draw $HOME\.codex\skills\
 - `hn-data-to-github-pages-gallery`: 将结构化数据、抓取结果和图片批次发布成可搜索、可筛选、可切换批次的 GitHub Pages 图库/数据网站。
 - `hn-stateful-cron-report-pipeline`: 构建带本地状态、历史对比、严格输出格式和首次验证的定时报告/监控任务。
 - `hn-xiaohei-draw`: 为中文文章生成 Ian 风格、宇航员小黑 IP 的正文配图。
+- `rubber-stamp-art`: 生成 4:5 宣纸做旧、矿物印泥质感、约 30% 留白的手工刻印橡皮图章与木刻版画。
 
 推荐安装方式：
 
