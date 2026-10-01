@@ -8,14 +8,16 @@
 
 ## 📦 现收录技能目录 (Curated Bundled Skills)
 
-经过架构重构与职责收敛，本仓库精选并维护 **12 个核心高频技能**（其余重叠/历史流程已安全隔离至 `backup/` 文件夹中）：
+经过架构重构与职责收敛，本仓库精选并维护 **14 个核心高频技能**（其余重叠/历史流程已安全隔离至 `backup/` 文件夹中）：
 
 ### 🚀 发布与交付 (Publishing & Releasing)
-- **`hn-project-publisher`**：**全流程 Web 项目发布总控**。涵盖 NPM/Git 初始化、页面显式 Repo 链接、Umami 流量埋点（固定项目 ID `e01c9f78-4607-4e60-b01c-77c8190b12b4`）、简洁中英文 README（各 $\le 500$ 字，含移动端有效内容延迟截图、Pages 扫码二维码、Cloudflare 专属域名 `<repo-name>.xiaosang.cc`）、推送 GitHub、GitHub Pages 双分支部署及同步收录两大作品集。
+- **`hn-project-publisher`**：**Web 项目首次发布与发布检查**。新项目走完整首次发布；已发布项目先检查现状，仅补缺失、失效或本次变更影响的环节，无缺口和待发布变更时无需重新发布。涵盖 npm/Git 与版本管理、页面 Repo 链接和 Umami 埋点、简洁中英文 README（各 ≤500 字，含真实截图与 Cloudflare Demo 二维码）、推送 GitHub、Cloudflare Workers Static Assets 独立域名部署（`<project-slug>.xiaosang.cc`），以及收录并单独发布 [xiaosang.cc 作品集](https://xiaosang.cc/)。每个仓库只使用一个主分支，本地手动部署 Cloudflare，不创建专用发布分支或 GitHub Action；默认保留旧 GitHub Pages 作回退，完整发布沿用 GitHub 个人主页同步。
 - **`hn-chrome-extension-publisher`**：**Chrome 网上应用店扩展发布专属**。包含 Manifest V3 审计、商店素材尺寸与隐私政策审查、过滤敏感密钥自动打包 ZIP、生成 SHA256 校验和并指导商店开发者后台提审。
 
 ### 🎨 界面打磨与视觉资产 (UI & Visual Assets)
 - **`hn-ui-layout-typography-audit`**：**UI 布局与排版审计**。基于对比、重复、对齐、亲密性四大设计原则，走查字号阶梯、4px/8px 间距网格、色彩对比度与无障碍规范。
+- **`hn-website-completeness-check`**：**网站查缺补漏**。检查 favicon、可见项目 GitHub 链接、README/仓库介绍、分享卡片、icon/logo，并按需检查元数据、移动端、交互状态、图片性能和发布收录。区分检查与修复，已有项目只补缺口。
+- **`hn-image-loading-optimizer`**：**图片密集网站加载优化**。从 rubber-stamp 提炼三层图片资产、解码后无感切换、过期响应隔离、首屏优先级、懒加载与分批渲染、导出按需加载，并附源码证据、验证方法与可复用控制器。
 - **`hn-tool-ui-polisher`**：**工具界面可用性打磨**。针对紧凑型小应用/独立工具，审查表单控件对齐、按钮分组、交互状态流转（Loading/Error/Success）与移动端自适应。
 - **`hn-visual-asset-pipeline`**：**产品视觉资产流水线**。规范化生成并批量整理 Favicon、多尺寸 App 图标、README 题图、透明底 PNG 与商店宣传图。
 
@@ -37,7 +39,7 @@
 ## ⚡ 安装方式 (Installation)
 
 ### 1. 全量安装 (Install All Bundled Skills)
-直接通过 npx 将所有 12 个精选技能安装到本地 Codex（默认路径为 `~/.codex/skills`）：
+直接通过 npx 将所有 14 个精选技能安装到本地 Codex（默认路径为 `~/.codex/skills`）：
 
 ```bash
 npx github:holynova/hn-codex-skills install
@@ -60,6 +62,12 @@ npx github:holynova/hn-codex-skills install hn-chrome-extension-publisher
 
 # 安装 UI 排版与版式走查技能
 npx github:holynova/hn-codex-skills install hn-ui-layout-typography-audit
+
+# 安装网站查缺补漏技能
+npx github:holynova/hn-codex-skills install hn-website-completeness-check
+
+# 安装图片加载优化技能
+npx github:holynova/hn-codex-skills install hn-image-loading-optimizer
 
 # 安装工具界面打磨技能
 npx github:holynova/hn-codex-skills install hn-tool-ui-polisher
@@ -102,7 +110,7 @@ npx github:holynova/hn-codex-skills install --path /custom/skills/dir
 hn-codex-skills/
 ├── bin/
 │   └── install.mjs        # npx 自动化安装器 CLI
-├── skills/                # 12 个当前正式发布的活跃技能
+├── skills/                # 14 个当前正式发布的活跃技能
 │   ├── hn-chrome-extension-publisher/
 │   ├── hn-project-publisher/
 │   ├── hn-ui-layout-typography-audit/

@@ -21,6 +21,8 @@ const skillNames = [
   "hn-web-analytics",
   "hn-share-card",
   "rubber-stamp-art",
+  "hn-image-loading-optimizer",
+  "hn-website-completeness-check",
 ];
 
 function usage(exitCode = 0) {

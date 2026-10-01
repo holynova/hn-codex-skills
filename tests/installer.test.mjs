@@ -31,7 +31,7 @@ test("installs every bundled skill into an isolated directory", () => withTempDi
   assert.equal(result.status, 0, result.stderr);
   const installed = fs.readdirSync(target, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."));
-  assert.equal(installed.length, 12);
+  assert.equal(installed.length, 14);
   for (const entry of installed) {
     assert.ok(fs.existsSync(path.join(target, entry.name, "SKILL.md")));
     assert.ok(fs.existsSync(path.join(target, entry.name, "agents", "openai.yaml")));

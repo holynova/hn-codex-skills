@@ -5,20 +5,20 @@ import path from "node:path";
 import process from "node:process";
 
 function usage() {
-  console.error("Usage: validate_release_readme.mjs <README> <repo-url> <pages-url> [max-han] [max-english] [cloudflare-url]");
+  console.error("Usage: validate_release_readme.mjs <README> <repo-url> <demo-url> [max-han] [max-english] [additional-url]");
   process.exit(2);
 }
 
-const [, , readmeArg, repoUrl, pagesUrl, arg4, arg5, arg6] = process.argv;
-if (!readmeArg || !repoUrl || !pagesUrl) usage();
+const [, , readmeArg, repoUrl, demoUrl, arg4, arg5, arg6] = process.argv;
+if (!readmeArg || !repoUrl || !demoUrl) usage();
 
 let maxHan = 500;
 let maxEnglish = 500;
-let cloudflareUrl = "";
+let additionalUrl = "";
 
 if (arg4) {
   if (/^https?:\/\//i.test(arg4) || arg4.includes(".xiaosang.cc")) {
-    cloudflareUrl = arg4;
+    additionalUrl = arg4;
   } else {
     const num = Number.parseInt(arg4, 10);
     if (Number.isInteger(num) && num > 0) {
@@ -30,7 +30,7 @@ if (arg4) {
 
 if (arg5) {
   if (/^https?:\/\//i.test(arg5) || arg5.includes(".xiaosang.cc")) {
-    cloudflareUrl = arg5;
+    additionalUrl = arg5;
   } else {
     const num = Number.parseInt(arg5, 10);
     if (Number.isInteger(num) && num > 0) {
@@ -40,7 +40,7 @@ if (arg5) {
 }
 
 if (arg6) {
-  cloudflareUrl = arg6;
+  additionalUrl = arg6;
 }
 
 const readmePath = path.resolve(readmeArg);
@@ -96,7 +96,7 @@ const englishWordCount = (nonHan.match(/[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*/g
 
 const checks = [
   [markdown.includes(repoUrl), `repository URL is missing: ${repoUrl}`],
-  [markdown.includes(pagesUrl), `Pages URL is missing: ${pagesUrl}`],
+  [markdown.includes(demoUrl), `Demo URL is missing: ${demoUrl}`],
   [Boolean(screenshotPath), "a repository-relative screenshot is missing"],
   [Boolean(screenshotPath && fs.existsSync(screenshotPath)), `screenshot file does not exist: ${screenshotPath || "unknown"}`],
   [Boolean(qrPath), "a repository-relative QR code image (e.g. assets/qr.png) is missing"],
@@ -105,10 +105,10 @@ const checks = [
   [englishWordCount <= maxEnglish, `English text is ${englishWordCount} words; maximum is ${maxEnglish}`],
 ];
 
-if (cloudflareUrl) {
+if (additionalUrl) {
   checks.push([
-    markdown.includes(cloudflareUrl),
-    `Cloudflare custom domain URL is missing: ${cloudflareUrl}`,
+    markdown.includes(additionalUrl),
+    `Additional public URL is missing: ${additionalUrl}`,
   ]);
 }
 
@@ -120,5 +120,5 @@ if (failures.length) {
 }
 
 console.log(
-  `README validation passed: Chinese ${hanCount}/${maxHan} chars, English ${englishWordCount}/${maxEnglish} words, screenshot, QR code, and public links verified.`
+  `README validation passed: Chinese ${hanCount}/${maxHan} chars, English ${englishWordCount}/${maxEnglish} words, screenshot/QR files exist and public URL text is present (online state and QR target are not checked).`
 );

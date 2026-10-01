@@ -1,148 +1,60 @@
-# GitHub Publishing
+# GitHub Source Publishing
 
-Use this sequence as a command guide, adapting names and build paths to the inspected project.
+GitHub 承载源码和仓库元数据。默认生产部署见 [cloudflare-publishing.md](cloudflare-publishing.md)，Git push 不会自动部署 Cloudflare。
 
-## Preflight
+已发布项目先走 [existing-project-checks.md](existing-project-checks.md)，仅对实际缺口或待发布变更使用下方操作。已满足的配置与元数据只检查、复用，不重复初始化、提交或写入。
+
+## 身份与来源
 
 ```bash
 gh auth status
 gh api user --jq .login
 git status --short --branch
 git remote -v
+gh repo view OWNER/REPO --json defaultBranchRef,url
 ```
 
-Do not continue with external changes when authentication points to the wrong account.
+复用已核实的远端与唯一主分支；项目沿用已有 `main` 或 `master`，不要将示例值覆盖到既有配置。源码、README、Wrangler 配置均提交到同一主分支，Cloudflare 从该分支同一提交手动发布。不得新建 Cloudflare 专用发布分支、构建产物分支或 GitHub Action/workflow。没有 Git/npm 元数据时才初始化，并补齐 `.gitignore`，排除依赖、凭据与临时缓存，保留必要 `.env.example`。
 
-## Initialize
+## 版本
 
-For a project without npm or Git metadata:
-
-```bash
-npm init -y
-git init -b master   # 或 git init -b main
-```
-
-Add `.gitignore` before staging. Never commit `.env*`, credentials, dependencies (`node_modules`), caches, logs, or OS files.
-
-If Git already exists, inspect history and remote state. Support both `master` and `main` branches.
-
-## Page Enhancements (UI Repo Link & Umami Tracking)
-
-Before packaging or building the page, ensure the following two items are injected into the HTML/UI:
-
-### 1. Visible GitHub Repo Link
-Place a clearly visible link or button to the GitHub repository in the page's header, navigation, or footer:
-```html
-<a href="https://github.com/OWNER/REPO" target="_blank" rel="noopener noreferrer" class="github-link" aria-label="GitHub Repository">
-  <!-- GitHub icon or text -->
-  GitHub
-</a>
-```
-
-### 2. Umami Analytics Tracking
-Add the standardized Umami tracking snippet inside the `<head>` of `index.html` (or root template/layout):
-```html
-<!-- Umami Analytics -->
-<script defer src="https://cloud.umami.is/script.js" data-website-id="e01c9f78-4607-4e60-b01c-77c8190b12b4"></script>
-```
-
-## Screenshot & QR Code Generation
-
-### Screenshot Guidelines
-- **Wait for valid content**: Ensure the project is running and fully loaded with real content before taking a screenshot. Never capture a loading spinner, skeleton screen, or blank layout.
-- **Mobile vs Desktop Viewport**: If the project is a mobile application, capture the screenshot using a mobile device viewport width (375px~430px), **never** use PC desktop stretched width.
-- Save screenshot to `assets/screenshot.png` (or relative path in repository).
-
-### QR Code for GitHub Pages
-Generate a mobile QR code pointing to the live GitHub Pages URL so users can scan directly from their mobile phones:
-```bash
-mkdir -p assets
-npx qrcode -o assets/qr.png "https://OWNER.github.io/REPO/"
-```
-
-## Cloudflare Custom Domain Convention
-
-Every project automatically deploys to Cloudflare with its dedicated subdomain:
-```text
-https://<repo-name>.xiaosang.cc
-```
-Include this dedicated domain in the README and project demo links alongside the GitHub Pages URL.
-
-## Version Every Publication
-
-Before rebuilding or pushing, determine the latest public version from the live page, `origin/master:package.json`, or the latest release/tag. If any prior publication exists, increase the version; default to patch unless the user requests minor or major.
-
-For an npm-managed project, use the appropriate bump without creating an automatic version commit or tag:
+读取唯一主分支的 package.json、release/tag 或线上版本。仅在本次需要发布应用变更时递增版本，默认 patch，用户指定 minor/major 时遵从；在构建前更新 package.json 与 lockfile。纯检查、仓库/作品集元数据补齐或重部署相同产物不自动递增版本：
 
 ```bash
 npm version patch --no-git-tag-version
 ```
 
-Use `minor` or `major` instead of `patch` when requested. For another package manager, use its equivalent or update `package.json` and its lockfile together. Do not bump after the build, because the published files would retain the old value.
+页面可见版本应来自构建注入或明确静态元素。运行技能的 `validate_release_version.mjs` 检查部署产物，并通过浏览器确认版本实际可见；文本标记存在不等于 UI 显示正确。
 
-Render `vX.Y.Z` visibly in the page. Prefer injecting the `package.json` version at build time. For a plain static page, update a durable element such as:
+## 仓库创建与推送
 
-```html
-<span class="app-version" aria-label="Version 1.2.3">v1.2.3</span>
-```
-
-Run the bundled version validator against the deployable file or build directory, then verify the rendered label in a browser.
-
-## Prepare Pages Source
-
-- Static HTML already runnable from the repository root: use `master:/` (or `main:/`).
-- Vite or another static build: set the public base to `/<repo>/`, emit into `docs/`, and commit `docs/`; use `master:/docs` (or `main:/docs`).
-- User/organization Pages repository named `OWNER.github.io`: use base `/`.
-- SSR, backend, or filesystem-dependent apps cannot run directly on branch-based GitHub Pages. Stop and explain the incompatibility instead of publishing a broken page.
-
-Test the production output locally before committing. Confirm routes, scripts, styles, images, and the repository link under the repository subpath.
-
-## Create Or Reuse Repository
-
-Prefer an existing correct `origin`. For a new repository:
+只暂存本次明确路径。已有远端时直接复用；授权包含创建公开仓库且尚无目标仓库时，在本地提交后：
 
 ```bash
-gh repo create OWNER/REPO --public --source=. --remote=origin --description "DESCRIPTION"
-git add <intentional paths>
-git commit -m "Publish project"
-git push -u origin <branch>    # master or main
-gh repo edit OWNER/REPO --default-branch <branch>
+gh repo create OWNER/REPO --public --source=. --remote=origin --push
 ```
 
-If the first commit must exist before repository creation, commit locally first and use `gh repo create ... --push`. Never use a force push unless the user explicitly requests history replacement.
-
-Set public metadata after the Pages URL is known:
+既有仓库：
 
 ```bash
-gh repo edit OWNER/REPO --description "DESCRIPTION" --homepage "https://OWNER.github.io/REPO/"
+git add <intentional-paths>
+git commit -m "Publish project to Cloudflare"
+git push origin <verified-main-branch>
 ```
 
-## Enable Or Update Pages
+不要 force push 或用 `git add -A` 混入用户已有改动。记录发布提交，Cloudflare 产物必须来自该提交及对应 lockfile。
 
-Create Pages when it does not exist (using `master` or `main`):
+## 公开元数据
 
-```bash
-gh api --method POST repos/OWNER/REPO/pages \
-  -f 'source[branch]=master' \
-  -f 'source[path]=/'
-```
-
-Use `/docs` for a committed build directory. If Pages already exists, update it:
+项目 Cloudflare HTTPS 与实际内容验证通过后设置 Homepage，描述沿用项目真实简介：
 
 ```bash
-gh api --method PUT repos/OWNER/REPO/pages \
-  -f 'source[branch]=master' \
-  -f 'source[path]=/docs'
-```
-
-If the default branch is `main`, replace `source[branch]=master` with `source[branch]=main`.
-
-## Verify
-
-```bash
+gh repo edit OWNER/REPO --homepage "https://<project-slug>.xiaosang.cc/"
 gh api repos/OWNER/REPO --jq '{url:.html_url,homepage:.homepage,default_branch:.default_branch}'
-gh api repos/OWNER/REPO/pages --jq '{url:.html_url,status:.status,source:.source}'
-gh run list --repo OWNER/REPO --limit 10
 ```
 
-Poll with bounded retries because Pages deployment is asynchronous. Open the returned Pages `html_url`, verify the expected title/content and assets, then verify the repository link and new visible version on the rendered page. A `queued` or `building` response is not final success.
+Repo 链接、Umami、截图、README 与二维码要求以 SKILL.md 为准，二维码使用同一 Cloudflare Demo 地址。
+
+## 既有 GitHub Pages
+
+默认保留已有 Pages 作为回退，不开启新 Pages、不删除历史发布。迁移时检查 Pages 的 CNAME、Actions 与框架 base 是否会冲突；只有授权覆盖域名迁移时才调整相关配置。若用户要求继续维护双部署，从同一主分支为根域名与 Pages 子路径分别构建并验证，不新建发布分支或 Cloudflare Action，不复用错误 base 的产物。Cloudflare 发布不等待 Pages 构建。
