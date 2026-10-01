@@ -1,4 +1,4 @@
 interface:
   display_name: "HN 项目发布"
-  short_description: "将版本化项目发布到 GitHub、Pages 和多个作品集"
-  default_prompt: "使用 $hn-project-publisher 为这个项目更新版本、完成发布并收录到我的多个作品集。"
+  short_description: "Cloudflare 首次发布与已发布项目查缺补漏，支持 xiaosang.cc 作品集收录"
+  default_prompt: "使用 $hn-project-publisher 先判断这个项目是否已发布；新项目完成 Cloudflare 首次发布和作品集收录，已发布项目只检查并补齐必要环节。"

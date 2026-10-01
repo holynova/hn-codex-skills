@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN 网站查缺补漏"
+  short_description: "检查网站标识、GitHub、README、分享卡片及移动端和发布完整度"
+  default_prompt: "使用 $hn-website-completeness-check 检查这个项目的 favicon、GitHub 链接、README 与介绍、分享卡片、icon/logo 和其他适用缺口，先给出证据与补齐建议。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN 图片加载优化"
+  short_description: "优化图片密集网站的三层资源、无感高清切换、懒加载与分批渲染"
+  default_prompt: "使用 $hn-image-loading-optimizer 检查这个项目的图片加载链路，复用有效优化并补齐性能和失败回退缺口。"
