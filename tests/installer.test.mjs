@@ -4,10 +4,32 @@ import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const installer = path.join(repoRoot, "bin", "install.mjs");
+
+test("pen-art installation preserves all mandatory images and references", () => withTempDir((temp) => {
+  const name = "hn-flowing-pen-art";
+  const result = runInstaller(["install", name, "--path", temp]);
+  assert.equal(result.status, 0, result.stderr);
+  const files = [
+    "SKILL.md", "agents/openai.yaml", "references/examples.md", "references/prompts.md",
+    ...["01-tide-keeper", "02-moth-dreamer", "03-white-stag", "04-spiral-city", "05-shell-atlas"]
+      .map((stem) => `references/images/${stem}.webp`),
+  ];
+  for (const file of files) {
+    const source = fs.readFileSync(path.join(repoRoot, "skills", name, file));
+    const installed = fs.readFileSync(path.join(temp, name, file));
+    assert.equal(createHash("sha256").update(installed).digest("hex"),
+      createHash("sha256").update(source).digest("hex"), file);
+    if (file.endsWith(".webp")) {
+      assert.equal(installed.toString("ascii", 0, 4), "RIFF", file);
+      assert.equal(installed.toString("ascii", 8, 12), "WEBP", file);
+    }
+  }
+}));
 
 function runInstaller(args) {
   return spawnSync(process.execPath, [installer, ...args], {
@@ -31,7 +53,7 @@ test("installs every bundled skill into an isolated directory", () => withTempDi
   assert.equal(result.status, 0, result.stderr);
   const installed = fs.readdirSync(target, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."));
-  assert.equal(installed.length, 17);
+  assert.equal(installed.length, 19);
   for (const entry of installed) {
     assert.ok(fs.existsSync(path.join(target, entry.name, "SKILL.md")));
     assert.ok(fs.existsSync(path.join(target, entry.name, "agents", "openai.yaml")));
@@ -153,4 +175,24 @@ test("woodcut installation preserves every mandatory visual reference", () => wi
     assert.deepEqual(image, fs.readFileSync(path.join(source, example.file)), example.file);
   }
   assert.deepEqual(fs.readFileSync(path.join(installed, "examples-board.jpg")), fs.readFileSync(path.join(source, "examples-board.jpg")));
+}));
+
+test("installs required translucent toy example images with matching hashes", () => withTempDir((temp) => {
+  const target = path.join(temp, "skills");
+  const result = runInstaller(["install", "hn-translucent-toy", "--path", target]);
+  assert.equal(result.status, 0, result.stderr);
+  const root = path.join(target, "hn-translucent-toy");
+  const manifest = JSON.parse(fs.readFileSync(path.join(root, "references", "examples.json"), "utf8"));
+  assert.equal(manifest.required, true);
+  assert.equal(manifest.examples.length, 6);
+  assert.equal(manifest.examples.filter((example) => example.role === "foundation").length, 3);
+  for (const example of manifest.examples) {
+    const image = path.resolve(root, example.image);
+    assert.ok(image.startsWith(`${root}${path.sep}`));
+    const bytes = fs.readFileSync(image);
+    assert.equal(bytes.subarray(0, 4).toString(), "RIFF");
+    assert.equal(bytes.subarray(8, 12).toString(), "WEBP");
+    assert.equal(createHash("sha256").update(bytes).digest("hex"), example.sha256);
+    assert.deepEqual(bytes, fs.readFileSync(path.join(repoRoot, "skills", "hn-translucent-toy", example.image)));
+  }
 }));

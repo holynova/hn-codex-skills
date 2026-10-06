@@ -1,0 +1,4 @@
+interface:
+  display_name: "半透明制服玩具"
+  short_description: "生成卡通收藏玩具角色，强调硬挺制服、盔甲、磨砂透明塑料与多样撞色"
+  default_prompt: "使用 $hn-translucent-toy 生成5张角色和配色不同的半透明制服或盔甲玩具海报，先查看必需例图。"
