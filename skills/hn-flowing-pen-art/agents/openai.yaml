@@ -1,0 +1,4 @@
+interface:
+  display_name: "流线钢笔画"
+  short_description: "以旧纸、深蓝墨色和随形排线创作诗性钢笔插画，附五张必须查看的视觉例图"
+  default_prompt: "使用 $hn-flowing-pen-art，先查看随包例图，再将我的主题画成流线钢笔画。"

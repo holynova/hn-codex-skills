@@ -4,10 +4,32 @@ import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const installer = path.join(repoRoot, "bin", "install.mjs");
+
+test("pen-art installation preserves all mandatory images and references", () => withTempDir((temp) => {
+  const name = "hn-flowing-pen-art";
+  const result = runInstaller(["install", name, "--path", temp]);
+  assert.equal(result.status, 0, result.stderr);
+  const files = [
+    "SKILL.md", "agents/openai.yaml", "references/examples.md", "references/prompts.md",
+    ...["01-tide-keeper", "02-moth-dreamer", "03-white-stag", "04-spiral-city", "05-shell-atlas"]
+      .map((stem) => `references/images/${stem}.webp`),
+  ];
+  for (const file of files) {
+    const source = fs.readFileSync(path.join(repoRoot, "skills", name, file));
+    const installed = fs.readFileSync(path.join(temp, name, file));
+    assert.equal(createHash("sha256").update(installed).digest("hex"),
+      createHash("sha256").update(source).digest("hex"), file);
+    if (file.endsWith(".webp")) {
+      assert.equal(installed.toString("ascii", 0, 4), "RIFF", file);
+      assert.equal(installed.toString("ascii", 8, 12), "WEBP", file);
+    }
+  }
+}));
 
 function runInstaller(args) {
   return spawnSync(process.execPath, [installer, ...args], {
@@ -31,7 +53,7 @@ test("installs every bundled skill into an isolated directory", () => withTempDi
   assert.equal(result.status, 0, result.stderr);
   const installed = fs.readdirSync(target, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."));
-  assert.equal(installed.length, 15);
+  assert.equal(installed.length, 16);
   for (const entry of installed) {
     assert.ok(fs.existsSync(path.join(target, entry.name, "SKILL.md")));
     assert.ok(fs.existsSync(path.join(target, entry.name, "agents", "openai.yaml")));

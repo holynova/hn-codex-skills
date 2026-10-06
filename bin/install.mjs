@@ -22,6 +22,7 @@ const skillNames = [
   "hn-share-card",
   "rubber-stamp-art",
   "hn-color-woodcut",
+  "hn-flowing-pen-art",
   "hn-image-loading-optimizer",
   "hn-website-completeness-check",
 ];
