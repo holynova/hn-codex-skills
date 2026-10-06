@@ -23,6 +23,7 @@ const skillNames = [
   "rubber-stamp-art",
   "hn-image-loading-optimizer",
   "hn-website-completeness-check",
+  "hn-ink-dance-sketch",
 ];
 
 function usage(exitCode = 0) {

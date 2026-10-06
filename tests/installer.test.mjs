@@ -31,7 +31,7 @@ test("installs every bundled skill into an isolated directory", () => withTempDi
   assert.equal(result.status, 0, result.stderr);
   const installed = fs.readdirSync(target, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."));
-  assert.equal(installed.length, 14);
+  assert.equal(installed.length, 15);
   for (const entry of installed) {
     assert.ok(fs.existsSync(path.join(target, entry.name, "SKILL.md")));
     assert.ok(fs.existsSync(path.join(target, entry.name, "agents", "openai.yaml")));
@@ -80,5 +80,27 @@ test("prevents installing archived skills in backup directory", () => withTempDi
     const result = runInstaller(["install", skill, "--path", target]);
     assert.notEqual(result.status, 0);
     assert.match(result.stderr, /Unknown skill/);
+  }
+}));
+
+// The visual reference library is required runtime input, not optional documentation.
+test("installs ink dance sketch with all required visual references intact", () => withTempDir((temp) => {
+  const target = path.join(temp, "skills");
+  const name = "hn-ink-dance-sketch";
+  const result = runInstaller(["install", name, "--path", target]);
+  assert.equal(result.status, 0, result.stderr);
+  const files = [
+    "references/examples.md", "references/prompting.md",
+    ...["01-ink-ribbon", "02-ballet", "03-flamenco", "04-mongolian",
+      "05-bharatanatyam", "06-contemporary"].map((file) => `references/examples/${file}.webp`),
+  ];
+  for (const file of files) {
+    const source = fs.readFileSync(path.join(repoRoot, "skills", name, file));
+    const installed = fs.readFileSync(path.join(target, name, file));
+    assert.deepEqual(installed, source, `Required reference changed or missing: ${file}`);
+    if (file.endsWith(".webp")) {
+      assert.equal(installed.toString("ascii", 0, 4), "RIFF");
+      assert.equal(installed.toString("ascii", 8, 12), "WEBP");
+    }
   }
 }));

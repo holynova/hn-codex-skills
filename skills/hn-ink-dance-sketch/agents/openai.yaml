@@ -1,0 +1,4 @@
+interface:
+  display_name: "墨线舞蹈速写"
+  short_description: "以疏放墨线和暖纸留白创作舞者，附必读例图与舞种服装变化规则"
+  default_prompt: "使用 $hn-ink-dance-sketch，先查看随包例图，再创作五张舞种、服装轮廓和重心各不相同的墨线舞蹈速写。"
