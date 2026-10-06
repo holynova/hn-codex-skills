@@ -21,6 +21,7 @@ const skillNames = [
   "hn-web-analytics",
   "hn-share-card",
   "rubber-stamp-art",
+  "hn-paper-gouache",
   "hn-color-woodcut",
   "hn-image-loading-optimizer",
   "hn-website-completeness-check",
@@ -129,6 +130,15 @@ function createInstallPlan(names, skillsDir, options) {
     }
     if (!fs.existsSync(path.join(source, "agents", "openai.yaml"))) {
       throw new Error(`Bundled skill is missing agents/openai.yaml: ${source}`);
+    }
+    if (name === "hn-paper-gouache") {
+      const examples = ["manifest.json", "coastal-bus.jpg", "rainy-city.jpg", "desert-market.jpg", "autumn-river.jpg", "snow-cable-car.jpg", "fushimi-inari.jpg"];
+      for (const example of examples) {
+        const required = path.join(source, "assets", "examples", example);
+        if (!fs.existsSync(required) || !fs.statSync(required).isFile() || fs.statSync(required).size === 0) {
+          throw new Error(`Bundled skill is missing required visual example: ${required}`);
+        }
+      }
     }
     if (fs.existsSync(target) && !options.force) {
       throw new Error(`Target already exists: ${target}. Re-run with --force to replace it.`);

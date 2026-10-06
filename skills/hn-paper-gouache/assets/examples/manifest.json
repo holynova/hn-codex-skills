@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "required": true,
+  "provenance": "六张均为本会话内置 image_gen 生成成图；仅重新编码为完整 1024×1536 JPEG，不裁切、不改画面。未打包用户原始附件。",
+  "gallery": "https://world-landmarks.xiaosang.cc/",
+  "examples": [
+    {
+      "id": "coastal-bus",
+      "title": "海岸巴士",
+      "path": "assets/examples/coastal-bus.jpg",
+      "width": 1024,
+      "height": 1536,
+      "sha256": "408317144142cbe733294cdce566e4f5958b24e3393f2c34cb5ffcd0b041f25f",
+      "lesson": "经典晴日、云影和弯道透视",
+      "origin": "AI-generated artwork created in this project; JPEG reference copy of original PNG"
+    },
+    {
+      "id": "rainy-city",
+      "title": "雨后电车",
+      "path": "assets/examples/rainy-city.jpg",
+      "width": 1024,
+      "height": 1536,
+      "sha256": "b650f19f33f299f853c962b3521f14e58c6f57377504731cf0213700239c190d",
+      "lesson": "暖色建筑、湿地倒影与街头视角",
+      "origin": "AI-generated artwork created in this project; JPEG reference copy of original PNG"
+    },
+    {
+      "id": "desert-market",
+      "title": "沙漠集市",
+      "path": "assets/examples/desert-market.jpg",
+      "width": 1024,
+      "height": 1536,
+      "sha256": "5443a78869f60daf604778fe5eb70c9b6221dc801af75f283318bed10c57bd98",
+      "lesson": "赭色块面、靛蓝投影与俯视庭院",
+      "origin": "AI-generated artwork created in this project; JPEG reference copy of original PNG"
+    },
+    {
+      "id": "autumn-river",
+      "title": "秋日划船",
+      "path": "assets/examples/autumn-river.jpg",
+      "width": 1024,
+      "height": 1536,
+      "sha256": "997ce0da6c9d075089eb883039a8a00a44291ccdecc645145bec0b80b708f2a7",
+      "lesson": "橙青对照、俯视主体与低天空占比",
+      "origin": "AI-generated artwork created in this project; JPEG reference copy of original PNG"
+    },
+    {
+      "id": "snow-cable-car",
+      "title": "雪山缆车",
+      "path": "assets/examples/snow-cable-car.jpg",
+      "width": 1024,
+      "height": 1536,
+      "sha256": "15529522b3c84f0516ac15f0243423a3466100b1141af0fa8e4e21faf82d15f8",
+      "lesson": "白色负形、冷色层次与红色视觉焦点",
+      "origin": "AI-generated artwork created in this project; JPEG reference copy of original PNG"
+    },
+    {
+      "id": "fushimi-inari",
+      "title": "伏见稻荷",
+      "path": "assets/examples/fushimi-inari.jpg",
+      "width": 1024,
+      "height": 1536,
+      "sha256": "9979a70a29063eeec360044cf903a301c20dd7d9ced10656f7c018e1c076003f",
+      "lesson": "可辨识地标、重复建筑节奏与深度",
+      "origin": "AI-generated artwork created in this project; JPEG reference copy of original PNG"
+    }
+  ]
+}

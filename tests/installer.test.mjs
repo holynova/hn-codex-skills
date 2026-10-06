@@ -31,11 +31,44 @@ test("installs every bundled skill into an isolated directory", () => withTempDi
   assert.equal(result.status, 0, result.stderr);
   const installed = fs.readdirSync(target, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."));
-  assert.equal(installed.length, 16);
+  assert.equal(installed.length, 17);
   for (const entry of installed) {
     assert.ok(fs.existsSync(path.join(target, entry.name, "SKILL.md")));
     assert.ok(fs.existsSync(path.join(target, entry.name, "agents", "openai.yaml")));
   }
+}));
+
+test("installs paper gouache with every mandatory full-size example intact", () => withTempDir((temp) => {
+  const target = path.join(temp, "skills");
+  const result = runInstaller(["install", "hn-paper-gouache", "--path", target]);
+  assert.equal(result.status, 0, result.stderr);
+  const source = path.join(repoRoot, "skills", "hn-paper-gouache");
+  const installed = path.join(target, "hn-paper-gouache");
+  const manifest = JSON.parse(fs.readFileSync(path.join(installed, "assets/examples/manifest.json"), "utf8"));
+  assert.equal(manifest.required, true);
+  assert.equal(manifest.examples.length, 6);
+  for (const example of manifest.examples) {
+    const actual = fs.readFileSync(path.join(installed, example.path));
+    assert.deepEqual(actual, fs.readFileSync(path.join(source, example.path)));
+    assert.equal(actual.readUInt16BE(0), 0xffd8);
+    assert.equal(example.width, 1024);
+    assert.equal(example.height, 1536);
+  }
+}));
+
+test("refuses a text-only paper gouache bundle before copying anything", () => withTempDir((temp) => {
+  const fakeRoot = path.join(temp, "bundle");
+  const skill = path.join(fakeRoot, "skills", "hn-paper-gouache");
+  fs.mkdirSync(path.join(fakeRoot, "bin"), { recursive: true });
+  fs.mkdirSync(path.join(skill, "agents"), { recursive: true });
+  fs.copyFileSync(installer, path.join(fakeRoot, "bin", "install.mjs"));
+  fs.writeFileSync(path.join(skill, "SKILL.md"), "paper gouache instructions");
+  fs.writeFileSync(path.join(skill, "agents", "openai.yaml"), "interface: {}\n");
+  const target = path.join(temp, "target");
+  const result = spawnSync(process.execPath, [path.join(fakeRoot, "bin", "install.mjs"), "install", "hn-paper-gouache", "--path", target], { encoding: "utf8" });
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /missing required visual example/);
+  assert.equal(fs.existsSync(path.join(target, "hn-paper-gouache")), false);
 }));
 
 test("preflights all conflicts before installing any skill", () => withTempDir((temp) => {

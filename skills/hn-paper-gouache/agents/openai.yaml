@@ -1,0 +1,4 @@
+interface:
+  display_name: "纸纹平涂水粉插画"
+  short_description: "以必读例图为基准，创作明亮纸纹水粉场景与地标插画，并保持批量构图多样性"
+  default_prompt: "使用 $hn-paper-gouache 先查看内置例图，再把我的主题画成纸纹平涂水粉插画。"
