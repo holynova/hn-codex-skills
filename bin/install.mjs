@@ -24,6 +24,7 @@ const skillNames = [
   "hn-translucent-toy",
   "hn-color-woodcut",
   "hn-flowing-pen-art",
+  "twilight-anime-art",
   "hn-image-loading-optimizer",
   "hn-website-completeness-check",
   "hn-ink-dance-sketch",

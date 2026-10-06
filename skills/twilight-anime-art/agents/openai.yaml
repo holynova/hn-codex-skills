@@ -1,0 +1,4 @@
+interface:
+  display_name: "暮色动画插画"
+  short_description: "以必读例图校准粉紫暮色、冷暖光线与细腻动画质感，创作多样场景"
+  default_prompt: "使用 $twilight-anime-art，先查看随附例图，按统一暮色动画风格为我的主题生成图像，并保持场景、人物和构图多样性。"

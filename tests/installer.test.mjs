@@ -53,10 +53,26 @@ test("installs every bundled skill into an isolated directory", () => withTempDi
   assert.equal(result.status, 0, result.stderr);
   const installed = fs.readdirSync(target, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."));
-  assert.equal(installed.length, 18);
+  assert.equal(installed.length, 19);
   for (const entry of installed) {
     assert.ok(fs.existsSync(path.join(target, entry.name, "SKILL.md")));
     assert.ok(fs.existsSync(path.join(target, entry.name, "agents", "openai.yaml")));
+  }
+}));
+
+test("installs twilight anime art with all five required visual references intact", () => withTempDir((temp) => {
+  const target = path.join(temp, "skills");
+  const result = runInstaller(["install", "twilight-anime-art", "--path", target]);
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(fs.readdirSync(target), ["twilight-anime-art"]);
+  for (const name of ["01-cafe", "02-train", "03-bookstore", "04-lodge", "05-rooftop"]) {
+    const relative = path.join("references", "images", `${name}.webp`);
+    const original = fs.readFileSync(path.join(repoRoot, "skills", "twilight-anime-art", relative));
+    const installed = fs.readFileSync(path.join(target, "twilight-anime-art", relative));
+    assert.equal(original.subarray(0, 4).toString(), "RIFF");
+    assert.equal(original.subarray(8, 12).toString(), "WEBP");
+    assert.ok(original.length > 1000);
+    assert.deepEqual(installed, original);
   }
 }));
 

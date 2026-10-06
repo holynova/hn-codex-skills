@@ -8,7 +8,7 @@
 
 ## 📦 现收录技能目录 (Curated Bundled Skills)
 
-经过架构重构与职责收敛，本仓库精选并维护 **18 个核心高频技能**（其余重叠/历史流程已安全隔离至 `backup/` 文件夹中）：
+经过架构重构与职责收敛，本仓库精选并维护 **19 个核心高频技能**（其余重叠/历史流程已安全隔离至 `backup/` 文件夹中）：
 
 ### 🚀 发布与交付 (Publishing & Releasing)
 - **`hn-project-publisher`**：**Web 项目首次发布与发布检查**。新项目走完整首次发布；已发布项目先检查现状，仅补缺失、失效或本次变更影响的环节，无缺口和待发布变更时无需重新发布。涵盖 npm/Git 与版本管理、页面 Repo 链接和 Umami 埋点、简洁中英文 README（各 ≤500 字，含真实截图与 Cloudflare Demo 二维码）、推送 GitHub、Cloudflare Workers Static Assets 独立域名部署（`<project-slug>.xiaosang.cc`），以及收录并单独发布 [xiaosang.cc 作品集](https://xiaosang.cc/)。每个仓库只使用一个主分支，本地手动部署 Cloudflare，不创建专用发布分支或 GitHub Action；默认保留旧 GitHub Pages 作回退，完整发布沿用 GitHub 个人主页同步。
@@ -28,6 +28,7 @@
 - **`rubber-stamp-art`**：**橡皮图章与木刻版画创作**。根据文字、诗词、地标或用户图片生成宣纸质感、矿物印泥配色与手工刻痕风格的印章艺术提示词。
 
 - **`hn-color-woodcut`**：**套色木刻 · 山河入版**。附带必须查看的8张风格例图与总览，提炼平涂套色、手刻刀痕、纸白留空与景深构图，支持山河、城市、庭院、生活、节庆和海浪等题材。
+- **[`twilight-anime-art`](skills/twilight-anime-art/SKILL.md)**：**暮色动画插画**。将粉紫暮色、琥珀暖光、蓝紫阴影与细腻手绘质感应用到不同场景、建筑、人物和物件，保持氛围统一与构图多样性。随附 [五张必读例图](skills/twilight-anime-art/references/examples.md)，使用时先看图校准，支持单图与系列作图。
 
 - **[`hn-flowing-pen-art`](skills/hn-flowing-pen-art/SKILL.md)**：**流线钢笔画创作**。将任意主题转成暖旧纸、深蓝墨色、随形排线与流动线场的诗性插画；内置[五张必需例图与分析](skills/hn-flowing-pen-art/references/examples.md)，生成前必须查看至少两张，并将至少一张作为风格参考输入。支持人物、动物、建筑、风景、静物和构图多变的系列。
 
@@ -46,7 +47,7 @@
 ## ⚡ 安装方式 (Installation)
 
 ### 1. 全量安装 (Install All Bundled Skills)
-直接通过 npx 将所有 18 个精选技能安装到本地 Codex（默认路径为 `~/.codex/skills`）：
+直接通过 npx 将所有 19 个精选技能安装到本地 Codex（默认路径为 `~/.codex/skills`）：
 
 ```bash
 npx github:holynova/hn-codex-skills install
@@ -102,6 +103,8 @@ npx github:holynova/hn-codex-skills install hn-color-woodcut
 
 # 安装流线钢笔画技能（含五张必需例图）
 npx github:holynova/hn-codex-skills install hn-flowing-pen-art
+# 安装暮色动画插画技能（包含五张必读例图）
+npx github:holynova/hn-codex-skills install twilight-anime-art
 
 # 安装 Umami 数据统计接入技能
 npx github:holynova/hn-codex-skills install hn-web-analytics
@@ -129,7 +132,7 @@ npx github:holynova/hn-codex-skills install --path /custom/skills/dir
 hn-codex-skills/
 ├── bin/
 │   └── install.mjs        # npx 自动化安装器 CLI
-├── skills/                # 17 个当前正式发布的活跃技能
+├── skills/                # 19 个当前正式发布的活跃技能
 │   ├── hn-chrome-extension-publisher/
 │   ├── hn-project-publisher/
 │   ├── hn-ui-layout-typography-audit/
