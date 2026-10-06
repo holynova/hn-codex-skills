@@ -53,7 +53,7 @@ test("installs every bundled skill into an isolated directory", () => withTempDi
   assert.equal(result.status, 0, result.stderr);
   const installed = fs.readdirSync(target, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."));
-  assert.equal(installed.length, 17);
+  assert.equal(installed.length, 18);
   for (const entry of installed) {
     assert.ok(fs.existsSync(path.join(target, entry.name, "SKILL.md")));
     assert.ok(fs.existsSync(path.join(target, entry.name, "agents", "openai.yaml")));
@@ -142,4 +142,24 @@ test("woodcut installation preserves every mandatory visual reference", () => wi
     assert.deepEqual(image, fs.readFileSync(path.join(source, example.file)), example.file);
   }
   assert.deepEqual(fs.readFileSync(path.join(installed, "examples-board.jpg")), fs.readFileSync(path.join(source, "examples-board.jpg")));
+}));
+
+test("installs required translucent toy example images with matching hashes", () => withTempDir((temp) => {
+  const target = path.join(temp, "skills");
+  const result = runInstaller(["install", "hn-translucent-toy", "--path", target]);
+  assert.equal(result.status, 0, result.stderr);
+  const root = path.join(target, "hn-translucent-toy");
+  const manifest = JSON.parse(fs.readFileSync(path.join(root, "references", "examples.json"), "utf8"));
+  assert.equal(manifest.required, true);
+  assert.equal(manifest.examples.length, 6);
+  assert.equal(manifest.examples.filter((example) => example.role === "foundation").length, 3);
+  for (const example of manifest.examples) {
+    const image = path.resolve(root, example.image);
+    assert.ok(image.startsWith(`${root}${path.sep}`));
+    const bytes = fs.readFileSync(image);
+    assert.equal(bytes.subarray(0, 4).toString(), "RIFF");
+    assert.equal(bytes.subarray(8, 12).toString(), "WEBP");
+    assert.equal(createHash("sha256").update(bytes).digest("hex"), example.sha256);
+    assert.deepEqual(bytes, fs.readFileSync(path.join(repoRoot, "skills", "hn-translucent-toy", example.image)));
+  }
 }));

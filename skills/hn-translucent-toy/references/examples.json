@@ -1,0 +1,109 @@
+{
+  "formatVersion": 1,
+  "required": true,
+  "provenance": {
+    "generation": "built-in image_gen",
+    "gallery": "https://translucent-toy-guard.xiaosang.cc/",
+    "note": "Examples are generated works from the gallery; resize and WebP encoding only."
+  },
+  "examples": [
+    {
+      "id": "samurai-coral",
+      "title": "珊瑚红武士",
+      "role": "foundation",
+      "image": "assets/examples/samurai-coral.webp",
+      "palette": [
+        "coral",
+        "teal",
+        "pearl gray"
+      ],
+      "description": "卡通头部、厚塑料分层甲、绳饰与半透明透色",
+      "width": 768,
+      "height": 1152,
+      "sha256": "c7e20d07bf0b326597af21adee95e2f83325abd3b4b187d6058b30c730ced6c9",
+      "sourceIndex": "01"
+    },
+    {
+      "id": "hussar-indigo",
+      "title": "靛蓝骠骑兵",
+      "role": "foundation",
+      "image": "assets/examples/hussar-indigo.webp",
+      "palette": [
+        "indigo",
+        "chartreuse",
+        "ivory",
+        "pink"
+      ],
+      "description": "高帽、硬挺制服、模压绳饰与少量灯线",
+      "width": 768,
+      "height": 1152,
+      "sha256": "a535f6aeb5ec7aa91023b0163cac6678761228f33169251770fda50d3cbcb148",
+      "sourceIndex": "02"
+    },
+    {
+      "id": "knight-mint",
+      "title": "薄荷绿骑士",
+      "role": "foundation",
+      "image": "assets/examples/knight-mint.webp",
+      "palette": [
+        "mint",
+        "orange",
+        "charcoal"
+      ],
+      "description": "圆厚肩甲、关节手套、透明圆盾与内层结构",
+      "width": 768,
+      "height": 1152,
+      "sha256": "f7a2ed45bf44cb1c2cf0d32b8af98c769a65c137aa0ed9efefbcb3e0bdd67bf5",
+      "sourceIndex": "03"
+    },
+    {
+      "id": "pilot-cream",
+      "title": "奶油黄飞行军官",
+      "role": "specialized",
+      "image": "assets/examples/pilot-cream.webp",
+      "palette": [
+        "cream yellow",
+        "cherry red",
+        "cobalt",
+        "amber"
+      ],
+      "description": "硬壳职业制服、透明护具与导航装备",
+      "width": 768,
+      "height": 1152,
+      "sha256": "bc353ef02b5459f112348f9d9bb73f91f5a174a474625d7147244a7667242680",
+      "sourceIndex": "04"
+    },
+    {
+      "id": "patrol-ice",
+      "title": "冰蓝极地巡逻员",
+      "role": "specialized",
+      "image": "assets/examples/patrol-ice.webp",
+      "palette": [
+        "ice blue",
+        "red",
+        "gray"
+      ],
+      "description": "背面回首视角、透明背甲与内部连接结构",
+      "width": 768,
+      "height": 1152,
+      "sha256": "981a48c80d12f6cf10525c85784d8fc3b48b331262011db10fc62fe3fc14d6d8",
+      "sourceIndex": "09"
+    },
+    {
+      "id": "diver-teal",
+      "title": "青绿潜水卫兵",
+      "role": "specialized",
+      "image": "assets/examples/diver-teal.webp",
+      "palette": [
+        "teal",
+        "orange",
+        "ivory"
+      ],
+      "description": "球形透明罩、厚壳体积与专业设备",
+      "width": 768,
+      "height": 1152,
+      "sha256": "929a27c8cea196de31395a09cbe4642b0314b6ee7e850e5f8ad487d0459d5b8a",
+      "sourceIndex": "16"
+    }
+  ]
+}
