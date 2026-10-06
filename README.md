@@ -22,6 +22,7 @@
 - **`hn-visual-asset-pipeline`**：**产品视觉资产流水线**。规范化生成并批量整理 Favicon、多尺寸 App 图标、README 题图、透明底 PNG 与商店宣传图。
 
 ### ✍️ 内容创作与艺术表达 (Creative & Content)
+- **[`hn-ink-dance-sketch`](skills/hn-ink-dance-sketch/SKILL.md)**：**墨线舞蹈速写**。疏放书写性墨线、暖纸留白、少量浓墨锚点；内置 [6 张必读例图](skills/hn-ink-dance-sketch/references/examples.md)，并通过舞种、服装轮廓、重心与视角变化避免系列雷同。
 - **`hn-xiaohei-draw`**：**“宇航员小黑”IP 正文配图系统**。生成具有 Ian 风格白底手绘线稿、红橙蓝局部重点标注、可爱宇航员小黑角色的中文技术与方法论配图。
 - **`hn-poem`**：**现代汉语短诗生成体系**。采用“低相关并置”理论，一次创作四首分别采用错搭替换、强制等同、重新解释与能力越权的陌生化短诗。
 - **`rubber-stamp-art`**：**橡皮图章与木刻版画创作**。根据文字、诗词、地标或用户图片生成宣纸质感、矿物印泥配色与手工刻痕风格的印章艺术提示词。
@@ -84,6 +85,9 @@ npx github:holynova/hn-codex-skills install hn-xiaohei-draw
 
 # 安装现代汉语短诗生成技能
 npx github:holynova/hn-codex-skills install hn-poem
+
+# 安装墨线舞蹈速写技能（包含必读例图）
+npx github:holynova/hn-codex-skills install hn-ink-dance-sketch
 
 # 安装橡皮图章与木刻版画创作技能
 npx github:holynova/hn-codex-skills install rubber-stamp-art

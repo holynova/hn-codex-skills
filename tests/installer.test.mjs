@@ -105,6 +105,28 @@ test("prevents installing archived skills in backup directory", () => withTempDi
   }
 }));
 
+// The visual reference library is required runtime input, not optional documentation.
+test("installs ink dance sketch with all required visual references intact", () => withTempDir((temp) => {
+  const target = path.join(temp, "skills");
+  const name = "hn-ink-dance-sketch";
+  const result = runInstaller(["install", name, "--path", target]);
+  assert.equal(result.status, 0, result.stderr);
+  const files = [
+    "references/examples.md", "references/prompting.md",
+    ...["01-ink-ribbon", "02-ballet", "03-flamenco", "04-mongolian",
+      "05-bharatanatyam", "06-contemporary"].map((file) => `references/examples/${file}.webp`),
+  ];
+  for (const file of files) {
+    const source = fs.readFileSync(path.join(repoRoot, "skills", name, file));
+    const installed = fs.readFileSync(path.join(target, name, file));
+    assert.deepEqual(installed, source, `Required reference changed or missing: ${file}`);
+    if (file.endsWith(".webp")) {
+      assert.equal(installed.toString("ascii", 0, 4), "RIFF");
+      assert.equal(installed.toString("ascii", 8, 12), "WEBP");
+    }
+  }
+}));
+
 test("woodcut installation preserves every mandatory visual reference", () => withTempDir((temp) => {
   const result = runInstaller(["install", "hn-color-woodcut", "--path", temp]);
   assert.equal(result.status, 0, result.stderr);
