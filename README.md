@@ -8,7 +8,7 @@
 
 ## 📦 现收录技能目录 (Curated Bundled Skills)
 
-经过架构重构与职责收敛，本仓库精选并维护 **14 个核心高频技能**（其余重叠/历史流程已安全隔离至 `backup/` 文件夹中）：
+经过架构重构与职责收敛，本仓库精选并维护 **15 个核心高频技能**（其余重叠/历史流程已安全隔离至 `backup/` 文件夹中）：
 
 ### 🚀 发布与交付 (Publishing & Releasing)
 - **`hn-project-publisher`**：**Web 项目首次发布与发布检查**。新项目走完整首次发布；已发布项目先检查现状，仅补缺失、失效或本次变更影响的环节，无缺口和待发布变更时无需重新发布。涵盖 npm/Git 与版本管理、页面 Repo 链接和 Umami 埋点、简洁中英文 README（各 ≤500 字，含真实截图与 Cloudflare Demo 二维码）、推送 GitHub、Cloudflare Workers Static Assets 独立域名部署（`<project-slug>.xiaosang.cc`），以及收录并单独发布 [xiaosang.cc 作品集](https://xiaosang.cc/)。每个仓库只使用一个主分支，本地手动部署 Cloudflare，不创建专用发布分支或 GitHub Action；默认保留旧 GitHub Pages 作回退，完整发布沿用 GitHub 个人主页同步。
@@ -26,6 +26,8 @@
 - **`hn-poem`**：**现代汉语短诗生成体系**。采用“低相关并置”理论，一次创作四首分别采用错搭替换、强制等同、重新解释与能力越权的陌生化短诗。
 - **`rubber-stamp-art`**：**橡皮图章与木刻版画创作**。根据文字、诗词、地标或用户图片生成宣纸质感、矿物印泥配色与手工刻痕风格的印章艺术提示词。
 
+- **`hn-color-woodcut`**：**套色木刻 · 山河入版**。附带必须查看的8张风格例图与总览，提炼平涂套色、手刻刀痕、纸白留空与景深构图，支持山河、城市、庭院、生活、节庆和海浪等题材。
+
 ### 📊 数据埋点与交互分享 (Analytics & Sharing)
 - **`hn-web-analytics`**：**集中式 Umami 统计接入**。为多个静态站点、Astro、React、Vue 前端统一埋入隐私友好的 PV、UV 与自定义事件统计代码。
 - **`hn-share-card`**：**精美结果分享卡片**。为 Web 工具生成带有二维码与关键成果的 Canvas 分享图片，支持一键下载 PNG 与系统原生分享回退。
@@ -39,7 +41,7 @@
 ## ⚡ 安装方式 (Installation)
 
 ### 1. 全量安装 (Install All Bundled Skills)
-直接通过 npx 将所有 14 个精选技能安装到本地 Codex（默认路径为 `~/.codex/skills`）：
+直接通过 npx 将所有 15 个精选技能安装到本地 Codex（默认路径为 `~/.codex/skills`）：
 
 ```bash
 npx github:holynova/hn-codex-skills install
@@ -84,6 +86,9 @@ npx github:holynova/hn-codex-skills install hn-poem
 # 安装橡皮图章与木刻版画创作技能
 npx github:holynova/hn-codex-skills install rubber-stamp-art
 
+# 安装套色木刻作图技能（含必备例图）
+npx github:holynova/hn-codex-skills install hn-color-woodcut
+
 # 安装 Umami 数据统计接入技能
 npx github:holynova/hn-codex-skills install hn-web-analytics
 
@@ -110,7 +115,7 @@ npx github:holynova/hn-codex-skills install --path /custom/skills/dir
 hn-codex-skills/
 ├── bin/
 │   └── install.mjs        # npx 自动化安装器 CLI
-├── skills/                # 14 个当前正式发布的活跃技能
+├── skills/                # 15 个当前正式发布的活跃技能
 │   ├── hn-chrome-extension-publisher/
 │   ├── hn-project-publisher/
 │   ├── hn-ui-layout-typography-audit/

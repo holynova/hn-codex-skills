@@ -31,7 +31,7 @@ test("installs every bundled skill into an isolated directory", () => withTempDi
   assert.equal(result.status, 0, result.stderr);
   const installed = fs.readdirSync(target, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."));
-  assert.equal(installed.length, 14);
+  assert.equal(installed.length, 15);
   for (const entry of installed) {
     assert.ok(fs.existsSync(path.join(target, entry.name, "SKILL.md")));
     assert.ok(fs.existsSync(path.join(target, entry.name, "agents", "openai.yaml")));
@@ -81,4 +81,21 @@ test("prevents installing archived skills in backup directory", () => withTempDi
     assert.notEqual(result.status, 0);
     assert.match(result.stderr, /Unknown skill/);
   }
+}));
+
+test("woodcut installation preserves every mandatory visual reference", () => withTempDir((temp) => {
+  const result = runInstaller(["install", "hn-color-woodcut", "--path", temp]);
+  assert.equal(result.status, 0, result.stderr);
+  const source = path.join(repoRoot, "skills", "hn-color-woodcut", "references");
+  const installed = path.join(temp, "hn-color-woodcut", "references");
+  const examples = JSON.parse(fs.readFileSync(path.join(installed, "examples.json"), "utf8"));
+  assert.equal(examples.length, 8);
+  for (const example of examples) {
+    const image = fs.readFileSync(path.join(installed, example.file));
+    assert.ok(image.length > 1000, example.file);
+    assert.equal(image.subarray(0, 4).toString(), "RIFF", example.file);
+    assert.equal(image.subarray(8, 12).toString(), "WEBP", example.file);
+    assert.deepEqual(image, fs.readFileSync(path.join(source, example.file)), example.file);
+  }
+  assert.deepEqual(fs.readFileSync(path.join(installed, "examples-board.jpg")), fs.readFileSync(path.join(source, "examples-board.jpg")));
 }));

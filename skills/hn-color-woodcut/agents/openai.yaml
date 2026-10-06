@@ -1,0 +1,4 @@
+interface:
+  display_name: "套色木刻 · 山河入版"
+  short_description: "先查看必备例图，再创作多彩套色木刻风格的风景、地标、庭院与节庆画作"
+  default_prompt: "使用 $hn-color-woodcut，先查看附带例图，再为我创作一组套色木刻风格画作，主题和配色各有变化。"

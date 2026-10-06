@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add `hn-color-woodcut`: multicolor woodcut generation with eight mandatory visual examples, an overview, palette recipes and provenance. Include it in the bundled installer and verify reference images survive installation.
+
 ## 1.0.0 - 2026-07-13
 
 ### Breaking Changes

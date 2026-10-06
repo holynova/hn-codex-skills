@@ -1,0 +1,90 @@
+[
+  {
+    "file": "examples/mountain.webp",
+    "title": "云岭山院",
+    "observe": "青绿、深松绿、纸白云海；观察前景剪影和远近山体的层次。",
+    "width": 960,
+    "height": 1200,
+    "sha256": "c6a00cdb25ffc385547e36222c40a550349b587c9b00fade654e783ca5204a91",
+    "source": "https://github.com/holynova/shanhe-gallery/blob/main/incoming/01.png",
+    "sourceSha256": "25366c6838938759a5ff7f76a754635447f8ac1eb41ab88ff23fb8d221cabc04",
+    "prompt": "Use case: stylized-concept. Create ONE original portrait landscape fine-art print, aspect ratio 4:5, matching the attached reference's Chinese mid-century multicolor woodcut aesthetic. Reference image is STYLE REFERENCE ONLY, not an edit target. Hand-carved angular edges, bold flat interlocking color blocks, coarse ink grain and subtle registration irregularities on ivory paper, no smooth gradients, no photographic realism. Restricted palette: pale mint, muted turquoise, forest teal, near-black deep green, vivid but muted yellow-green, small pale ochre accents, extensive unprinted paper-white cloud and water shapes. Strong foreground silhouettes, layered distant mountains, elegant asymmetrical depth. Landscape occupies a rectangular print area with narrow clean ivory paper margins. No text, no captions, no signatures, no watermarks. Scene: A remote mountain courtyard on a sunlit green ridge, tiny winding footpath, towering layered turquoise mountains and sweeping white cloud banks. A distinct original arrangement."
+  },
+  {
+    "file": "examples/city.webp",
+    "title": "上海 · 武康大楼",
+    "observe": "赭红砖墙、金黄梧桐、蓝灰街面；观察建筑轮廓与简化窗格。",
+    "width": 960,
+    "height": 1200,
+    "sha256": "9bde3af8101d2ab1c9aa0845525ce1694aab62e4bf3f0b84ca677c42d06002b8",
+    "source": "https://github.com/holynova/shanhe-gallery/blob/main/incoming/travel-132.png",
+    "sourceSha256": "19bd702e575ff31db174d443a4a13888fbabda65e42b778f33d54379f89ff2b4",
+    "prompt": "Create ONE original vertical 4:5 fine-art landscape COLOR WOODCUT of Wukang Mansion accurately wedge-shaped ship-like eight-story red brick French Renaissance apartment building at narrow street junction, rounded sharp prow, cream ground-floor arcade, rows of balconies, plane trees and small cyclists, low street perspective. No pagoda. Palette specifically brick red, slate blue, ivory, golden leaves. Supplied image STYLE ONLY: mid-century Chinese multiblock woodcut, boldly FLAT limited color planes, visibly rough hand-carved angular gouges and irregular edges, coarse ink grain, slight ink registration, broad ivory paper borders. Recognizable landmark and credible local geography, complete original composition. No photography, photorealistic shading, smooth gradients, text, letters, calligraphy, signs, signature, watermarks, grid or collage. All architectural plaques blank. One completed handmade print."
+  },
+  {
+    "file": "examples/daily-life.webp",
+    "title": "成都 · 人民公园鹤鸣茶社",
+    "observe": "绿荫、竹椅赭黄、纸白光斑；观察小人物和生活动作如何融入大色块。",
+    "width": 960,
+    "height": 1200,
+    "sha256": "c06c2f1f91e2522753c5638d5345acad587aa513e085186952b9f75c5f4ef1c0",
+    "source": "https://github.com/holynova/shanhe-gallery/blob/main/incoming/travel-142.png",
+    "sourceSha256": "3a81a63b261d59425b87563f002cd1642ce0ebd760abcbe6dc8e1bfca9822d17",
+    "prompt": "Create ONE original vertical 4:5 fine-art landscape COLOR WOODCUT of Heming Teahouse Chengdu People's Park: many bamboo armchairs and square tables under huge old trees beside low traditional tiled teahouse veranda, small groups chat over porcelain gaiwan, server uses long-spout brass kettle. Green park pond glimpsed, main scene open-air tea culture. No signs. Palette specifically leaf green, amber bamboo, indigo shade, ivory. Supplied image STYLE ONLY: mid-century Chinese multiblock woodcut, boldly FLAT limited color planes, visibly rough hand-carved angular gouges and irregular edges, coarse ink grain, slight ink registration, broad ivory paper borders. Recognizable landmark and credible local geography, complete original composition. No photography, photorealistic shading, smooth gradients, text, letters, calligraphy, signs, signature, watermarks, grid or collage. All architectural plaques blank. One completed handmade print."
+  },
+  {
+    "file": "examples/garden.webp",
+    "title": "京都 · 金阁寺倒影",
+    "observe": "红枫、金阁、青蓝倒影；观察斜向树枝框景和静水留白。",
+    "width": 960,
+    "height": 1200,
+    "sha256": "e50002ecebaadc8ea0e2cbbcb967281863aa5e7774d932b2513608f9283bdadf",
+    "source": "https://github.com/holynova/shanhe-gallery/blob/main/incoming/travel-147.png",
+    "sourceSha256": "d5d229d11fbc1666569f567b669b3c1c2c51435ab885821a042ac55d971f2551",
+    "prompt": "Create ONE original vertical 4:5 fine-art landscape COLOR WOODCUT of Kyoto Kinkakuji precisely three-story golden pavilion, upper two levels gold and lower pale timber, distinctive gold phoenix finial on hipped dark roof, beside mirror pond with rocks and pine islands. Full pavilion reflection foreground, autumn foliage. Not five-tier pagoda. Palette specifically gold ochre, emerald, deep blue pond, ivory. Supplied image STYLE ONLY: mid-century Chinese multiblock woodcut, boldly FLAT limited color planes, visibly rough hand-carved angular gouges and irregular edges, coarse ink grain, slight ink registration, broad ivory paper borders. Recognizable landmark and credible local geography, complete original composition. No photography, photorealistic shading, smooth gradients, text, letters, calligraphy, signs, signature, watermarks, grid or collage. All architectural plaques blank. One completed handmade print."
+  },
+  {
+    "file": "examples/courtyard.webp",
+    "title": "塞维利亚 · 皇家城堡 · 庭院",
+    "observe": "赭金石墙、青绿水池、深绿棕榈；观察建筑透视与重复拱廊。",
+    "width": 960,
+    "height": 1200,
+    "sha256": "1b3c77aef060653489e839d0739364db75acc88df1ecaa6129277da9e217f719",
+    "source": "https://github.com/holynova/shanhe-gallery/blob/main/incoming/travel-167.png",
+    "sourceSha256": "3a1c0da48fa445aa5913d9057be52774d4681f6d16fe50d93d19e922d2c06033",
+    "prompt": "Use case: stylized-concept. Create ONE independent portrait 4:5 original fine-art city landscape. Reference image is STYLE REFERENCE ONLY: mid-20th-century Chinese hand-carved multicolor woodcut applied to this new subject, broad flat opaque ink color blocks, bold irregular jagged knife and gouge marks, rough granular ink, imperfect printing edges, warm ivory paper fibers. Detailed crafted print, NOT photograph, watercolor, smooth vector or digital gradient. Broad unprinted ivory paper margins on all sides. Tiny people only when useful for scale. Absolutely no letters, numbers, inscriptions, signs, captions, signature, watermark, logo, frame or collage. Scene: Seville Royal Alcazar courtyard inspired by Patio de las Doncellas: long rectangular reflective pool centered between sunken gardens and symmetrical delicate Moorish horseshoe and scalloped arches, slender paired columns and richly carved geometric plaster, palms visible above. No calligraphy or lettering in ornament. Color palette limited to sandstone ochre, turquoise pool, dark olive green, muted coral and ivory."
+  },
+  {
+    "file": "examples/festival.webp",
+    "title": "春节 · 蒸年糕",
+    "observe": "暖红、米白、深色木构；观察蒸汽、节庆与室内生活的版画化。",
+    "width": 960,
+    "height": 1200,
+    "sha256": "77a0af3fc6370802ed959e7eb0391fa3dbdbffee22dc1ed790b509e2acb52493",
+    "source": "https://github.com/holynova/shanhe-gallery/blob/main/incoming/81.png",
+    "sourceSha256": "b9ebc326f04a7c6156f17826870cf04839433731e930a958f8acf2c1a842c5f1",
+    "prompt": "Create ONE original vertical 4:5 complete fine-art scene of Chinese Spring Festival preparations, villagers steaming rice cakes. STYLE ONLY from supplied reference: mid-century Chinese multi-block color woodcut, boldly flat limited ink planes, rough hand-carved gouges and broken edges, coarse ink grain, subtle registration, broad ivory paper margins. Medium-wide view inside rustic village kitchen: two or three people, naturally small enough to see whole kitchen and open doorway, perform clear cooking actions. One person lifts round bamboo steamer lid from clay wood-fired stove revealing rice cakes and a strong pale plume of steam; another kneads white dough on wooden table, third arranges finished cake pieces in a basket. Kitchen has timber beams, woven utensils, stacks of bamboo steamers, orange stove glow. Through open door at right see cold pale courtyard and two hanging scarlet paper lanterns, winter village roof. No close-up faces or portraits. Limited warm ochre, ivory steam/dough, deep slate teal shadow, small vermilion lantern accents, charcoal cuts; festive warm but not all red. Graphic hand-carved planes, no photographic shading. No writing, readable letters, slogans, signage, signature, watermark, grid or collage."
+  },
+  {
+    "file": "examples/snow-mountain.webp",
+    "title": "瑞士 · 少女峰",
+    "observe": "雪白、冷蓝与山间深色；观察雪面如何由纸白与切割色块构成。",
+    "width": 960,
+    "height": 1200,
+    "sha256": "39a168b225bea07fd4593d5b2fc7e83ad0358fdae59fe3a21bba8c3a4a37281f",
+    "source": "https://github.com/holynova/shanhe-gallery/blob/main/incoming/overseas-103.png",
+    "sourceSha256": "ad7e379432b53b7bffd42066561cd848ac4d4731ea31de45e5f51da071246834",
+    "prompt": "Create ONE original vertical 4:5 finished alpine landscape color WOODCUT of Jungfrau, Switzerland, with a tiny mountain train. Supplied image STYLE ONLY: mid-century Chinese multiblock print, genuinely flat irregular color planes, bold hand-carved gouges, coarse ink grain and slight registration, generous ivory paper margins. Distinctive Jungfrau snow massif rises broad and majestic behind green alpine slope, glacier tongue and sculpted crevasses below the snowy summit, adjoining rocky peaks create dramatic wall. Foreground diagonal hillside narrow-gauge railway with a short vivid RED cogwheel passenger train rounding a curve from bottom left toward middle right, tiny in mountain scale, one small brown alpine hut and dark spruce clumps. No city or Chinese buildings, no enormous locomotive. Soft crisp morning cloud cuts. Limited cobalt blue and violet slate rock/shadows, ivory white snow/glacier, olive lime meadow, vermilion train accent, pale warm peach sky. Clearly handcarved flat blocks, not photographic, no gradient realism. No text, train letters, signage, numbers, signature, watermark, collage or grid. Single complete woodcut print."
+  },
+  {
+    "file": "examples/ocean.webp",
+    "title": "海洋 · 浪峰",
+    "observe": "深蓝、青蓝、纸白浪花；观察海浪刀痕与大片留白的动势。",
+    "width": 960,
+    "height": 1200,
+    "sha256": "b49714ae0591d664bf6d944f3718ba883e08e45516ef05844922c23a72b650eb",
+    "source": "https://github.com/holynova/shanhe-gallery/blob/main/incoming/supplement-126.png",
+    "sourceSha256": "9e372b53ad5a4b7655ed5f72463b8ad0fe95efca66a74c2bd597d994cf730c82",
+    "prompt": "Use case: stylized-concept. Create ONE original portrait 4:5 ocean fine-art print. Reference image is STYLE ONLY: mid-century Chinese multicolor hand-carved woodcut with broad flat interlocking ink blocks, expressive angular gouge marks, coarse ink grain and subtly imperfect registration on warm ivory paper. Generous clean unprinted border. Scene: A great curling ocean wave seen obliquely, towering cobalt and turquoise water arc with crisp paper-white carved foam tips and streaks, smaller waves toward far horizon, energetic asymmetrical depth, entirely ocean with no Mount Fuji, boats or buildings. Cobalt, turquoise, midnight blue and ivory. Original unified environmental composition. No gradients, photography, glossy illustration, text, signature or watermark. Sea water and foam must be rendered through flat ink shapes and carved marks, no photorealism."
+  }
+]
