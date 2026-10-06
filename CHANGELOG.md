@@ -6,6 +6,7 @@
 
 - Add `hn-ink-dance-sketch` with six required visual examples, sparse ink style guidance, and dance/costume diversity controls.
 - Bundle the visual references in single-skill and full installer paths, with byte-for-byte installation verification.
+- Add `hn-color-woodcut`: multicolor woodcut generation with eight mandatory visual examples, an overview, palette recipes and provenance. Include it in the bundled installer and verify reference images survive installation.
 
 ## 1.0.0 - 2026-07-13
 
