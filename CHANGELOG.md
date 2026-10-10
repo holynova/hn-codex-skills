@@ -2,8 +2,7 @@
 
 ## Unreleased
 
-### Features
-
+- Add `hn-hok-skin-prompt` with three mandatory in-game reference screenshots (狄仁杰·阴阳师, 曹操·经典, 阿轲·罗刹妄海), hero-anime matching matrix, master prompt formula, verified installation, and Xiaohongshu publishing format.
 - Add hn-flowing-pen-art with five mandatory visual references, contour-hatching guidance, varied composition prompts, and verified image-preserving installation.
 
 - Add `hn-ink-dance-sketch` with six required visual examples, sparse ink style guidance, and dance/costume diversity controls.

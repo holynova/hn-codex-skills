@@ -8,7 +8,7 @@
 
 ## 📦 现收录技能目录 (Curated Bundled Skills)
 
-经过架构重构与职责收敛，本仓库精选并维护 **20 个核心高频技能**（其余重叠/历史流程已安全隔离至 `backup/` 文件夹中）：
+经过架构重构与职责收敛，本仓库精选并维护 **21 个核心高频技能**（其余重叠/历史流程已安全隔离至 `backup/` 文件夹中）：
 
 ### 🚀 发布与交付 (Publishing & Releasing)
 - **`hn-project-publisher`**：**Web 项目首次发布与发布检查**。新项目走完整首次发布；已发布项目先检查现状，仅补缺失、失效或本次变更影响的环节，无缺口和待发布变更时无需重新发布。涵盖 npm/Git 与版本管理、页面 Repo 链接和 Umami 埋点、简洁中英文 README（各 ≤500 字，含真实截图与 Cloudflare Demo 二维码）、推送 GitHub、Cloudflare Workers Static Assets 独立域名部署（`<project-slug>.xiaosang.cc`），以及收录并单独发布 [xiaosang.cc 作品集](https://xiaosang.cc/)。每个仓库只使用一个主分支，本地手动部署 Cloudflare，不创建专用发布分支或 GitHub Action；默认保留旧 GitHub Pages 作回退，完整发布沿用 GitHub 个人主页同步。
@@ -22,17 +22,15 @@
 - **`hn-visual-asset-pipeline`**：**产品视觉资产流水线**。规范化生成并批量整理 Favicon、多尺寸 App 图标、README 题图、透明底 PNG 与商店宣传图。
 
 ### ✍️ 内容创作与艺术表达 (Creative & Content)
+- **[`hn-hok-skin-prompt`](skills/hn-hok-skin-prompt/SKILL.md)**：**王者荣耀经典动漫联动皮肤提示词生成**。输入任意动漫角色或王者英雄，自动完成人设深度融合并生成对齐官方 16:9 纯净展台、40% 偏左构图、大面积天空留白与全套真机 UI 的高级感生图提示词。内置 3 张用户原始真机截图（狄仁杰·阴阳师、曹操·经典、阿轲·罗刹妄海），配套输出小红书极简发布文案。
 - **[`hn-ink-dance-sketch`](skills/hn-ink-dance-sketch/SKILL.md)**：**墨线舞蹈速写**。疏放书写性墨线、暖纸留白、少量浓墨锚点；内置 [6 张必读例图](skills/hn-ink-dance-sketch/references/examples.md)，并通过舞种、服装轮廓、重心与视角变化避免系列雷同。
 - **`hn-xiaohei-draw`**：**“宇航员小黑”IP 正文配图系统**。生成具有 Ian 风格白底手绘线稿、红橙蓝局部重点标注、可爱宇航员小黑角色的中文技术与方法论配图。
 - **`hn-poem`**：**现代汉语短诗生成体系**。采用“低相关并置”理论，一次创作四首分别采用错搭替换、强制等同、重新解释与能力越权的陌生化短诗。
 - **`rubber-stamp-art`**：**橡皮图章与木刻版画创作**。根据文字、诗词、地标或用户图片生成宣纸质感、矿物印泥配色与手工刻痕风格的印章艺术提示词。
 - **[`hn-paper-gouache`](skills/hn-paper-gouache/SKILL.md)**：**纸纹平涂水粉插画**。抽象明亮色块、不透明水粉、纸纹和手绘边缘，用于城市、地标与自然场景；内置 [6 张完整必读例图](skills/hn-paper-gouache/references/visual-examples.md)，先看图再生成，支持配色、季节与构图多样性。安装器拒绝缺例图的文字版包。
-
 - **`hn-color-woodcut`**：**套色木刻 · 山河入版**。附带必须查看的8张风格例图与总览，提炼平涂套色、手刻刀痕、纸白留空与景深构图，支持山河、城市、庭院、生活、节庆和海浪等题材。
 - **[`twilight-anime-art`](skills/twilight-anime-art/SKILL.md)**：**暮色动画插画**。将粉紫暮色、琥珀暖光、蓝紫阴影与细腻手绘质感应用到不同场景、建筑、人物和物件，保持氛围统一与构图多样性。随附 [五张必读例图](skills/twilight-anime-art/references/examples.md)，使用时先看图校准，支持单图与系列作图。
-
 - **[`hn-flowing-pen-art`](skills/hn-flowing-pen-art/SKILL.md)**：**流线钢笔画创作**。将任意主题转成暖旧纸、深蓝墨色、随形排线与流动线场的诗性插画；内置[五张必需例图与分析](skills/hn-flowing-pen-art/references/examples.md)，生成前必须查看至少两张，并将至少一张作为风格参考输入。支持人物、动物、建筑、风景、静物和构图多变的系列。
-
 - **[`hn-translucent-toy`](skills/hn-translucent-toy/SKILL.md)**：**半透明制服与盔甲玩具生图**。提炼卡通收藏玩具人物、硬挺模压制服、厚壳半透明树脂与鲜亮撞色；内置6张必需例图，生成前必须看图校准，支持多角色、多配色系列。
 
 ### 📊 数据埋点与交互分享 (Analytics & Sharing)
@@ -48,7 +46,7 @@
 ## ⚡ 安装方式 (Installation)
 
 ### 1. 全量安装 (Install All Bundled Skills)
-直接通过 npx 将所有 20 个精选技能安装到本地 Codex（默认路径为 `~/.codex/skills`）：
+直接通过 npx 将所有 21 个精选技能安装到本地 Codex（默认路径为 `~/.codex/skills`）：
 
 ```bash
 npx github:holynova/hn-codex-skills install
@@ -95,6 +93,9 @@ npx github:holynova/hn-codex-skills install hn-ink-dance-sketch
 
 # 安装半透明制服与盔甲玩具生图技能（包含必需例图）
 npx github:holynova/hn-codex-skills install hn-translucent-toy
+
+# 安装王者荣耀经典动漫联动皮肤提示词生成技能（附三张真机校准截图）
+npx github:holynova/hn-codex-skills install hn-hok-skin-prompt
 
 # 安装橡皮图章与木刻版画创作技能
 npx github:holynova/hn-codex-skills install rubber-stamp-art

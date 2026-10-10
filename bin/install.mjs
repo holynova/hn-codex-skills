@@ -29,6 +29,7 @@ const skillNames = [
   "hn-image-loading-optimizer",
   "hn-website-completeness-check",
   "hn-ink-dance-sketch",
+  "hn-hok-skin-prompt",
 ];
 
 function usage(exitCode = 0) {

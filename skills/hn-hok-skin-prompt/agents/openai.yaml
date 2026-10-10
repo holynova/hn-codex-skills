@@ -1,0 +1,4 @@
+interface:
+  display_name: "王者荣耀经典动漫联动皮肤"
+  short_description: "生成官方16:9纯净展台、留白与UI对齐的王者联动皮肤提示词，附三张原始真机校准图"
+  default_prompt: "使用 -hok-skin-prompt，先查看内置真机例图校准比例与UI，再为我生成该角色的完整做图提示词。"

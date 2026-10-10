@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "required": true,
+  "provenance": "三张均为用户原始真机游戏截图，展示真实王者荣耀英雄展示界面的人物比例、构图留白、同心圆地台与全套UI参数。",
+  "examples": [
+    {
+      "id": "direnjie-yinyangshi",
+      "title": "狄仁杰·阴阳师",
+      "path": "assets/examples/direnjie-yinyangshi.jpg",
+      "width": 1024,
+      "height": 471,
+      "sha256": "e2d310127d0481c4274e7d983a7d7fbb7f6b78f684e48caf880db03b78beb330",
+      "lesson": "勇者品质真机截图。展示40%偏左站姿、同心圆地台、大面积深蓝星夜山峦留白、顶部资产栏与右侧信息排版。",
+      "origin": "Original Honor of Kings mobile game screenshots provided by user"
+    },
+    {
+      "id": "caocao-classic",
+      "title": "曹操·经典",
+      "path": "assets/examples/caocao-classic.jpg",
+      "width": 1024,
+      "height": 471,
+      "sha256": "0cb87236f2cc5a8c041333a886325dbae5a3928f5f21fd3499bc0353ad6d5f97",
+      "lesson": "经典原皮真机截图。展示重型兵刃斜立姿态、古都秋色城郭深远景深、开阔天空留白与“已穿戴”金属地台按钮。",
+      "origin": "Original Honor of Kings mobile game screenshots provided by user"
+    },
+    {
+      "id": "ake-luoshawanghai",
+      "title": "阿轲·罗刹妄海",
+      "path": "assets/examples/ake-luoshawanghai.jpg",
+      "width": 1024,
+      "height": 471,
+      "sha256": "69c65990f9806de1a0c015a38b13adb1f2d3a7a72d4c90da98c346fe61a0f72d",
+      "lesson": "传说限定真机截图。展示高阶动态服饰与双刺、全套传说UI覆盖、“1688点券 购买并穿戴”价格按钮与暗黑红金留白氛围。",
+      "origin": "Original Honor of Kings mobile game screenshots provided by user"
+    }
+  ]
+}

@@ -53,10 +53,26 @@ test("installs every bundled skill into an isolated directory", () => withTempDi
   assert.equal(result.status, 0, result.stderr);
   const installed = fs.readdirSync(target, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."));
-  assert.equal(installed.length, 20);
+  assert.equal(installed.length, 21);
   for (const entry of installed) {
     assert.ok(fs.existsSync(path.join(target, entry.name, "SKILL.md")));
     assert.ok(fs.existsSync(path.join(target, entry.name, "agents", "openai.yaml")));
+  }
+}));
+
+test("installs hok skin prompt with all three mandatory reference screenshots intact", () => withTempDir((temp) => {
+  const target = path.join(temp, "skills");
+  const result = runInstaller(["install", "hn-hok-skin-prompt", "--path", target]);
+  assert.equal(result.status, 0, result.stderr);
+  const source = path.join(repoRoot, "skills", "hn-hok-skin-prompt");
+  const installed = path.join(target, "hn-hok-skin-prompt");
+  const manifest = JSON.parse(fs.readFileSync(path.join(installed, "assets/examples/manifest.json"), "utf8"));
+  assert.equal(manifest.required, true);
+  assert.equal(manifest.examples.length, 3);
+  for (const example of manifest.examples) {
+    const actual = fs.readFileSync(path.join(installed, example.path));
+    assert.deepEqual(actual, fs.readFileSync(path.join(source, example.path)));
+    assert.equal(actual.readUInt16BE(0), 0xffd8);
   }
 }));
 
