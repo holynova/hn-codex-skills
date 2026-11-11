@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN NotebookLM PPT 流水线"
+  short_description: "通过 nlm CLI 从文本/音视频生成高保真 PPT 幻灯片，并完成矢量校对与超清 Web/PDF 交付"
+  default_prompt: "使用 $hn-notebooklm-ppt 设计或排查从素材预处理、NotebookLM CLI 批量生图到高清晰 WebP/PDF 交付的完整幻灯片流水线。"

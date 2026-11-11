@@ -30,6 +30,7 @@ const skillNames = [
   "hn-website-completeness-check",
   "hn-ink-dance-sketch",
   "hn-hok-skin-prompt",
+  "hn-notebooklm-ppt",
 ];
 
 function usage(exitCode = 0) {
