@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN macOS 磁盘清理"
+  short_description: "用 Mole 分析磁盘占用，清理可重建产物、旧会话和闲置项目"
+  default_prompt: "使用 $hn-clean 分析这台 Mac 的磁盘占用，列出按收益排序的清理建议。"

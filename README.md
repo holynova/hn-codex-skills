@@ -8,7 +8,7 @@
 
 ## 📦 现收录技能目录 (Curated Bundled Skills)
 
-经过架构重构与职责收敛，本仓库精选并维护 **22 个核心高频技能**（其余重叠/历史流程已安全隔离至 `backup/` 文件夹中）：
+经过架构重构与职责收敛，本仓库精选并维护 **23 个核心高频技能**（其余重叠/历史流程已安全隔离至 `backup/` 文件夹中）：
 
 ### 🚀 发布与交付 (Publishing & Releasing)
 - **`hn-project-publisher`**：**Web 项目首次发布与发布检查**。新项目走完整首次发布；已发布项目先检查现状，仅补缺失、失效或本次变更影响的环节，无缺口和待发布变更时无需重新发布。涵盖 npm/Git 与版本管理、页面 Repo 链接和 Umami 埋点、简洁中英文 README（各 ≤500 字，含真实截图与 Cloudflare Demo 二维码）、推送 GitHub、Cloudflare Workers Static Assets 独立域名部署（`<project-slug>.xiaosang.cc`），以及收录并单独发布 [xiaosang.cc 作品集](https://xiaosang.cc/)。每个仓库只使用一个主分支，本地手动部署 Cloudflare，不创建专用发布分支或 GitHub Action；默认保留旧 GitHub Pages 作回退，完整发布沿用 GitHub 个人主页同步。
@@ -39,6 +39,7 @@
 - **`hn-share-card`**：**精美结果分享卡片**。为 Web 工具生成带有二维码与关键成果的 Canvas 分享图片，支持一键下载 PNG 与系统原生分享回退。
 
 ### 🛠️ 系统诊断与日常自动化 (Diagnostics & Automation)
+- **[`hn-clean`](skills/hn-clean/SKILL.md)**：**macOS 磁盘分析与清理**。用 Mole 预览并核实占用，按授权清理可重建产物和缓存，处理旧会话与闲置项目，并记录空间变化和恢复位置。
 - **`hn-windows-stability-doctor`**：**Windows 稳定性与崩溃诊断**。快速诊断蓝屏（BSOD）、异常死机、WHEA 硬件报错、驱动崩溃与内存/磁盘健康。
 - **`hospital-record-collector`**：**医疗票据与病历自动化采集**。配合微信岳阳医院服务，按时间范围自动截取电子发票与门诊病历截图并归档。
 
@@ -47,7 +48,7 @@
 ## ⚡ 安装方式 (Installation)
 
 ### 1. 全量安装 (Install All Bundled Skills)
-直接通过 npx 将所有 22 个精选技能安装到本地 Codex（默认路径为 `~/.codex/skills`）：
+直接通过 npx 将所有 23 个精选技能安装到本地 Codex（默认路径为 `~/.codex/skills`）：
 
 ```bash
 npx github:holynova/hn-codex-skills install
@@ -124,6 +125,9 @@ npx github:holynova/hn-codex-skills install hn-share-card
 # 安装 Windows 稳定性诊断技能
 npx github:holynova/hn-codex-skills install hn-windows-stability-doctor
 
+# 安装 macOS 磁盘分析与清理技能
+npx github:holynova/hn-codex-skills install hn-clean
+
 # 安装岳阳医院票据采集技能
 npx github:holynova/hn-codex-skills install hospital-record-collector
 ```
@@ -141,7 +145,7 @@ npx github:holynova/hn-codex-skills install --path /custom/skills/dir
 hn-codex-skills/
 ├── bin/
 │   └── install.mjs        # npx 自动化安装器 CLI
-├── skills/                # 22 个当前正式发布的活跃技能
+├── skills/                # 23 个当前正式发布的活跃技能
 │   ├── hn-chrome-extension-publisher/
 │   ├── hn-project-publisher/
 │   ├── hn-ui-layout-typography-audit/

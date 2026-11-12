@@ -10,6 +10,7 @@ const repoRoot = path.resolve(__dirname, "..");
 const sourceSkillsDir = path.join(repoRoot, "skills");
 const skillNames = [
   "hn-windows-stability-doctor",
+  "hn-clean",
   "hn-tool-ui-polisher",
   "hn-visual-asset-pipeline",
   "hn-xiaohei-draw",
