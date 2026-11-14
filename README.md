@@ -8,7 +8,7 @@
 
 ## 📦 现收录技能目录 (Curated Bundled Skills)
 
-经过架构重构与职责收敛，本仓库精选并维护 **23 个核心高频技能**（其余重叠/历史流程已安全隔离至 `backup/` 文件夹中）：
+经过架构重构与职责收敛，本仓库精选并维护 **24 个核心高频技能**（其余重叠/历史流程已安全隔离至 `backup/` 文件夹中）：
 
 ### 🚀 发布与交付 (Publishing & Releasing)
 - **`hn-project-publisher`**：**Web 项目首次发布与发布检查**。新项目走完整首次发布；已发布项目先检查现状，仅补缺失、失效或本次变更影响的环节，无缺口和待发布变更时无需重新发布。涵盖 npm/Git 与版本管理、页面 Repo 链接和 Umami 埋点、简洁中英文 README（各 ≤500 字，含真实截图与 Cloudflare Demo 二维码）、推送 GitHub、Cloudflare Workers Static Assets 独立域名部署（`<project-slug>.xiaosang.cc`），以及收录并单独发布 [xiaosang.cc 作品集](https://xiaosang.cc/)。每个仓库只使用一个主分支，本地手动部署 Cloudflare，不创建专用发布分支或 GitHub Action；默认保留旧 GitHub Pages 作回退，完整发布沿用 GitHub 个人主页同步。
@@ -16,6 +16,7 @@
 
 ### 🎨 界面打磨与视觉资产 (UI & Visual Assets)
 - **`hn-ui-layout-typography-audit`**：**UI 布局与排版审计**。基于对比、重复、对齐、亲密性四大设计原则，走查字号阶梯、4px/8px 间距网格、色彩对比度与无障碍规范。
+- **`hn-github-ux-audit`**：**GitHub 项目体验设计批量审计**。按十条产品标准（小白主链路、文案本地化、数字校验、弹窗克制、单强调色暖灰、最多 4 种字号、字体符号、扁平规范、响应式、三方案机制）逐站核对并修复；只审作品集内项目，修复走审计分支加未合并 PR，等用户按编号批量合并；交付逐站记录、汇总报告与前后对比图。
 - **`hn-website-completeness-check`**：**网站查缺补漏**。检查 favicon、可见项目 GitHub 链接、README/仓库介绍、分享卡片、icon/logo，并按需检查元数据、移动端、交互状态、图片性能和发布收录。区分检查与修复，已有项目只补缺口。
 - **`hn-image-loading-optimizer`**：**图片密集网站加载优化**。从 rubber-stamp 提炼三层图片资产、解码后无感切换、过期响应隔离、首屏优先级、懒加载与分批渲染、导出按需加载，并附源码证据、验证方法与可复用控制器。
 - **`hn-tool-ui-polisher`**：**工具界面可用性打磨**。针对紧凑型小应用/独立工具，审查表单控件对齐、按钮分组、交互状态流转（Loading/Error/Success）与移动端自适应。
@@ -48,7 +49,7 @@
 ## ⚡ 安装方式 (Installation)
 
 ### 1. 全量安装 (Install All Bundled Skills)
-直接通过 npx 将所有 23 个精选技能安装到本地 Codex（默认路径为 `~/.codex/skills`）：
+直接通过 npx 将所有 24 个精选技能安装到本地 Codex（默认路径为 `~/.codex/skills`）：
 
 ```bash
 npx github:holynova/hn-codex-skills install
