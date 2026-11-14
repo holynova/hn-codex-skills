@@ -17,6 +17,7 @@ const skillNames = [
   "hn-project-publisher",
   "hn-chrome-extension-publisher",
   "hn-ui-layout-typography-audit",
+  "hn-github-ux-audit",
   "hospital-record-collector",
   "hn-poem",
   "hn-web-analytics",

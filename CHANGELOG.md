@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add `hn-github-ux-audit`: batch UX audit of GitHub projects against ten product standards (novice main-flow walkthrough, localized copy, verified numbers, restrained confirmations, single accent color with warm grays, max four font sizes, typography and symbols, flat design system, responsive longest-copy layout, three-option mechanism). Portfolio-only scope, fixes on audit branches with unmerged PRs for batch merge by number, per-project records, summary report, and before/after comparison pages.
 - Add `hn-clean` for macOS disk audits with Mole, authorized cleanup, and recoverable session and project removal.
 - Add `hn-notebooklm-ppt`: end-to-end NotebookLM (`nlm`) CLI slide deck production and sharp Web/PDF delivery workflow covering multi-modal ingestion (long texts, Markdown, web/YouTube URLs, local video/audio transcripts), <=50-source notebook sharding, non-retrying CLI submission with `NOTEBOOKLM_RATE_LIMIT_MAX_RETRIES=0`, multi-profile isolation, `status=4` vs 429 backoff separation, non-destructive vector PDF overlays, lossless stream extraction with 2x Poppler overlay supersampling + `cwebp -q 90 -sharp_yuv`, and proportional fullscreen WebP viewing.
 - Add `hn-hok-skin-prompt` with three mandatory in-game reference screenshots (狄仁杰·阴阳师, 曹操·经典, 阿轲·罗刹妄海), hero-anime matching matrix, master prompt formula, verified installation, and Xiaohongshu publishing format.

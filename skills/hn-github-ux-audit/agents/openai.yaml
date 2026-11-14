@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN GitHub 体验审计"
+  short_description: "按十条产品标准批量审核 GitHub 项目体验设计，修复走审计分支加未合并 PR"
+  default_prompt: "使用 $hn-github-ux-audit 审核我 GitHub 上最近的 N 个项目，按十条标准逐项核对并修复，修复走分支加未合并 PR。"
