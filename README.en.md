@@ -14,6 +14,9 @@
 
 A curated Codex skills collection: high-frequency workflows for shipping, UI polish, creative work and system diagnostics, captured as skills so you never re-explain complex rules to an AI. 24 skills, one `npx` command to install into any Codex setup.
 
+
+The publishing skill fills missing Chinese or English documentation and reuses complete bilingual READMEs.
+
 ## Showcase
 
 <p align="center">

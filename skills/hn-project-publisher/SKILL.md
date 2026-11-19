@@ -58,15 +58,16 @@ description: 发布个人 Web 项目到 Cloudflare Workers 并收录到 xiaosang
   npx qrcode -o assets/qr.png "https://<project-slug>.xiaosang.cc/"
   ```
 
-- 按 [references/readme-template.md](references/readme-template.md) 编写简洁中英文说明（中文 ≤500 汉字，英文 ≤500 单词），包含真实截图、Repo、Cloudflare Demo、二维码、本地运行及发布命令。未验证的地址先标为待验证。
+- 先读取 [references/readme-workflow.md](references/readme-workflow.md)：保留已有有效 README，补齐缺失语言与过时信息；无 README 时默认创建英文 `README.md` 与中文 `README.zh-CN.md`。优先使用 `beautify-github-readme`，缺失时按固定来源自动安装，失败则使用 [内置模板](references/readme-template.md)。已有双语内容合格时直接复用，不为美化制造改动。
+- 两种语言均包含真实截图、Repo、Cloudflare Demo、二维码、本地运行及发布命令，未验证地址先标为待验证。新写简介保持中文 ≤500 汉字、英文 ≤500 单词；不因字数限制删减已有技术文档。
 - 从技能目录运行校验器，参数路径指向项目；不要假设项目已复制技能脚本：
 
   ```bash
-  node <skill-dir>/scripts/validate_release_readme.mjs <project-dir>/README.md <repo-url> <cloudflare-url> 500 500
+  node <skill-dir>/scripts/validate_release_readme.mjs <project-dir>/README.md <repo-url> <cloudflare-url> 500 500 --companion <project-dir>/README.zh-CN.md --screenshot <project-dir>/assets/screenshot.png --preserve-length
   node <skill-dir>/scripts/validate_release_version.mjs <project-dir>/package.json <deployable-file-or-dir> <previous-version>
   ```
 
-  README 校验仅检查链接文本、图片文件存在与字数；二维码实际内容、截图有效性和线上状态仍需验证。没有历史版本时省略版本校验的最后一项。
+  README 校验命令按实际文件名调整；单文件双语省略 `--companion`。`--preserve-length` 只报告字数，不以全文长度阻止已有文档发布；简介长度另行审阅。校验检查双语基本信号、互链、链接文本和图片文件，不证明翻译准确；二维码实际内容、截图有效性和线上状态仍需验证。没有历史版本时省略版本校验的最后一项。
 
 ### 4. 发布并验证项目
 

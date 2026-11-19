@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 1.1.0 - 2026-11-19
+
+- Add bilingual README preparation and validation to `hn-project-publisher`.
 
 - Add `hn-ui-check`: batch UX audit of GitHub projects against ten product standards (novice main-flow walkthrough, localized copy, verified numbers, restrained confirmations, single accent color with warm grays, max four font sizes, typography and symbols, flat design system, responsive longest-copy layout, three-option mechanism). Portfolio-only scope, fixes on audit branches with unmerged PRs for batch merge by number, per-project records, summary report, and before/after comparison pages.
 - Add `hn-clean` for macOS disk audits with Mole, authorized cleanup, and recoverable session and project removal.

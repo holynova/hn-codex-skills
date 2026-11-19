@@ -1,6 +1,6 @@
 {
   "name": "hn-codex-skills",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Installer package for HN personal Codex skills.",
   "homepage": "https://github.com/holynova/hn-codex-skills",
   "type": "module",
