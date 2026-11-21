@@ -1,17 +1,17 @@
 ---
 name: hn-project-publisher
-description: 发布个人 Web 项目到 Cloudflare Workers 并收录到 xiaosang.cc 作品集。新项目走首次发布流程；已发布项目先检查现状，只补缺失或失效环节，按需更新部署。适用于首次上线、发布检查、更新与 GitHub Pages 迁移。
+description: 通过 GitHub 推送独立发布个人 Web 项目到 Cloudflare 并收录到 xiaosang.cc 作品集。新项目走首次发布流程；已发布项目先检查现状，只补缺失或失效环节，按需更新部署。适用于首次上线、发布检查、更新与 GitHub Pages 迁移。
 ---
 
 # HN Project Publisher
 
 ## 发布目标与范围
 
-默认采用 **Cloudflare Workers Static Assets + Custom Domain**：GitHub 保存源码，项目运行在 `https://<project-slug>.xiaosang.cc/`，作品集入口为 `https://xiaosang.cc/`。不默认创建 Cloudflare Pages 或启用 GitHub Pages。已有 Pages 保留作回退；用户明确要求时才维护双平台发布，仍遵守下方单分支与手动 Cloudflare 发布规则。
+GitHub 保存源码。静态站优先选择独立的 Cloudflare Pages Git 项目；已有 Worker 使用 Workers Builds 连接该项目仓库。访客使用项目自定义域名，作品集通过卡片链接收录。生产托管使用 Cloudflare。
 
 **单一分支（强制）**：每个仓库只使用其已核实的一个主分支作为源码与发布来源。项目沿用现有 `main` 或 `master`，作品集使用 `master`；代码、README、Wrangler 配置与作品数据均在各自同一主分支维护。不得为了 Cloudflare 新建 `cloudflare`、`cloudflare-migration`、`deploy`、`gh-pages` 等发布分支，也不得另建长期维护的构建产物分支。
 
-**手动部署（强制）**：在本地从该主分支同一提交构建并执行 `wrangler deploy`。不得为 Cloudflare 发布创建 GitHub Action/workflow，也不得新增 Workers Builds/Git 集成自动部署。GitHub 推送与 Cloudflare 手动部署是独立步骤。
+**推送即发布**：每个站点绑定自己的仓库和生产分支。由 Cloudflare 构建、部署该提交并记录部署结果。日常发布机只需要 Git 写权限。独立站的构建不得读取相邻仓库、个人目录或未声明的本地文件。迁移共享站点时，先验证独立站、深链和静态资源，再移除旧挂载。
 
 完整发布包含项目上线、GitHub 仓库 Homepage 更新、作品集收录及作品集自身的 Cloudflare 发布。GitHub Profile (`holynova/holynova`) 沿用原有同步流程；用户只指定 xiaosang.cc 时只更新该作品集。仅准备材料、审阅或局部修复时不扩展成完整发布。复用当前与既有授权，不重复确认已经授权的操作；缺少某个外部动作的授权时先准备具体改动，只暂停该动作。
 
@@ -47,7 +47,7 @@ description: 发布个人 Web 项目到 Cloudflare Workers 并收录到 xiaosang
   ```
 
 - 自定义域名运行在根路径 `/`，移除旧 Pages 的 `/<repo>/` base、硬编码资源前缀及生产环境旧链接。沿用 `dist/`、`build/`、`docs/` 或静态目录，不为 Cloudflare 强制改成 `docs/`。需要双平台时分别构建对应 base。
-- 将 Worker 配置与部署命令保存到项目；检查静态上传边界，根目录部署时使用 `.assetsignore`。运行项目原有检查、生产构建与 Wrangler dry-run，并测试真实页面、资源和路由。
+- 将该站点的构建命令、输出目录与云端发布配置保存在项目中；检查静态上传边界，根目录部署时使用 `.assetsignore`。运行项目原有检查、生产构建以及适用于 Worker 的 Wrangler dry-run，并测试真实页面、资源和路由。
 
 ### 3. 截图、二维码与 README
 
@@ -72,7 +72,7 @@ description: 发布个人 Web 项目到 Cloudflare Workers 并收录到 xiaosang
 ### 4. 发布并验证项目
 
 - 只提交本次明确文件，推送到已核实的唯一主分支；复用正确远端。代码与部署配置一并在该分支维护，不使用 Cloudflare 专用分支或 Action。仅在授权包含创建公开仓库且没有目标仓库时使用 `gh repo create`。
-- 从对应提交的生产产物执行 `wrangler deploy --config <config>`，记录源码 SHA、Worker、Cloudflare deployment/version ID 与域名。Git push、dry-run 和上传成功均不能替代线上验证。
+- 跟踪该提交触发的 Cloudflare 构建和生产部署，记录 SHA、站点、部署 ID 与域名。Git push、dry-run 和上传成功均不能替代线上验证。
 - 验证自定义域名的 HTTPS、当前内容/版本、关键 JS/CSS/图片、路由刷新和核心功能；重试有上限，TLS 失败不可用 `curl -k` 算成功。
 - 项目验证后，将 GitHub Homepage 设置为该 Cloudflare 地址。若之前因域名未就绪标注为待验证，更新 README 后提交推送；生产产物含 README 时同步重建部署。
 
@@ -80,7 +80,7 @@ description: 发布个人 Web 项目到 Cloudflare Workers 并收录到 xiaosang
 
 读取 [references/portfolio-updates.md](references/portfolio-updates.md)。先验证项目，再将同一 Demo 地址与截图写入作品集；按仓库 URL/name 更新现有条目，避免重复。
 
-`holynova/holynova.github.io` 的 **`master` 是唯一作品数据来源**，当前配置的 Worker 为 **`xiaosang-portfolio`**。保留真实的 `categories[].repos[]` 结构，使用 `url` 存 GitHub Repo、`homepage` 存 Cloudflare Demo。运行作品集检查后提交推送，再从同一提交 **单独部署作品集 Worker**。
+`holynova/holynova.github.io` 的 **`master` 是唯一作品数据来源**，当前配置的 Worker 为 **`xiaosang-portfolio`**。保留真实的 `categories[].repos[]` 结构，使用 `url` 存 GitHub Repo、`homepage` 存 Cloudflare Demo。运行作品集检查后提交推送，跟踪 master 推送触发的作品集 Worker 部署。
 
 回读 `https://xiaosang.cc/data/repos.json` 与发布提交比较，打开作品卡片检查截图及 Repo/Demo 跳转。仅推送作品集仓库或等待 GitHub Pages 不算 xiaosang.cc 已更新。
 
@@ -98,4 +98,4 @@ GitHub Profile: updated + verified / outside scope / pending
 Remaining: prepared / pushed / deployed / verified / blocked items
 ```
 
-项目 Worker 与作品集 Worker 分别报告；任何必需环节受阻都保留已完成成果并明确指出，不回退改写 Demo 为未验证地址。
+项目与作品集分别报告；任何必需环节受阻都保留已完成成果并明确指出，不回退改写 Demo 为未验证地址。

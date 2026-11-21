@@ -1,6 +1,6 @@
 # GitHub Source Publishing
 
-GitHub 承载源码和仓库元数据。默认生产部署见 [cloudflare-publishing.md](cloudflare-publishing.md)，Git push 不会自动部署 Cloudflare。
+GitHub 承载源码和仓库元数据。默认生产部署见 [cloudflare-publishing.md](cloudflare-publishing.md)，生产分支的推送触发 Cloudflare 构建，完成后核实部署 SHA。
 
 已发布项目先走 [existing-project-checks.md](existing-project-checks.md)，仅对实际缺口或待发布变更使用下方操作。已满足的配置与元数据只检查、复用，不重复初始化、提交或写入。
 
@@ -14,7 +14,7 @@ git remote -v
 gh repo view OWNER/REPO --json defaultBranchRef,url
 ```
 
-复用已核实的远端与唯一主分支；项目沿用已有 `main` 或 `master`，不要将示例值覆盖到既有配置。源码、README、Wrangler 配置均提交到同一主分支，Cloudflare 从该分支同一提交手动发布。不得新建 Cloudflare 专用发布分支、构建产物分支或 GitHub Action/workflow。没有 Git/npm 元数据时才初始化，并补齐 `.gitignore`，排除依赖、凭据与临时缓存，保留必要 `.env.example`。
+复用已核实的远端与唯一主分支；项目沿用已有 `main` 或 `master`，不要将示例值覆盖到既有配置。源码、README、Wrangler 配置均提交到同一主分支，Cloudflare 直接构建该提交。没有 Git/npm 元数据时才初始化，并补齐 `.gitignore`，排除依赖、凭据与临时缓存，保留必要 `.env.example`。
 
 ## 版本
 

@@ -13,7 +13,7 @@
 ## xiaosang.cc：数据来源与条目更新
 
 1. 核实远端为 `holynova/holynova.github.io`，读取最新 `origin/master` 及工作区状态；有无关改动或分支分歧时使用该提交的干净 checkout 或 detached worktree，不 reset 用户修改，也不新建发布分支。
-2. **master 是唯一可编辑作品与部署来源**，数据、截图、Wrangler 配置均在 master 维护。历史 `cloudflare-migration` 分支作档案，不在其上单独维护内容。不得为 Cloudflare 新建其他分支或 GitHub Action/workflow。
+2. **master 是唯一可编辑作品与部署来源**，数据、截图、Wrangler 配置均在 master 维护。历史 `cloudflare-migration` 分支作档案，不在其上单独维护内容。Cloudflare 连接这个分支。
 3. 阅读当前 `data/repos.json` 和 `js/detail-app.js`。真实结构为顶层 `lastUpdated`、`totalRepos` 与 `categories[]`，每个分类包含 `repos[]`，不得改成扁平列表。
 4. 用 `url`（GitHub 仓库 URL）或 `name` 在所有分类查找条目。已有项目原地更新并保留未涉及的属性；新增项目进入已有合适分类，不擅自新增分类或把项目设为精选。
 
@@ -52,16 +52,7 @@
 
 ## 单独部署作品集
 
-从 **已推送 master 的同一提交**发布。读取该提交 `wrangler.jsonc` 并核实账户/域名绑定；当前仓库配置 Worker 为 `xiaosang-portfolio`，Custom Domain 为 `xiaosang.cc`，assets 为根目录 `.`。不要使用历史 Worker `holynova-github-io`。
-
-遵循仓库 README 的锁定 Wrangler 命令（2026-10-01 核实版本如下；以后以仓库当前约定为准）：
-
-```bash
-npx --yes wrangler@4.128.0 deploy --dry-run --config wrangler.jsonc
-npx --yes wrangler@4.128.0 deploy --config wrangler.jsonc
-```
-
-保留现有 `.assetsignore`、账户、routes 与 bindings。GitHub Actions 的数据校验或 Pages 发布不替代这一步。Cloudflare 固定从 master 同一提交在本地手动发布，不新增独立内容/发布分支、Cloudflare GitHub Action/workflow 或 Workers Builds/Git 集成。
+读取 master 当前 Wrangler 配置与构建命令，核实 xiaosang-portfolio 和 xiaosang.cc。跟踪 master 推送触发的 Workers Builds；实际切换前先检查仍在使用的旧挂载，保留这些资产直至独立入口及旧路径均验证通过。
 
 部署后：
 

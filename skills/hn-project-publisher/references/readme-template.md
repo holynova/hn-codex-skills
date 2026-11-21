@@ -36,12 +36,12 @@ npm run dev
 ## 发布 / Deploy
 
 ```bash
-npm run deploy
+git push origin HEAD
 ```
 
-Cloudflare Workers · Custom Domain: `PROJECT-SLUG.xiaosang.cc`
+Cloudflare Pages / Workers Builds · Custom Domain: `PROJECT-SLUG.xiaosang.cc`
 
-源码与部署配置使用同一个主分支；在本地手动发布，不创建 Cloudflare 专用分支或 GitHub Action。
+源码与部署配置使用同一个主分支；推送到已绑定的生产分支后由 Cloudflare 构建并部署。
 ````
 
 生成二维码与校验（从项目目录执行，skill-dir 是实际技能位置）：

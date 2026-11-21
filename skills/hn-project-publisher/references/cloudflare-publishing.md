@@ -1,10 +1,10 @@
-# Cloudflare Workers 发布
+# Cloudflare 独立发布
 
-适用于个人项目的 Workers Static Assets 发布。默认每个项目一个 Worker、一个 `*.xiaosang.cc` Custom Domain；作品集是另一个独立 Worker。这里的 Cloudflare 指 Workers，不是 Cloudflare Pages。
+静态站在 Cloudflare Pages 创建时选择 Connect to Git，绑定 GitHub 仓库、生产分支、构建命令与静态输出目录。已有 Worker 在 Settings → Builds 绑定自己的仓库，核对 Wrangler 的 name 与云端一致。安装 Cloudflare Workers & Pages GitHub App 时仅授权有关仓库。使用临时地址验证后绑定正式域名。
 
-已发布项目先按 [existing-project-checks.md](existing-project-checks.md) 检查；下方构建与部署仅在实际缺口或待发布变更需要时执行。有效 Worker、域名与配置直接复用，不因调用本技能重新部署。
+作品集只构建本仓库中的公开文件。独立子站自行负责图片、PDF、数据和运行依赖。图集等大型媒体可使用 R2；将对象写凭据限到该桶，只放在受信任生产构建的密钥中，媒体到位后再发布新目录。首次迁移按资源清单验证原图及缩略图。Git 集成、R2 启用或 DNS 受阻时记录实测状态，保留仍在线的旧入口。
 
-**唯一源码分支 + 本地手动部署**：每个仓库沿用一个主分支（项目现有 main/master，作品集 master），源码与 Wrangler 配置在同一分支维护。不得为 Cloudflare 新建发布分支或 GitHub Action/workflow，不新增 Workers Builds/Git 集成。所有 Cloudflare 发布均在本地从该主分支同一提交执行 Wrangler。
+以下 Wrangler 配置适用于 Worker；Pages 项目使用自己的设置。
 
 ## 1. 账户、Worker 与域名
 
@@ -80,40 +80,11 @@ wrangler.toml
 
 不能因示例而排除浏览器实际依赖的 scripts/ 或数据。优先使用只含公开文件的产物目录；所有被纳入 assets 的文件均可能公开访问。
 
-## 3. 本地检查与可重复发布
+## 3. 验证推送触发的部署
 
-需要构建时使用现有 lockfile/包管理器安装，按实际缺口准备 Repo 链接与 Umami，仅在发布应用变更时更新版本，再构建；纯静态项目省略不存在的构建命令。配置脚本可采用：
+从干净检出运行项目构建与现有检查。Worker 可额外运行 Wrangler dry-run。推送到绑定的生产分支后，在 Cloudflare 确认该 SHA 的构建与部署状态。已推送而构建失败时修复具体故障；需要重试相同提交可使用云端重试。避免手动上传与 Git 集成争抢生产版本。
 
-```json
-{
-  "scripts": {
-    "deploy:check": "wrangler deploy --dry-run --config wrangler.jsonc",
-    "deploy": "npm run build && wrangler deploy --config wrangler.jsonc"
-  }
-}
-```
-
-已有脚本优先；静态无 build 项目将 deploy 改为直接 `wrangler deploy`。
-
-```bash
-npx wrangler deploy --dry-run --config wrangler.jsonc
-npx wrangler dev --config wrangler.jsonc
-```
-
-dry-run 检查打包/配置，不会验证线上 DNS、证书和实际功能。通过本地 Worker/生产预览测试首页、关键操作、资源及深层路由刷新；核实资产文件类型、数量与大小是否符合当前账户限制，不把历史迁移时的配额当恒定值。
-
-## 4. 部署与上线检查
-
-从唯一主分支已提交的同一提交构建并在本地部署，记录主分支、源码 SHA、项目版本、Worker 和部署 ID：
-
-```bash
-npx wrangler deploy --config wrangler.jsonc
-curl -fLsS --max-time 30 "https://<project-slug>.xiaosang.cc/"
-```
-
-不得创建 Cloudflare 专用分支、GitHub Action/workflow 或 Workers Builds/Git 集成，不能用自动部署替代本地 Wrangler 发布。检查已有 workflow/自动构建是否会覆盖本次手动部署；若存在冲突，记录并在迁移授权范围内处理，不另建分支或 Action 绕过冲突。已有测试、数据校验与历史 Pages workflow 不因本规则自动删除。
-
-核实 Custom Domain 指向目标 Worker，再验证 HTTPS、当前版本/独有内容、主要 JS/CSS/图片的响应和 Content-Type、浏览器核心功能及深层路由。SPA 的缺失资源可能返回 HTML，200 不是完整验证。
+核实 Custom Domain 指向目标站点，再验证 HTTPS、当前版本/独有内容、主要 JS/CSS/图片的响应和 Content-Type、浏览器核心功能及深层路由。SPA 的缺失资源可能返回 HTML，200 不是完整验证。
 
 证书传播可有限重试（例如最多 6 次、间隔 10 秒）。仍失败则报告「已部署，域名/TLS 待就绪」，不要无限轮询、禁用证书校验或将故障地址加入作品集。部署失败检查具体错误并修复可处理项，权限或额度受阻时保留产物与配置，不改投未要求的平台。
 
@@ -121,7 +92,8 @@ curl -fLsS --max-time 30 "https://<project-slug>.xiaosang.cc/"
 
 ## 参考与证据
 
-2026-10-01 核实的作品集 [master 配置](https://github.com/holynova/holynova.github.io/blob/master/wrangler.jsonc) 使用 `xiaosang-portfolio`、`assets.directory: '.'`、`xiaosang.cc` Custom Domain；[README](https://github.com/holynova/holynova.github.io/blob/master/README.md) 明确手动发布。现有本地项目也展示根目录与 dist 两类配置；部分配置未进入远端仓库，不能推断 Git push 已部署。
+- [Cloudflare Pages Git 集成](https://developers.cloudflare.com/pages/get-started/git-integration/)
+- [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/)
 
 - [Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/)
 - [资产配置与 .assetsignore](https://developers.cloudflare.com/workers/static-assets/binding/)
