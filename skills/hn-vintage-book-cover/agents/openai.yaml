@@ -1,0 +1,4 @@
+interface:
+  display_name: "纸上旧书 · 文学封面"
+  short_description: "从书名和故事意象出发，用少色套印与中文题字创作单本或系列封面"
+  default_prompt: "用 $hn-vintage-book-cover 为《借来的月光》设计一张中文文学书籍正封。"

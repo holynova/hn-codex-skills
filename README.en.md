@@ -1,7 +1,7 @@
 <p align="right"><a href="README.md">中文</a></p>
 
 <p align="center">
-  <img src="./assets/readme/hero.svg" width="100%" alt="HN Codex Skills — a curated Codex skills collection: a terminal window on the right shows the one-line npx install command and the count of 24 skills by category">
+  <img src="./assets/readme/hero.svg" width="100%" alt="HN Codex Skills — a curated Codex skills collection: a terminal window on the right shows the one-line npx install command and the count of 25 skills by category">
 </p>
 
 <p align="center">
@@ -12,7 +12,7 @@
   <a href="https://github.com/holynova/hn-codex-skills">GitHub Repository</a>
 </p>
 
-A curated Codex skills collection: high-frequency workflows for shipping, UI polish, creative work and system diagnostics, captured as skills so you never re-explain complex rules to an AI. 24 skills, one `npx` command to install into any Codex setup.
+A curated Codex skills collection: high-frequency workflows for shipping, UI polish, creative work and system diagnostics, captured as skills so you never re-explain complex rules to an AI. 25 skills, one `npx` command to install into any Codex setup.
 
 
 The publishing skill fills missing Chinese or English documentation and reuses complete bilingual READMEs.
@@ -54,6 +54,7 @@ The publishing skill fills missing Chinese or English documentation and reuses c
 | [hn-xiaohei-draw](skills/hn-xiaohei-draw/SKILL.md) | "Xiaohei the astronaut" IP illustrations for Chinese articles: white-background hand-drawn sketches with red, orange, and blue annotations |
 | [hn-poem](skills/hn-poem/SKILL.md) | Modern Chinese short poems: four at a time, four defamiliarization techniques |
 | [rubber-stamp-art](skills/rubber-stamp-art/SKILL.md) | Rubber stamps and woodblock prints: Xuan paper texture, mineral ink, hand-carved marks |
+| [hn-vintage-book-cover](skills/hn-vintage-book-cover/SKILL.md) | Create Chinese literary book covers with spot inks, negative space, and integrated lettering. Includes four visual examples. |
 | [hn-paper-gouache](skills/hn-paper-gouache/SKILL.md) | Paper-textured flat gouache illustrations: cities, landmarks, and nature, 6 must-read examples |
 | [hn-color-woodcut](skills/hn-color-woodcut/SKILL.md) | Multicolor woodcut · landscapes in print: flat color layers, hand-carved knife marks, 8 must-read examples |
 | [twilight-anime-art](skills/twilight-anime-art/SKILL.md) | Twilight anime illustrations: pink-purple dusk, amber warm light, 5 must-read examples |
@@ -81,7 +82,7 @@ The publishing skill fills missing Chinese or English documentation and reuses c
 Requires Node.js 18+. Installs to `$CODEX_HOME/skills` by default (`~/.codex/skills` if unset).
 
 ```bash
-# Install all 24 skills
+# Install all 25 skills
 npx github:holynova/hn-codex-skills install
 
 # Install just one
@@ -100,7 +101,7 @@ The installer preflights and stages all targets, replaces atomically, and rolls 
 ```
 hn-codex-skills/
 ├── bin/install.mjs        npx installer CLI (allowlist validation + atomic replace + rollback)
-├── skills/                24 active skills (each with SKILL.md; art skills include must-read examples)
+├── skills/                25 active skills (each with SKILL.md; art skills include must-read examples)
 ├── backup/                6 archived skills (overlapping features / legacy flows, never install)
 ├── tests/                 Automated tests (installer, release flow, Chrome packaging safety)
 ├── CHANGELOG.md

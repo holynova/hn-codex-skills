@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add `hn-vintage-book-cover` for illustrated Chinese literary jackets, with four visual references.
+
 ## 1.1.0 - 2026-11-19
 
 - Add bilingual README preparation and validation to `hn-project-publisher`.

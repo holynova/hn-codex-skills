@@ -1,7 +1,7 @@
 <p align="right"><a href="README.en.md">English</a></p>
 
 <p align="center">
-  <img src="./assets/readme/hero.svg" width="100%" alt="HN Codex Skills — 个人精选 Codex 技能体系：右侧终端窗口显示 npx 一键安装命令与 24 个技能的分类统计">
+  <img src="./assets/readme/hero.svg" width="100%" alt="HN Codex Skills — 个人精选 Codex 技能体系：右侧终端窗口显示 npx 一键安装命令与 25 个技能的分类统计">
 </p>
 
 <p align="center">
@@ -12,7 +12,7 @@
   <a href="https://github.com/holynova/hn-codex-skills">GitHub 仓库</a>
 </p>
 
-个人精选的 Codex Skills 体系：把高频的工程发版、界面打磨、内容创作与系统诊断工作流沉淀为技能，避免每次与 AI 对话时重复说明复杂规则。24 个技能，一条 `npx` 命令装进任意环境的 Codex。
+个人精选的 Codex Skills 体系：把高频的工程发版、界面打磨、内容创作与系统诊断工作流沉淀为技能，避免每次与 AI 对话时重复说明复杂规则。25 个技能，一条 `npx` 命令装进任意环境的 Codex。
 
 
 发布技能会补齐中英文 README，优先复用现有双语内容。
@@ -54,6 +54,7 @@
 | [hn-xiaohei-draw](skills/hn-xiaohei-draw/SKILL.md) | "宇航员小黑"IP 中文正文配图：白底手绘线稿 + 红橙蓝标注 |
 | [hn-poem](skills/hn-poem/SKILL.md) | 现代汉语短诗：一次四首，四种陌生化手法 |
 | [rubber-stamp-art](skills/rubber-stamp-art/SKILL.md) | 橡皮图章与木刻版画：宣纸质感、矿物印泥、手工刻痕 |
+| [hn-vintage-book-cover](skills/hn-vintage-book-cover/SKILL.md) | 用少色套印、纸色留白和中文题字创作文学书籍正封，含四幅装帧例图 |
 | [hn-paper-gouache](skills/hn-paper-gouache/SKILL.md) | 纸纹平涂水粉插画：城市、地标与自然，6 张必读例图 |
 | [hn-color-woodcut](skills/hn-color-woodcut/SKILL.md) | 套色木刻 · 山河入版：平涂套色、手刻刀痕，8 张必读例图 |
 | [twilight-anime-art](skills/twilight-anime-art/SKILL.md) | 暮色动画插画：粉紫暮色、琥珀暖光，5 张必读例图 |
@@ -81,7 +82,7 @@
 需要 Node.js 18+。默认装到 `$CODEX_HOME/skills`（未设置则为 `~/.codex/skills`）。
 
 ```bash
-# 全量安装 24 个技能
+# 全量安装 25 个技能
 npx github:holynova/hn-codex-skills install
 
 # 只装一个
@@ -100,7 +101,7 @@ npx github:holynova/hn-codex-skills install --dry-run
 ```
 hn-codex-skills/
 ├── bin/install.mjs        npx 安装器 CLI（白名单校验 + 原子替换 + 回滚）
-├── skills/                24 个正式技能（每个含 SKILL.md，艺术类含必读例图）
+├── skills/                25 个正式技能（每个含 SKILL.md，艺术类含必读例图）
 ├── backup/                6 个归档技能（功能重叠 / 历史流程，严禁安装）
 ├── tests/                 自动化测试（安装器、发布流程、Chrome 打包安全）
 ├── CHANGELOG.md

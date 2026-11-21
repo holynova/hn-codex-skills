@@ -2,7 +2,7 @@
      width="1200" height="360" viewBox="0 0 1200 360"
      role="img" aria-labelledby="title desc">
   <title id="title">HN Codex Skills — 个人精选 Codex 技能体系</title>
-  <desc id="desc">深色终端风标题：HN Codex Skills，个人精选 Codex 技能体系；右侧是终端窗口，显示 npx 一键安装命令与 24 个技能的分类统计。</desc>
+  <desc id="desc">深色终端风标题：HN Codex Skills，个人精选 Codex 技能体系；右侧是终端窗口，显示 npx 一键安装命令与 25 个技能的分类统计。</desc>
 
   <rect width="1200" height="360" rx="26" fill="#12161c"/>
 
@@ -10,9 +10,9 @@
     <text x="56" y="62" font-size="19" letter-spacing="3" fill="#8fa3c8">CODEX SKILLS · 个人精选工作流沉淀</text>
     <text x="56" y="128" font-size="62" font-weight="700" fill="#e8eef7">HN Codex Skills</text>
     <text x="56" y="168" font-size="23" fill="#c6d4e8">高频工程与创作工作流，一次沉淀、处处复用</text>
-    <text x="56" y="204" font-size="19" fill="#8fa3c8">发布、界面打磨、艺术创作、系统诊断——24 个技能。</text>
+    <text x="56" y="204" font-size="19" fill="#8fa3c8">发布、界面打磨、艺术创作、系统诊断——25 个技能。</text>
     <g id="chips" font-size="18" fill="#e8eef7" text-anchor="middle">
-      <g><rect x="56" y="238" width="126" height="36" rx="18" fill="#1d2836" stroke="#33465f" stroke-width="1.5"/><text x="119" y="262">24 个技能</text></g>
+      <g><rect x="56" y="238" width="126" height="36" rx="18" fill="#1d2836" stroke="#33465f" stroke-width="1.5"/><text x="119" y="262">25 个技能</text></g>
       <g><rect x="194" y="238" width="150" height="36" rx="18" fill="#1d2836" stroke="#33465f" stroke-width="1.5"/><text x="269" y="262">npx 一键安装</text></g>
       <g><rect x="356" y="238" width="110" height="36" rx="18" fill="#1d2836" stroke="#33465f" stroke-width="1.5"/><text x="411" y="262">Node 18+</text></g>
       <g><rect x="478" y="238" width="126" height="36" rx="18" fill="#1d2836" stroke="#33465f" stroke-width="1.5"/><text x="541" y="262">白名单校验</text></g>
@@ -27,7 +27,7 @@
     <circle cx="834" cy="58" r="5" fill="#3fb950"/>
     <text x="798" y="96" font-size="15" fill="#5eead4">$ npx github:holynova/hn-codex-skills</text>
     <text x="798" y="122" font-size="15" fill="#5eead4">  install</text>
-    <text x="798" y="158" font-size="15" fill="#8fa3c8">24 skills installed -&gt; ~/.codex/skills</text>
+    <text x="798" y="158" font-size="15" fill="#8fa3c8">25 skills installed -&gt; ~/.codex/skills</text>
   </g>
 
   <g id="categories" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="18">
@@ -39,7 +39,7 @@
     </g>
     <g>
       <rect x="780" y="252" width="12" height="12" rx="3" fill="#f5a623"/>
-      <text x="802" y="264" fill="#e8eef7">内容创作 × 11</text>
+      <text x="802" y="264" fill="#e8eef7">内容创作 × 12</text>
       <rect x="910" y="252" width="12" height="12" rx="3" fill="#c084fc"/>
       <text x="932" y="264" fill="#e8eef7">数据分享 × 2</text>
     </g>
