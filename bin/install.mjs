@@ -9,6 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "..");
 const sourceSkillsDir = path.join(repoRoot, "skills");
 const skillNames = [
+  "hn-start",
   "hn-windows-stability-doctor",
   "hn-clean",
   "hn-tool-ui-polisher",

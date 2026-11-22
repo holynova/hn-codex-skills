@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `hn-start` for project kickoff, requirements clarification, and assumption checks.
+
 - Add `hn-vintage-book-cover` for illustrated Chinese literary jackets, with four visual references.
 
 ## 1.1.0 - 2026-11-19

@@ -1,7 +1,7 @@
 <p align="right"><a href="README.en.md">English</a></p>
 
 <p align="center">
-  <img src="./assets/readme/hero.svg" width="100%" alt="HN Codex Skills — 个人精选 Codex 技能体系：右侧终端窗口显示 npx 一键安装命令与 25 个技能的分类统计">
+  <img src="./assets/readme/hero.svg" width="100%" alt="HN Codex Skills — 个人精选 Codex 技能体系：右侧终端窗口显示 npx 一键安装命令与 26 个技能的分类统计">
 </p>
 
 <p align="center">
@@ -12,7 +12,7 @@
   <a href="https://github.com/holynova/hn-codex-skills">GitHub 仓库</a>
 </p>
 
-个人精选的 Codex Skills 体系：把高频的工程发版、界面打磨、内容创作与系统诊断工作流沉淀为技能，避免每次与 AI 对话时重复说明复杂规则。25 个技能，一条 `npx` 命令装进任意环境的 Codex。
+个人精选的 Codex Skills 体系：把高频的工程发版、界面打磨、内容创作与系统诊断工作流沉淀为技能，避免每次与 AI 对话时重复说明复杂规则。26 个技能，一条 `npx` 命令装进任意环境的 Codex。
 
 
 发布技能会补齐中英文 README，优先复用现有双语内容。
@@ -27,10 +27,11 @@
 
 ## 技能目录
 
-### 发布与交付
+### 项目启动与交付
 
 | 技能 | 一句话 |
 | --- | --- |
+| [hn-start](skills/hn-start/SKILL.md) | 新项目开场时复述需求、澄清关键分歧并检验假设 |
 | [hn-project-publisher](skills/hn-project-publisher/SKILL.md) | Web 项目首次发布与发布检查：只补缺口，不重复发布 |
 | [hn-chrome-extension-publisher](skills/hn-chrome-extension-publisher/SKILL.md) | Chrome 扩展上架：Manifest V3 审计、打包、SHA256 校验、提审指导 |
 
@@ -82,7 +83,7 @@
 需要 Node.js 18+。默认装到 `$CODEX_HOME/skills`（未设置则为 `~/.codex/skills`）。
 
 ```bash
-# 全量安装 25 个技能
+# 全量安装 26 个技能
 npx github:holynova/hn-codex-skills install
 
 # 只装一个
@@ -101,7 +102,7 @@ npx github:holynova/hn-codex-skills install --dry-run
 ```
 hn-codex-skills/
 ├── bin/install.mjs        npx 安装器 CLI（白名单校验 + 原子替换 + 回滚）
-├── skills/                25 个正式技能（每个含 SKILL.md，艺术类含必读例图）
+├── skills/                26 个正式技能（每个含 SKILL.md，艺术类含必读例图）
 ├── backup/                6 个归档技能（功能重叠 / 历史流程，严禁安装）
 ├── tests/                 自动化测试（安装器、发布流程、Chrome 打包安全）
 ├── CHANGELOG.md

@@ -1,7 +1,7 @@
 <p align="right"><a href="README.md">中文</a></p>
 
 <p align="center">
-  <img src="./assets/readme/hero.svg" width="100%" alt="HN Codex Skills — a curated Codex skills collection: a terminal window on the right shows the one-line npx install command and the count of 25 skills by category">
+  <img src="./assets/readme/hero.svg" width="100%" alt="HN Codex Skills — a curated Codex skills collection: a terminal window on the right shows the one-line npx install command and the count of 26 skills by category">
 </p>
 
 <p align="center">
@@ -12,7 +12,7 @@
   <a href="https://github.com/holynova/hn-codex-skills">GitHub Repository</a>
 </p>
 
-A curated Codex skills collection: high-frequency workflows for shipping, UI polish, creative work and system diagnostics, captured as skills so you never re-explain complex rules to an AI. 25 skills, one `npx` command to install into any Codex setup.
+A curated Codex skills collection: high-frequency workflows for shipping, UI polish, creative work and system diagnostics, captured as skills so you never re-explain complex rules to an AI. 26 skills, one `npx` command to install into any Codex setup.
 
 
 The publishing skill fills missing Chinese or English documentation and reuses complete bilingual READMEs.
@@ -27,10 +27,11 @@ The publishing skill fills missing Chinese or English documentation and reuses c
 
 ## Skills
 
-### Publishing & Releasing
+### Project Kickoff & Delivery
 
 | Skill | In one line |
 | --- | --- |
+| [hn-start](skills/hn-start/SKILL.md) | Restate a new project brief, clarify decisions that affect delivery, and challenge assumptions |
 | [hn-project-publisher](skills/hn-project-publisher/SKILL.md) | First-time web project release and release checks: fill gaps only, never re-release |
 | [hn-chrome-extension-publisher](skills/hn-chrome-extension-publisher/SKILL.md) | Chrome extension publishing: Manifest V3 audit, packaging, SHA256 verification, submission guidance |
 
@@ -82,7 +83,7 @@ The publishing skill fills missing Chinese or English documentation and reuses c
 Requires Node.js 18+. Installs to `$CODEX_HOME/skills` by default (`~/.codex/skills` if unset).
 
 ```bash
-# Install all 25 skills
+# Install all 26 skills
 npx github:holynova/hn-codex-skills install
 
 # Install just one
@@ -101,7 +102,7 @@ The installer preflights and stages all targets, replaces atomically, and rolls 
 ```
 hn-codex-skills/
 ├── bin/install.mjs        npx installer CLI (allowlist validation + atomic replace + rollback)
-├── skills/                25 active skills (each with SKILL.md; art skills include must-read examples)
+├── skills/                26 active skills (each with SKILL.md; art skills include must-read examples)
 ├── backup/                6 archived skills (overlapping features / legacy flows, never install)
 ├── tests/                 Automated tests (installer, release flow, Chrome packaging safety)
 ├── CHANGELOG.md
