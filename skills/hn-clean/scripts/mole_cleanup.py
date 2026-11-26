@@ -113,12 +113,12 @@ def parse_clean_output(text: str) -> dict:
         m_pot = re.search(r"Potential space:\s*([^|\n]+)", line, re.I)
         if m_pot:
             potential_space = m_pot.group(1).strip()
-        m_freed = re.search(r"(?:Space freed|Freed space|Total freed|Reclaimed):\s*([^|\n]+)", line, re.I)
+        m_freed = re.search(r"(?:Removed|Space freed|Freed space|Total freed|Reclaimed):\s*([^|\n]+)", line, re.I)
         if m_freed:
             freed_space = m_freed.group(1).strip()
-        m_items = re.search(r"Items:\s*(\d+)", line, re.I)
+        m_items = re.search(r"(?:Items:\s*(\d+)|(\d+)\s*items\b)", line, re.I)
         if m_items:
-            items = int(m_items.group(1))
+            items = int(m_items.group(1) or m_items.group(2))
         m_cats = re.search(r"Categories:\s*(\d+)", line, re.I)
         if m_cats:
             categories = int(m_cats.group(1))

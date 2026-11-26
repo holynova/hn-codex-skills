@@ -136,6 +136,29 @@ def extract_json(raw: str):
     return None
 
 
+HEAVY_SOURCE_BUILD_FORMULAE = {"llvm", "rust", "gcc", "cmake", "go", "zig", "node"}
+
+
+def detect_heavy_brew_source_build(dry_run_output: str) -> list[str]:
+    """Parse `brew upgrade --dry-run` output for formulae that would build from source."""
+    lines = dry_run_output.splitlines()
+    building: list[str] = []
+    in_section = False
+    for raw in lines:
+        stripped = raw.strip()
+        if re.match(r"^==>\s*\d+\s+.*would build from source", stripped, re.I):
+            in_section = True
+            continue
+        if in_section:
+            if not stripped or stripped.startswith("==>") or stripped.startswith("This is ") or stripped.startswith("Please "):
+                in_section = False
+                continue
+            building.append(stripped)
+    if len(building) >= 3 or any(b.lower().split("@", 1)[0] in HEAVY_SOURCE_BUILD_FORMULAE for b in building):
+        return building
+    return []
+
+
 def fetch_npm_latest_tag(pkg: str) -> str | None:
     rc, out, _ = run_cmd(["npm", "view", pkg, "dist-tags", "--json"], timeout=30)
     if rc == 0:
@@ -224,7 +247,17 @@ def lane_homebrew(catalog: dict, apply: bool, only: set[str], no_casks: bool) ->
         if not apply:
             res["outdated"].append({"name": full_name, "manager": "brew-formula", "before": before, "latest": latest})
             continue
-        rc_u, u_out, u_err = run_cmd(["brew", "upgrade", full_name], timeout=900, env_extra=brew_env)
+        rc_dry, dry_out, dry_err = run_cmd(["brew", "upgrade", "--dry-run", full_name], timeout=60, env_extra=brew_env)
+        heavy_src = detect_heavy_brew_source_build(f"{dry_out}\n{dry_err}") if rc_dry == 0 else []
+        if heavy_src:
+            preview_names = ", ".join(heavy_src[:6]) + (f" 等共 {len(heavy_src)} 项" if len(heavy_src) > 6 else "")
+            res["issues"].append({
+                "name": full_name,
+                "manager": "brew-formula",
+                "message": f"needs_manual: 无预编译 bottle，需从源码编译 {preview_names}（已跳过以免耗时卡死，可手动执行 brew upgrade {full_name}）",
+            })
+            continue
+        rc_u, u_out, u_err = run_cmd(["brew", "upgrade", full_name], timeout=300, env_extra=brew_env)
         _, v_out, _ = run_cmd(["brew", "list", "--versions", full_name], timeout=30, env_extra=brew_env)
         after = v_out.split()[-1] if v_out.split() else latest
         if rc_u == 0:
@@ -244,7 +277,7 @@ def lane_homebrew(catalog: dict, apply: bool, only: set[str], no_casks: bool) ->
             if not apply:
                 res["outdated"].append({"name": full_name, "manager": "brew-cask", "before": before, "latest": latest})
                 continue
-            rc_u, u_out, u_err = run_cmd(["brew", "upgrade", "--cask", "--greedy", full_name], timeout=900, env_extra=brew_env)
+            rc_u, u_out, u_err = run_cmd(["brew", "upgrade", "--cask", "--greedy", full_name], timeout=300, env_extra=brew_env)
             combined = f"{u_out}\n{u_err}"
             if rc_u == 0:
                 _, cv_out, _ = run_cmd(["brew", "list", "--cask", "--versions", full_name], timeout=30, env_extra=brew_env)

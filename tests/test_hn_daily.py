@@ -88,6 +88,21 @@ class AiSoftwareUpdateTests(unittest.TestCase):
         self.assertTrue(ai_update.is_newer_version("1.7.0", "1.9.0"))
         self.assertFalse(ai_update.is_newer_version("1.0.0-beta.12", "0.9.0"))
 
+    def test_heavy_brew_source_build_detection(self):
+        sample = (
+            "==> Would upgrade 1 requested outdated package\n"
+            "anomalyco/tap/opencode 1.18.31 -> 1.19.6\n"
+            "==> 3 homebrew/core formulae that would build from source\n"
+            "llvm\n"
+            "rust\n"
+            "ripgrep\n"
+            "\n"
+            "This is a Tier 3 configuration:\n"
+        )
+        detected = ai_update.detect_heavy_brew_source_build(sample)
+        self.assertEqual(detected, ["llvm", "rust", "ripgrep"])
+        self.assertEqual(ai_update.detect_heavy_brew_source_build("==> Upgrading 1 outdated package:\nmole 1.58.0 -> 1.74.0\n"), [])
+
 
 class SkillsSyncTests(unittest.TestCase):
     def test_repo_discovery_excludes_backup_and_syncs_temp_home(self):
@@ -159,6 +174,15 @@ class MoleCleanupTests(unittest.TestCase):
         self.assertEqual(c_parsed["items"], 303)
         self.assertEqual(c_parsed["categories"], 6)
         self.assertEqual(len(c_parsed["advisories"]), 2)
+
+        mole_174_apply = (
+            "Cleanup complete\n"
+            "Removed: 3.06GB · 160 items\n"
+            "Free space: 24.81GB (+5.96GB)\n"
+        )
+        c174 = mole_clean.parse_clean_output(mole_174_apply)
+        self.assertEqual(c174["freed_space"], "3.06GB · 160 items")
+        self.assertEqual(c174["items"], 160)
 
         opt_sample = (
             "  ◎ Broken login item: Steam (app not found)\n"
