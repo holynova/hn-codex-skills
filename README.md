@@ -1,7 +1,7 @@
 <p align="right"><a href="README.en.md">English</a></p>
 
 <p align="center">
-  <img src="./assets/readme/hero.svg" width="100%" alt="HN Codex Skills — 个人精选 Codex 技能体系：右侧终端窗口显示 npx 一键安装命令与 26 个技能的分类统计">
+  <img src="./assets/readme/hero.svg" width="100%" alt="HN Codex Skills — 个人精选 Codex 技能体系：右侧终端窗口显示 npx 一键安装命令与 30 个技能的分类统计">
 </p>
 
 <p align="center">
@@ -12,7 +12,7 @@
   <a href="https://github.com/holynova/hn-codex-skills">GitHub 仓库</a>
 </p>
 
-个人精选的 Codex Skills 体系：把高频的工程发版、界面打磨、内容创作与系统诊断工作流沉淀为技能，避免每次与 AI 对话时重复说明复杂规则。26 个技能，一条 `npx` 命令装进任意环境的 Codex。
+个人精选的 Codex Skills 体系：把高频的工程发版、界面打磨、内容创作与系统诊断工作流沉淀为技能，避免每次与 AI 对话时重复说明复杂规则。30 个技能，一条 `npx` 命令装进任意环境的 Codex。
 
 
 发布技能会补齐中英文 README，优先复用现有双语内容。
@@ -74,7 +74,11 @@
 
 | 技能 | 一句话 |
 | --- | --- |
-| [hn-clean](skills/hn-clean/SKILL.md) | macOS 磁盘分析与清理：Mole 预览核实，按授权清理 |
+| [hn-daily](skills/hn-daily/SKILL.md) | 每日维护编排：并行更新 AI 软件与统计 Token、串行同步 skills、执行 Mole 清理优化 |
+| [hn-ai-software-update](skills/hn-ai-software-update/SKILL.md) | AI 软件与 CLI 更新：并发升级 Homebrew/npm/pnpm/uv/自更新器中的 AI CLI 与 Mole |
+| [hn-skills-sync](skills/hn-skills-sync/SKILL.md) | Skills 同步与更新：更新第三方 skills 并从 GitHub 仓库新增/更新个人技能 |
+| [hn-token-stats](skills/hn-token-stats/SKILL.md) | AI Token 统计卡片：近 7 日消耗按万/亿取整、周峰值 1/8 精细进度条 |
+| [hn-clean](skills/hn-clean/SKILL.md) | macOS 磁盘分析与清理：Mole 预览核实、`mo clean`/`mo optimize` 清理优化与前后 `df -k` 校验 |
 | [hn-windows-stability-doctor](skills/hn-windows-stability-doctor/SKILL.md) | Windows 稳定性诊断：蓝屏、死机、WHEA、驱动崩溃 |
 | [hospital-record-collector](skills/hospital-record-collector/SKILL.md) | 医疗票据与病历自动采集归档 |
 
@@ -83,7 +87,7 @@
 需要 Node.js 18+。默认装到 `$CODEX_HOME/skills`（未设置则为 `~/.codex/skills`）。
 
 ```bash
-# 全量安装 26 个技能
+# 全量安装 30 个技能
 npx github:holynova/hn-codex-skills install
 
 # 只装一个
@@ -102,7 +106,7 @@ npx github:holynova/hn-codex-skills install --dry-run
 ```
 hn-codex-skills/
 ├── bin/install.mjs        npx 安装器 CLI（白名单校验 + 原子替换 + 回滚）
-├── skills/                26 个正式技能（每个含 SKILL.md，艺术类含必读例图）
+├── skills/                30 个正式技能（每个含 SKILL.md，艺术类含必读例图）
 ├── backup/                6 个归档技能（功能重叠 / 历史流程，严禁安装）
 ├── tests/                 自动化测试（安装器、发布流程、Chrome 打包安全）
 ├── CHANGELOG.md

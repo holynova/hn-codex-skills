@@ -35,6 +35,10 @@ const skillNames = [
   "hn-ink-dance-sketch",
   "hn-hok-skin-prompt",
   "hn-notebooklm-ppt",
+  "hn-ai-software-update",
+  "hn-skills-sync",
+  "hn-token-stats",
+  "hn-daily",
 ];
 
 function usage(exitCode = 0) {

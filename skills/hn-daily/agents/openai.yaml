@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN 每日维护编排"
+  short_description: "编排更新 AI 软件、同步 skills、Mole 清理优化与近7日 Token 统计"
+  default_prompt: "使用 $hn-daily 执行今日维护：更新 AI 软件与 Mole、同步所有 skills、运行 mo clean 与 mo optimize，并统计近7日 Token。"

@@ -1,0 +1,124 @@
+{
+  "schema": 1,
+  "homebrew_formulae": [
+    "mole",
+    "opencode",
+    "aider",
+    "aider-chat",
+    "claude",
+    "claude-code",
+    "codex",
+    "gemini-cli",
+    "devin",
+    "openai",
+    "llm",
+    "ollama",
+    "goose",
+    "mods",
+    "aichat",
+    "fabric-ai",
+    "sgpt"
+  ],
+  "homebrew_casks": [
+    "claude-code",
+    "claude-code@latest",
+    "claude",
+    "codexbar",
+    "cc-switch",
+    "opencode-desktop",
+    "cursor",
+    "windsurf",
+    "antigravity",
+    "antigravity-ide",
+    "chatgpt",
+    "devin",
+    "lm-studio",
+    "jan",
+    "cherry-studio",
+    "zed",
+    "t3-code"
+  ],
+  "cask_to_app_names": {
+    "antigravity": ["Antigravity.app"],
+    "antigravity-ide": ["Antigravity IDE.app"],
+    "cc-switch": ["CC Switch.app"],
+    "chatgpt": ["ChatGPT.app"],
+    "claude": ["Claude.app"],
+    "codexbar": ["CodexBar.app"],
+    "cursor": ["Cursor.app"],
+    "opencode-desktop": ["OpenCode.app"],
+    "t3-code": ["T3 Code (Beta).app", "T3 Code.app"],
+    "windsurf": ["Windsurf.app"],
+    "lm-studio": ["LM Studio.app"],
+    "cherry-studio": ["Cherry Studio.app"]
+  },
+  "js_packages": [
+    "skills",
+    "@jackwener/opencli",
+    "@openai/codex",
+    "@anthropic-ai/claude-code",
+    "@google/gemini-cli",
+    "@deepseek-ai/dsh",
+    "ccusage",
+    "opencode-dash",
+    "@earendil-works/pi-coding-agent",
+    "@neovate/code",
+    "@qwen-code/qwen-code",
+    "@sourcegraph/amp",
+    "@kilocode/cli",
+    "openclaw",
+    "@github/copilot"
+  ],
+  "legacy_pnpm_bin_to_pkg": {
+    "gemini": "@google/gemini-cli",
+    "codex": "@openai/codex",
+    "dsh": "@deepseek-ai/dsh",
+    "pi": "@earendil-works/pi-coding-agent",
+    "neovate": "@neovate/code",
+    "opencli": "@jackwener/opencli"
+  },
+  "uv_tools": [
+    "notebooklm-mcp-cli",
+    "aider-chat",
+    "llm",
+    "open-interpreter",
+    "specify-cli",
+    "shell-gpt"
+  ],
+  "pipx_packages": [
+    "aider-chat",
+    "llm",
+    "open-interpreter",
+    "shell-gpt"
+  ],
+  "cargo_crates": [
+    "aichat",
+    "codex"
+  ],
+  "self_updaters": [
+    {
+      "id": "agy",
+      "bin": "agy",
+      "version_cmd": ["agy", "--version"],
+      "update_cmd": ["agy", "update"]
+    }
+  ],
+  "direct_macos_apps": [
+    "Antigravity.app",
+    "Antigravity IDE.app",
+    "ChatGPT.app",
+    "Claude.app",
+    "Cursor.app",
+    "Windsurf.app",
+    "T3 Code (Beta).app",
+    "T3 Code.app",
+    "ZCode.app",
+    "ego lite.app",
+    "CodexBar.app",
+    "CC Switch.app",
+    "OpenCode.app",
+    "LM Studio.app",
+    "Cherry Studio.app",
+    "Devin.app"
+  ]
+}

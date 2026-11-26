@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN Skills 同步与更新"
+  short_description: "更新第三方 skills 并从 GitHub 仓库新增与更新个人 skills"
+  default_prompt: "使用 $hn-skills-sync 更新所有第三方 skills 并同步 holynova/hn-codex-skills 中的新增与更新技能。"

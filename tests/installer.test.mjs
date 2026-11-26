@@ -53,7 +53,7 @@ test("installs every bundled skill into an isolated directory", () => withTempDi
   assert.equal(result.status, 0, result.stderr);
   const installed = fs.readdirSync(target, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."));
-  assert.equal(installed.length, 26);
+  assert.equal(installed.length, 30);
   for (const entry of installed) {
     assert.ok(fs.existsSync(path.join(target, entry.name, "SKILL.md")));
     assert.ok(fs.existsSync(path.join(target, entry.name, "agents", "openai.yaml")));
@@ -246,5 +246,50 @@ test("installs required translucent toy example images with matching hashes", ()
     assert.equal(bytes.subarray(8, 12).toString(), "WEBP");
     assert.equal(createHash("sha256").update(bytes).digest("hex"), example.sha256);
     assert.deepEqual(bytes, fs.readFileSync(path.join(repoRoot, "skills", "hn-translucent-toy", example.image)));
+  }
+}));
+
+test("installs hn-daily suite skills intact and free of local user paths", () => withTempDir((temp) => {
+  const target = path.join(temp, "skills");
+  const suiteFiles = {
+    "hn-ai-software-update": [
+      "SKILL.md",
+      "agents/openai.yaml",
+      "references/software-catalog.json",
+      "scripts/update_ai_software.py",
+    ],
+    "hn-skills-sync": [
+      "SKILL.md",
+      "agents/openai.yaml",
+      "scripts/sync_skills.py",
+    ],
+    "hn-token-stats": [
+      "SKILL.md",
+      "agents/openai.yaml",
+      "scripts/token_stats.py",
+    ],
+    "hn-clean": [
+      "SKILL.md",
+      "agents/openai.yaml",
+      "references/macos-cleanup.md",
+      "references/sessions-and-projects.md",
+      "scripts/mole_cleanup.py",
+    ],
+    "hn-daily": [
+      "SKILL.md",
+      "agents/openai.yaml",
+      "scripts/hn_daily.py",
+    ],
+  };
+
+  for (const [name, files] of Object.entries(suiteFiles)) {
+    const result = runInstaller(["install", name, "--path", target]);
+    assert.equal(result.status, 0, result.stderr);
+    for (const file of files) {
+      const sourceText = fs.readFileSync(path.join(repoRoot, "skills", name, file), "utf8");
+      const installedText = fs.readFileSync(path.join(target, name, file), "utf8");
+      assert.equal(installedText, sourceText, `${name}/${file}`);
+      assert.doesNotMatch(installedText, /\/Users\//, `Local user path leaked in ${name}/${file}`);
+    }
   }
 }));

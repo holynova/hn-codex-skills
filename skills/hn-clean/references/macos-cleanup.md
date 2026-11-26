@@ -10,11 +10,14 @@
 df -k "$HOME"
 mole analyze --json "$HOME"
 mole clean --dry-run
+mole optimize --dry-run
 LC_ALL=C LANG=C mole purge --dry-run
 mole installer --dry-run
 ```
 
-`purge` 侧重旧项目产物，`clean` 侧重缓存等日常项目，`installer` 单独查找安装包。部分版本的 purge 可能受终端区域设置影响，可用命令级 `LC_ALL=C LANG=C` 重试。若 Mole 缺失或无法完成预览，用系统工具继续盘点，并注明覆盖范围。工具默认选中只提供线索。实际运行交互式清理时核对最终选择，取消超出授权范围的所有条目。只有在能限定到已核实条目的情况下，才用批量清理。
+`purge` 侧重旧项目产物，`clean` 侧重缓存等日常项目，`optimize` 侧重系统缓存刷新与维护检查，`installer` 单独查找安装包。部分版本的 purge 可能受终端区域设置影响，可用命令级 `LC_ALL=C LANG=C` 重试。若 Mole 缺失或无法完成预览，用系统工具继续盘点，并注明覆盖范围。工具默认选中只提供线索。实际运行交互式清理时核对最终选择，取消超出授权范围的所有条目。只有在能限定到已核实条目的情况下，才用批量清理。
+
+非交互或无人值守执行时，设置 `NONINTERACTIVE=1` 与 `SUDO_ASKPASS=/usr/bin/false` 并关闭标准输入，防止 `mo optimize` 申请管理员权限卡死或 `mo clean` 在无权限路径（如 root 所有的 `~/.npm/_cacache`）反复重试。遇到非零退出（例如部分完成返回 243）或需要管理员权限的优化项时，保留已完成结果、记录跳过或受阻项并重新 `df -k` 复测，绝不自动提权或递归修改权限。
 
 ## 判断哪些内容可清
 

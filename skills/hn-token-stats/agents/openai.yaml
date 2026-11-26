@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN AI Token 统计"
+  short_description: "输出近7日 AI Token 消耗与 1/8 刻度进度条中文卡片"
+  default_prompt: "使用 $hn-token-stats 统计近七日我使用的 AI Token，按 1/8 刻度进度条格式输出。"

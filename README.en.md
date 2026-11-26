@@ -1,7 +1,7 @@
 <p align="right"><a href="README.md">中文</a></p>
 
 <p align="center">
-  <img src="./assets/readme/hero.svg" width="100%" alt="HN Codex Skills — a curated Codex skills collection: a terminal window on the right shows the one-line npx install command and the count of 26 skills by category">
+  <img src="./assets/readme/hero.svg" width="100%" alt="HN Codex Skills — a curated Codex skills collection: a terminal window on the right shows the one-line npx install command and the count of 30 skills by category">
 </p>
 
 <p align="center">
@@ -12,7 +12,7 @@
   <a href="https://github.com/holynova/hn-codex-skills">GitHub Repository</a>
 </p>
 
-A curated Codex skills collection: high-frequency workflows for shipping, UI polish, creative work and system diagnostics, captured as skills so you never re-explain complex rules to an AI. 26 skills, one `npx` command to install into any Codex setup.
+A curated Codex skills collection: high-frequency workflows for shipping, UI polish, creative work and system diagnostics, captured as skills so you never re-explain complex rules to an AI. 30 skills, one `npx` command to install into any Codex setup.
 
 
 The publishing skill fills missing Chinese or English documentation and reuses complete bilingual READMEs.
@@ -74,7 +74,11 @@ The publishing skill fills missing Chinese or English documentation and reuses c
 
 | Skill | In one line |
 | --- | --- |
-| [hn-clean](skills/hn-clean/SKILL.md) | macOS disk analysis and cleanup: Mole preview verification, cleanup only as authorized |
+| [hn-daily](skills/hn-daily/SKILL.md) | Daily maintenance orchestrator: parallel software updates + token stats, serial skills sync, and Mole cleanup/optimize |
+| [hn-ai-software-update](skills/hn-ai-software-update/SKILL.md) | AI software & CLI updater: concurrently upgrades AI CLIs, Mole, and apps via their native package managers |
+| [hn-skills-sync](skills/hn-skills-sync/SKILL.md) | Skills sync & update: upgrades third-party skills and syncs new/updated skills from GitHub across agent dirs |
+| [hn-token-stats](skills/hn-token-stats/SKILL.md) | AI token telemetry cards: 7-day totals rounded to 10k/100M with 1/8-block precision bars |
+| [hn-clean](skills/hn-clean/SKILL.md) | macOS disk analysis and cleanup: Mole `clean`/`optimize` preview & execution with `df -k` verification |
 | [hn-windows-stability-doctor](skills/hn-windows-stability-doctor/SKILL.md) | Windows stability diagnostics: blue screens, freezes, WHEA, driver crashes |
 | [hospital-record-collector](skills/hospital-record-collector/SKILL.md) | Automatic collection and archiving of medical receipts and records |
 
@@ -83,7 +87,7 @@ The publishing skill fills missing Chinese or English documentation and reuses c
 Requires Node.js 18+. Installs to `$CODEX_HOME/skills` by default (`~/.codex/skills` if unset).
 
 ```bash
-# Install all 26 skills
+# Install all 30 skills
 npx github:holynova/hn-codex-skills install
 
 # Install just one
@@ -102,7 +106,7 @@ The installer preflights and stages all targets, replaces atomically, and rolls 
 ```
 hn-codex-skills/
 ├── bin/install.mjs        npx installer CLI (allowlist validation + atomic replace + rollback)
-├── skills/                26 active skills (each with SKILL.md; art skills include must-read examples)
+├── skills/                30 active skills (each with SKILL.md; art skills include must-read examples)
 ├── backup/                6 archived skills (overlapping features / legacy flows, never install)
 ├── tests/                 Automated tests (installer, release flow, Chrome packaging safety)
 ├── CHANGELOG.md

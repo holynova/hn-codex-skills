@@ -2,8 +2,13 @@
 
 ## Unreleased
 
+<<<<<<< HEAD
+- Add `hn-daily` orchestrator skill composing parallel software updates (`hn-ai-software-update`) and 7-day token telemetry (`hn-token-stats`) followed by serial skills sync (`hn-skills-sync`) and Mole disk cleanup/optimization (`hn-clean`).
+- Add `hn-ai-software-update` to inventory and concurrently upgrade AI CLIs, Mole, `skills` CLI, and macOS AI apps across Homebrew, npm, pnpm (including legacy v5 shims), uv/pipx/cargo, and native self-updaters.
+- Add `hn-skills-sync` to update third-party skills (`skills update -g -y`) and sync allowlisted `holynova/hn-codex-skills` skills across Codex, `.agents`, Claude, and Gemini/Antigravity directories while excluding `backup/`.
+- Add `hn-token-stats` to report 7-day AI token consumption with 1/8-block precision progress bars and T3 Code Antigravity ACP coverage.
+- Enhance `hn-clean` with `scripts/mole_cleanup.py` covering `mo clean`, `mo optimize`, non-interactive sudo safety, `df -k` before/after verification, and large-directory advisories.
 - Add `hn-start` for project kickoff, requirements clarification, and assumption checks.
-
 - Add `hn-vintage-book-cover` for illustrated Chinese literary jackets, with four visual references.
 
 ## 1.1.0 - 2026-11-19
