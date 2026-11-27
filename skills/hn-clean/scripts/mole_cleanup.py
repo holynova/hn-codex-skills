@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Safe Mole (mo clean + mo optimize) preview/apply wrapper with df -k verification."""
+"""Safe Mole (mo clean + mo optimize) preview/apply wrapper with fast-fail timeouts and df -k verification."""
 
 from __future__ import annotations
 
@@ -8,6 +8,7 @@ import json
 import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
 from datetime import datetime
@@ -75,21 +76,35 @@ def run_cmd(cmd: list[str], timeout: int) -> tuple[int, str, str, bool]:
         "SUDO_ASKPASS": "/usr/bin/false",
     }
     try:
-        proc = subprocess.run(
+        proc = subprocess.Popen(
             cmd,
             stdin=subprocess.DEVNULL,
-            capture_output=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             text=True,
-            timeout=timeout,
             env=env,
+            start_new_session=True,
         )
-        return proc.returncode, strip_ansi(proc.stdout), strip_ansi(proc.stderr), False
-    except subprocess.TimeoutExpired as exc:
-        out = exc.stdout if isinstance(exc.stdout, str) else (exc.stdout or b"").decode("utf-8", "replace")
-        err = exc.stderr if isinstance(exc.stderr, str) else (exc.stderr or b"").decode("utf-8", "replace")
-        return 124, strip_ansi(out), strip_ansi(err), True
     except OSError as exc:
         return 127, "", str(exc), False
+
+    try:
+        out, err = proc.communicate(timeout=timeout)
+        return proc.returncode, strip_ansi(out), strip_ansi(err), False
+    except subprocess.TimeoutExpired:
+        try:
+            os.killpg(proc.pid, signal.SIGTERM)
+        except ProcessLookupError:
+            pass
+        try:
+            out, err = proc.communicate(timeout=3)
+        except subprocess.TimeoutExpired:
+            try:
+                os.killpg(proc.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            out, err = proc.communicate()
+        return 124, strip_ansi(out), strip_ansi(err), True
 
 
 def parse_clean_output(text: str) -> dict:
@@ -169,10 +184,10 @@ def parse_optimize_output(text: str) -> dict:
 def classify_clean_apply(rc: int, out: str, err: str, timed_out: bool) -> str:
     combined = f"{out}\n{err}".lower()
     if timed_out:
-        return "timeout"
+        return "skipped_timeout"
     if rc == 0:
         return "ok"
-    if rc == 243 or "eacces" in combined or "permission" in combined or "cleaned" in combined or "freed" in combined:
+    if rc == 243 or "eacces" in combined or "permission" in combined or "cleaned" in combined or "freed" in combined or "removed:" in combined:
         return "partial"
     return "failed"
 
@@ -180,8 +195,8 @@ def classify_clean_apply(rc: int, out: str, err: str, timed_out: bool) -> str:
 def classify_optimize_apply(rc: int, out: str, err: str, timed_out: bool) -> str:
     combined = f"{out}\n{err}".lower()
     if timed_out:
-        return "timeout"
-    if "sudo" in combined or "password" in combined or "administrator" in combined or "requires root" in combined or "tty" in combined:
+        return "skipped_timeout"
+    if "sudo" in combined or "password" in combined or "administrator" in combined or "requires root" in combined or "requires admin" in combined or "tty" in combined:
         if "applied" in combined or "refreshed" in combined or "optimized" in combined:
             return "partial_needs_admin"
         return "needs_admin"
@@ -192,7 +207,13 @@ def classify_optimize_apply(rc: int, out: str, err: str, timed_out: bool) -> str
     return "failed"
 
 
-def execute(apply: bool, skip_clean: bool, skip_optimize: bool, timeout: int) -> dict:
+def execute(
+    apply: bool,
+    skip_clean: bool,
+    skip_optimize: bool,
+    timeout: int,
+    with_preview: bool = False,
+) -> dict:
     home = Path.home()
     before_disk = measure_volume(home)
     mo_bin = find_mole()
@@ -224,16 +245,18 @@ def execute(apply: bool, skip_clean: bool, skip_optimize: bool, timeout: int) ->
         report["mole_version"] = ver_out.strip().splitlines()[0]
 
     if not skip_clean:
-        rc, out, err, timed_out = run_cmd([mo_bin, "clean", "--dry-run"], timeout=timeout)
-        parsed = parse_clean_output(out + "\n" + err)
-        clean_res: dict = {
-            "dry_run": {
+        clean_res: dict = {}
+        if (not apply) or with_preview:
+            rc, out, err, timed_out = run_cmd([mo_bin, "clean", "--dry-run"], timeout=timeout)
+            parsed = parse_clean_output(out + "\n" + err)
+            clean_res["dry_run"] = {
                 "returncode": rc,
                 "timed_out": timed_out,
                 **parsed,
                 "tail": "\n".join((out or err).splitlines()[-25:]),
             }
-        }
+            if not apply:
+                clean_res["status"] = "skipped_timeout" if timed_out else ("preview_ok" if rc == 0 else "preview_partial")
         if apply:
             arc, aout, aerr, atimed = run_cmd([mo_bin, "clean"], timeout=timeout)
             aparsed = parse_clean_output(aout + "\n" + aerr)
@@ -244,23 +267,24 @@ def execute(apply: bool, skip_clean: bool, skip_optimize: bool, timeout: int) ->
                 "tail": "\n".join((aout or aerr).splitlines()[-25:]),
             }
             clean_res["status"] = classify_clean_apply(arc, aout, aerr, atimed)
-        else:
-            clean_res["status"] = "preview_ok" if rc == 0 else ("timeout" if timed_out else "preview_partial")
         report["clean"] = clean_res
 
     if not skip_optimize:
-        rc, out, err, timed_out = run_cmd([mo_bin, "optimize", "--dry-run"], timeout=timeout)
-        parsed = parse_optimize_output(out + "\n" + err)
-        opt_res: dict = {
-            "dry_run": {
+        opt_timeout = min(timeout, 45)
+        opt_res: dict = {}
+        if (not apply) or with_preview:
+            rc, out, err, timed_out = run_cmd([mo_bin, "optimize", "--dry-run"], timeout=opt_timeout)
+            parsed = parse_optimize_output(out + "\n" + err)
+            opt_res["dry_run"] = {
                 "returncode": rc,
                 "timed_out": timed_out,
                 **parsed,
                 "tail": "\n".join((out or err).splitlines()[-25:]),
             }
-        }
+            if not apply:
+                opt_res["status"] = "skipped_timeout" if timed_out else ("preview_ok" if rc in (0, 1) else "failed")
         if apply:
-            arc, aout, aerr, atimed = run_cmd([mo_bin, "optimize"], timeout=min(timeout, 120))
+            arc, aout, aerr, atimed = run_cmd([mo_bin, "optimize"], timeout=opt_timeout)
             aparsed = parse_optimize_output(aout + "\n" + aerr)
             opt_status = classify_optimize_apply(arc, aout, aerr, atimed)
             opt_res["apply"] = {
@@ -272,8 +296,6 @@ def execute(apply: bool, skip_clean: bool, skip_optimize: bool, timeout: int) ->
             if "needs_admin" in opt_status:
                 opt_res["manual_command"] = "mo optimize"
             opt_res["status"] = opt_status
-        else:
-            opt_res["status"] = "preview_ok" if rc in (0, 1) and not timed_out else ("timeout" if timed_out else "failed")
         report["optimize"] = opt_res
 
     after_disk = measure_volume(home)
@@ -283,8 +305,8 @@ def execute(apply: bool, skip_clean: bool, skip_optimize: bool, timeout: int) ->
 
     statuses = [report["clean"]["status"], report["optimize"]["status"]]
     if any(s == "failed" for s in statuses):
-        report["status"] = "partial" if any(s in {"ok", "partial", "preview_ok", "partial_needs_admin"} for s in statuses) else "failed"
-    elif any(s in {"partial", "timeout", "needs_admin", "partial_needs_admin", "preview_partial"} for s in statuses):
+        report["status"] = "partial" if any(s in {"ok", "partial", "preview_ok", "partial_needs_admin", "skipped_timeout"} for s in statuses) else "failed"
+    elif any(s in {"partial", "skipped_timeout", "needs_admin", "partial_needs_admin", "preview_partial"} for s in statuses):
         report["status"] = "partial"
     return report
 
@@ -314,30 +336,36 @@ def render_markdown(report: dict) -> str:
 
     clean = report.get("clean", {})
     if clean.get("status") != "skipped":
-        dry = clean.get("dry_run", {})
-        app = clean.get("apply")
-        lines.append(
-            f"- `mo clean` 状态：`{clean['status']}` | 预览估算：`{dry.get('potential_space') or '未知'}`（{dry.get('items') or '?'} 项）"
-            + (f" | 实清释放：`{app.get('freed_space') or '见明细'}`" if app else "")
-        )
+        dry = clean.get("dry_run") or {}
+        app = clean.get("apply") or {}
+        src = app or dry
+        parts = [f"- `mo clean` 状态：`{clean['status']}`"]
+        if dry.get("potential_space"):
+            parts.append(f"预览估算：`{dry['potential_space']}`")
+        if app:
+            parts.append(f"实清释放：`{app.get('freed_space') or '已执行'}`")
+        lines.append(" | ".join(parts))
         if dry.get("clean_list_path"):
             lines.append(f"  - 预览清单：`{dry['clean_list_path']}`")
-        for adv in dry.get("advisories", []):
+        for adv in src.get("advisories", []):
             lines.append(f"  - 未自动删除的大目录建议：`{adv}`")
-        for warn in (app or dry).get("warnings", [])[:5]:
+        for warn in src.get("warnings", [])[:5]:
             lines.append(f"  - 跳过/受限提示：{warn}")
 
     opt = report.get("optimize", {})
     if opt.get("status") != "skipped":
-        dry = opt.get("dry_run", {})
-        app = opt.get("apply")
-        lines.append(
-            f"- `mo optimize` 状态：`{opt['status']}` | 预览建议优化项：`{dry.get('planned_count') if dry.get('planned_count') is not None else '?'}`"
-            + (f" | 实际应用：`{app.get('applied_count') if app.get('applied_count') is not None else '见日志'}`" if app else "")
-        )
+        dry = opt.get("dry_run") or {}
+        app = opt.get("apply") or {}
+        src = app or dry
+        parts = [f"- `mo optimize` 状态：`{opt['status']}`"]
+        if dry.get("planned_count") is not None:
+            parts.append(f"预览建议优化项：`{dry['planned_count']}`")
+        if app:
+            parts.append(f"实际应用：`{app.get('applied_count') if app.get('applied_count') is not None else '见日志'}`")
+        lines.append(" | ".join(parts))
         if opt.get("manual_command"):
             lines.append(f"  - 需交互/管理员权限，请按需在终端手动执行：`{opt['manual_command']}`")
-        for item in dry.get("attention_items", [])[:5]:
+        for item in src.get("attention_items", [])[:5]:
             lines.append(f"  - 待关注项：{item}")
 
     return "\n".join(lines)
@@ -346,9 +374,10 @@ def render_markdown(report: dict) -> str:
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--apply", action="store_true", help="Execute mo clean and mo optimize (default: dry-run).")
+    parser.add_argument("--with-preview", action="store_true", help="Also run --dry-run before --apply.")
     parser.add_argument("--skip-clean", action="store_true", help="Skip mo clean.")
     parser.add_argument("--skip-optimize", action="store_true", help="Skip mo optimize.")
-    parser.add_argument("--timeout", type=int, default=420, help="Per-command timeout in seconds.")
+    parser.add_argument("--timeout", type=int, default=90, help="Per-command timeout in seconds (default: 90).")
     parser.add_argument("--json", action="store_true", help="Emit JSON output.")
     return parser.parse_args(argv)
 
@@ -360,6 +389,7 @@ def main(argv: list[str] | None = None) -> int:
         skip_clean=args.skip_clean,
         skip_optimize=args.skip_optimize,
         timeout=args.timeout,
+        with_preview=args.with_preview,
     )
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2))

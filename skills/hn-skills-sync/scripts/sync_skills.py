@@ -9,6 +9,7 @@ import json
 import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -108,23 +109,38 @@ def check_installer_allowlist(repo_root: Path, active_skills: list[str]) -> list
     return [f"bin/install.mjs missing skills: {', '.join(missing)}"] if missing else []
 
 
-def run_cmd(cmd: list[str], timeout: int = 300) -> tuple[int, str, str]:
+def run_cmd(cmd: list[str], timeout: int = 120) -> tuple[int, str, str]:
+    env = {**os.environ, "NO_COLOR": "1", "CI": "1"}
     try:
-        proc = subprocess.run(
+        proc = subprocess.Popen(
             cmd,
             stdin=subprocess.DEVNULL,
-            capture_output=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             text=True,
-            timeout=timeout,
-            env={**os.environ, "NO_COLOR": "1", "CI": "1"},
+            env=env,
+            start_new_session=True,
         )
-        return proc.returncode, proc.stdout, proc.stderr
-    except subprocess.TimeoutExpired as exc:
-        out = exc.stdout if isinstance(exc.stdout, str) else ""
-        err = exc.stderr if isinstance(exc.stderr, str) else ""
-        return 124, out, f"Timed out after {timeout}s\n{err}"
     except OSError as exc:
         return 127, "", str(exc)
+
+    try:
+        out, err = proc.communicate(timeout=timeout)
+        return proc.returncode, out or "", err or ""
+    except subprocess.TimeoutExpired:
+        try:
+            os.killpg(proc.pid, signal.SIGTERM)
+        except ProcessLookupError:
+            pass
+        try:
+            out, err = proc.communicate(timeout=3)
+        except subprocess.TimeoutExpired:
+            try:
+                os.killpg(proc.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            out, err = proc.communicate()
+        return 124, out or "", f"Timed out after {timeout}s\n{err or ''}"
 
 
 def atomic_replace_dir(source_dir: Path, target_dir: Path) -> None:
@@ -259,7 +275,7 @@ def sync_all(
                 report["third_party"]["status"] = "failed"
                 report["third_party"]["output"] = "skills CLI not found."
             else:
-                rc, out, err = run_cmd([*skills_cli, "update", "-g", "-y"], timeout=600)
+                rc, out, err = run_cmd([*skills_cli, "update", "-g", "-y"], timeout=120)
                 lock_after = read_skill_lock(lock_path)
                 updated_tp: list[str] = []
                 unchanged_tp: list[str] = []
@@ -275,8 +291,12 @@ def sync_all(
                 report["third_party"]["updated"] = updated_tp
                 report["third_party"]["unchanged"] = unchanged_tp
                 report["third_party"]["returncode"] = rc
-                report["third_party"]["output"] = (out or err)[-2000:]
-                report["third_party"]["status"] = "ok" if rc == 0 else "partial"
+                if rc == 124:
+                    report["third_party"]["status"] = "skipped_timeout"
+                    report["third_party"]["output"] = "Timed out after 120s (skipped)"
+                else:
+                    report["third_party"]["output"] = (out or err)[-2000:]
+                    report["third_party"]["status"] = "ok" if rc == 0 else "partial"
 
     # 2. Personal GitHub skills sync
     if not skip_hn_skills:
@@ -287,7 +307,7 @@ def sync_all(
             else:
                 tmp_clone = Path(tempfile.mkdtemp(prefix="hn-skills-sync-"))
                 clone_url = f"https://github.com/{repo}.git"
-                rc, out, err = run_cmd(["git", "clone", "--depth", "1", "--quiet", clone_url, str(tmp_clone)], timeout=180)
+                rc, out, err = run_cmd(["git", "clone", "--depth", "1", "--quiet", clone_url, str(tmp_clone)], timeout=45)
                 if rc != 0:
                     raise RuntimeError(f"git clone {clone_url} failed (rc={rc}): {err or out}")
                 source_root = tmp_clone
@@ -310,7 +330,7 @@ def sync_all(
                     if installer_js.is_file() and node_bin and not report["hn_skills"]["warnings"]:
                         rc, out, err = run_cmd(
                             [node_bin, str(installer_js), "install", "--force", "--path", str(codex_dir)],
-                            timeout=180,
+                            timeout=45,
                         )
                         if rc != 0:
                             report["hn_skills"]["warnings"].append(f"install.mjs failed (rc={rc}); fell back to atomic copy: {err or out}")
@@ -332,7 +352,7 @@ def sync_all(
                             agent_flags.extend(["antigravity", "antigravity-cli"])
                         agent_flags.append("cline")
                         cmd = [*skills_cli, "add", add_source, "-g", "-y", "-s", *active_skills, "-a", *agent_flags]
-                        rc, out, err = run_cmd(cmd, timeout=300)
+                        rc, out, err = run_cmd(cmd, timeout=90)
                         if rc != 0:
                             report["hn_skills"]["warnings"].append(f"skills add returned rc={rc}; reconciled directly.")
 
@@ -369,8 +389,8 @@ def sync_all(
 
     statuses = [report["third_party"]["status"], report["hn_skills"]["status"]]
     if any(s == "failed" for s in statuses):
-        report["status"] = "partial" if any(s in {"ok", "partial", "preview"} for s in statuses) else "failed"
-    elif any(s == "partial" for s in statuses):
+        report["status"] = "partial" if any(s in {"ok", "partial", "preview", "skipped_timeout"} for s in statuses) else "failed"
+    elif any(s in {"partial", "skipped_timeout"} for s in statuses):
         report["status"] = "partial"
     return report
 

@@ -4,8 +4,10 @@ import os
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
+from unittest import mock
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SKILLS_DIR = REPO_ROOT / "skills"
@@ -103,6 +105,18 @@ class AiSoftwareUpdateTests(unittest.TestCase):
         self.assertEqual(detected, ["llvm", "rust", "ripgrep"])
         self.assertEqual(ai_update.detect_heavy_brew_source_build("==> Upgrading 1 outdated package:\nmole 1.58.0 -> 1.74.0\n"), [])
 
+    def test_uv_already_latest_classification(self):
+        bucket1, entry1 = ai_update.classify_uv_upgrade("notebooklm-mcp-cli", "0.16.6", "0.16.6", "Nothing to upgrade")
+        self.assertEqual(bucket1, "already_latest")
+        self.assertEqual(entry1["version"], "0.16.6")
+
+        bucket2, entry2 = ai_update.classify_uv_upgrade("notebooklm-mcp-cli", "0.16.6", "0.16.6", "")
+        self.assertEqual(bucket2, "already_latest")
+
+        bucket3, entry3 = ai_update.classify_uv_upgrade("notebooklm-mcp-cli", "0.12.0", "0.16.6", "Upgraded notebooklm-mcp-cli v0.12.0 -> v0.16.6")
+        self.assertEqual(bucket3, "upgraded")
+        self.assertEqual(entry3["after"], "0.16.6")
+
 
 class SkillsSyncTests(unittest.TestCase):
     def test_repo_discovery_excludes_backup_and_syncs_temp_home(self):
@@ -194,32 +208,56 @@ class MoleCleanupTests(unittest.TestCase):
         self.assertEqual(len(o_parsed["attention_items"]), 1)
         self.assertEqual(mole_clean.classify_optimize_apply(1, "", "sudo: a password is required", False), "needs_admin")
         self.assertEqual(mole_clean.classify_clean_apply(243, "Space freed: 1.2GB", "EACCES", False), "partial")
+        self.assertEqual(mole_clean.classify_clean_apply(124, "", "", True), "skipped_timeout")
+
+    def test_apply_skips_redundant_dry_run_unless_with_preview(self):
+        calls = []
+
+        def fake_run(cmd, timeout):
+            calls.append(cmd)
+            if cmd[1] == "--version":
+                return 0, "Mole version 1.74.0", "", False
+            if cmd[1] == "clean":
+                return 0, "Removed: 1.0GB · 10 items\n", "", False
+            if cmd[1] == "optimize":
+                return 0, "Applied 2 optimizations\n", "", False
+            return 0, "", "", False
+
+        with mock.patch.object(mole_clean, "find_mole", return_value="/opt/homebrew/bin/mo"), \
+             mock.patch.object(mole_clean, "measure_volume", return_value={"mount_point": "/", "avail_kb": 1024, "avail_gb": 1.0}), \
+             mock.patch.object(mole_clean, "run_cmd", side_effect=fake_run):
+            res = mole_clean.execute(apply=True, skip_clean=False, skip_optimize=False, timeout=90, with_preview=False)
+            self.assertEqual(res["status"], "ok")
+            self.assertNotIn("dry_run", res["clean"])
+            self.assertNotIn("dry_run", res["optimize"])
+            self.assertEqual([c[1:] for c in calls], [["--version"], ["clean"], ["optimize"]])
 
 
 class DailyOrchestratorTests(unittest.TestCase):
-    def test_dag_parallel_and_serial_order_and_failure_isolation(self):
+    def test_dag_parallel_and_serial_order_and_streaming_plan_c(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             mock_specs = {
                 "hn-ai-software-update/scripts/update_ai_software.py": (
-                    "import json, sys, time\n"
+                    "import json, time\n"
                     "time.sleep(0.25)\n"
-                    "print(json.dumps({'status': 'partial', 'upgraded': [], 'outdated': [], 'already_latest': [], 'manual_apps': [], 'issues': [{'name':'x','manager':'m','message':'warn'}]}))\n"
+                    "print(json.dumps({'status': 'partial', 'upgraded': [{'name':'mole','manager':'brew-formula','before':'1.58','after':'1.74'}], 'outdated': [], 'already_latest': [{'name':'codex'}], 'manual_apps': [], 'issues': [{'name':'opencode','manager':'brew-formula','message':'needs_manual: src'}]}))\n"
                 ),
                 "hn-token-stats/scripts/token_stats.py": (
                     "import json, time\n"
-                    "time.sleep(0.25)\n"
-                    "print(json.dumps({'status': 'ok', 'cards': [{'agent':'codex','label':'Codex','text':'📊 ok'}]}))\n"
+                    "time.sleep(0.05)\n"
+                    "card = '📊 Codex Token｜近7日（11/19–11/25）\\n日期 | 进度条         | Token\\n11/19 | ████████████ | 1,000万\\n7日累计：约 1,000万 Token\\n注：含缓存，按1万取整；进度按周峰值，每格含1/8刻度。'\n"
+                    "print(json.dumps({'status': 'ok', 'combined_total': 10000000, 'cards': [{'agent':'codex','label':'Codex','text': card}]}))\n"
                 ),
                 "hn-skills-sync/scripts/sync_skills.py": (
                     "import json, time\n"
                     "time.sleep(0.05)\n"
-                    "print(json.dumps({'status': 'ok', 'repo':'r', 'third_party':{'status':'ok','updated':[],'unchanged':[]}, 'hn_skills':{'status':'ok','active_count':1,'added':[],'updated':[],'symlink_repairs':[],'warnings':[]}}))\n"
+                    "print(json.dumps({'status': 'ok', 'repo':'holynova/hn-codex-skills', 'third_party':{'status':'ok','updated':['a'],'unchanged':[]}, 'hn_skills':{'status':'ok','active_count':30,'added':['hn-daily'],'updated':[],'symlink_repairs':[],'warnings':[]}}))\n"
                 ),
                 "hn-clean/scripts/mole_cleanup.py": (
                     "import json, time\n"
                     "time.sleep(0.05)\n"
-                    "print(json.dumps({'status': 'ok', 'clean':{'status':'ok','dry_run':{}}, 'optimize':{'status':'ok','dry_run':{}}}))\n"
+                    "print(json.dumps({'status': 'ok', 'before_disk': {'avail_gb': 10.0}, 'after_disk': {'avail_gb': 12.0}, 'observed_delta_kb': 2097152, 'clean':{'status':'ok','apply':{'freed_space':'2.0GB · 10 items','advisories':['pnpm store · 2GB']}}, 'optimize':{'status':'ok','apply':{'applied_count':2}}}))\n"
                 ),
             }
             for rel, code in mock_specs.items():
@@ -227,25 +265,69 @@ class DailyOrchestratorTests(unittest.TestCase):
                 p.parent.mkdir(parents=True, exist_ok=True)
                 p.write_text(code, encoding="utf-8")
 
-            report = hn_daily.orchestrate(apply=True, skills_root=root)
+            streamed = []
+            report = hn_daily.orchestrate(
+                apply=True,
+                skills_root=root,
+                on_stage_done=lambda stage, st, idx, tot: streamed.append((stage, idx, tot, st["ended_epoch"])),
+            )
             st = report["stages"]
 
-            # Stage 1 overlap: both start before either finishes
-            self.assertLess(st["tokens"]["started_epoch"], st["update"]["ended_epoch"])
-            self.assertLess(st["update"]["started_epoch"], st["tokens"]["ended_epoch"])
+            # Streaming fired immediately: tokens (0.05s) finished strictly before update (0.25s) ended!
+            self.assertEqual([x[0] for x in streamed], ["tokens", "update", "skills", "clean"])
+            self.assertLess(streamed[0][3], st["update"]["ended_epoch"])
+            self.assertEqual([x[1] for x in streamed], [1, 2, 3, 4])
 
-            # Stage 2 runs after Stage 1 update completes
+            # Serial constraints
             self.assertGreaterEqual(st["skills"]["started_epoch"], st["update"]["ended_epoch"] - 0.01)
-
-            # Stage 3 runs after Stage 1 & Stage 2 complete
             self.assertGreaterEqual(st["clean"]["started_epoch"], st["skills"]["ended_epoch"] - 0.01)
-            self.assertGreaterEqual(st["clean"]["started_epoch"], st["tokens"]["ended_epoch"] - 0.01)
 
-            # Failure isolation: partial update still lets clean & tokens finish
-            self.assertEqual(st["tokens"]["status"], "ok")
-            self.assertEqual(st["clean"]["status"], "ok")
+            # Plan C concise format + embedded 7-day graphical card
             md = hn_daily.render_markdown(report)
-            self.assertIn("📊 ok", md)
+            self.assertIn("⚠️ Daily 汇总｜", md)
+            self.assertIn("更新 1 项 · 同步 2 技能 · 可用空间 +2.00 GB（→ 12.00 GB） · 7日 1,000万 Token", md)
+            self.assertIn("- **软件（⚠️）**：", md)
+            self.assertIn("- **Skills（✅）**：", md)
+            self.assertIn("- **清理（✅）**：", md)
+            self.assertIn("11/19 | ████████████ | 1,000万", md)
+
+    def test_fast_fail_timeout_skips_slow_step_without_blocking(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            mock_specs = {
+                "hn-ai-software-update/scripts/update_ai_software.py": "import time\ntime.sleep(3.0)\n",
+                "hn-token-stats/scripts/token_stats.py": (
+                    "import json\n"
+                    "print(json.dumps({'status': 'ok', 'combined_total': 100000, 'cards': [{'agent':'codex','label':'Codex','text':'📊 ok'}]}))\n"
+                ),
+                "hn-skills-sync/scripts/sync_skills.py": (
+                    "import json\n"
+                    "print(json.dumps({'status': 'ok', 'repo':'r', 'third_party':{'status':'ok','updated':[],'unchanged':[]}, 'hn_skills':{'status':'ok','active_count':1,'added':[],'updated':[],'symlink_repairs':[],'warnings':[]}}))\n"
+                ),
+                "hn-clean/scripts/mole_cleanup.py": (
+                    "import json\n"
+                    "print(json.dumps({'status': 'ok', 'clean':{'status':'ok','apply':{'freed_space':'1MB'}}, 'optimize':{'status':'ok','apply':{'applied_count':1}}}))\n"
+                ),
+            }
+            for rel, code in mock_specs.items():
+                p = root / rel
+                p.parent.mkdir(parents=True, exist_ok=True)
+                p.write_text(code, encoding="utf-8")
+
+            t0 = time.time()
+            report = hn_daily.orchestrate(
+                apply=True,
+                skills_root=root,
+                stage_timeouts={"update": 0.25, "tokens": 5, "skills": 5, "clean": 5},
+            )
+            elapsed = time.time() - t0
+            self.assertLess(elapsed, 2.0)
+            self.assertEqual(report["stages"]["update"]["status"], "skipped_timeout")
+            self.assertEqual(report["stages"]["tokens"]["status"], "ok")
+            self.assertEqual(report["stages"]["skills"]["status"], "ok")
+            self.assertEqual(report["stages"]["clean"]["status"], "ok")
+            md = hn_daily.render_markdown(report)
+            self.assertIn("- **软件（⏭️）**：已跳过（超时", md)
 
 
 if __name__ == "__main__":

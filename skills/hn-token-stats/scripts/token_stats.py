@@ -8,6 +8,7 @@ import glob
 import json
 import os
 import shutil
+import signal
 import subprocess
 import sys
 from datetime import date, datetime, timedelta
@@ -115,21 +116,37 @@ def extract_json_object(raw: str) -> dict | None:
         return None
 
 
-def run_ccusage_json(cmd: list[str], env_extra: dict[str, str] | None = None, timeout: int = 60) -> dict | None:
+def run_ccusage_json(cmd: list[str], env_extra: dict[str, str] | None = None, timeout: int = 30) -> dict | None:
     env = {**os.environ, "NO_COLOR": "1", **(env_extra or {})}
     try:
-        proc = subprocess.run(
+        proc = subprocess.Popen(
             cmd,
             stdin=subprocess.DEVNULL,
-            capture_output=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             text=True,
-            timeout=timeout,
             env=env,
+            start_new_session=True,
         )
+    except OSError:
+        return None
+    try:
+        out, _ = proc.communicate(timeout=timeout)
         if proc.returncode == 0:
-            return extract_json_object(proc.stdout)
-    except (OSError, subprocess.TimeoutExpired):
-        pass
+            return extract_json_object(out)
+    except subprocess.TimeoutExpired:
+        try:
+            os.killpg(proc.pid, signal.SIGTERM)
+        except ProcessLookupError:
+            pass
+        try:
+            proc.communicate(timeout=2)
+        except subprocess.TimeoutExpired:
+            try:
+                os.killpg(proc.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            proc.communicate()
     return None
 
 

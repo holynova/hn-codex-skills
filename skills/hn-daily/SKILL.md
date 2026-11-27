@@ -1,47 +1,63 @@
 ---
 name: hn-daily
-description: 每日一站式系统维护与 AI 盘点编排技能：按依赖编排并行与串行步骤，组合调用 hn-ai-software-update（更新 AI CLI、Mole 与软件）、hn-token-stats（近七日 Token 进度条统计）、hn-skills-sync（更新第三方与个人 GitHub skills）和 hn-clean（运行 mo clean 与 mo optimize 清理优化磁盘）。适用于每日维护、批量升级同步清理或统一日报汇报。
+description: 每日一站式系统维护与 AI 盘点编排技能：按依赖编排并行与串行步骤，组合调用 hn-ai-software-update（更新 AI CLI、Mole 与软件）、hn-token-stats（近七日 Token 进度条统计）、hn-skills-sync（更新第三方与个人 GitHub skills）和 hn-clean（运行 mo clean 与 mo optimize 清理优化磁盘），支持分步即时输出、失败/超时快速跳过与带近7日图形化进度条的极简汇总。适用于每日维护、批量升级同步清理或统一日报汇报。
 ---
 
 # HN 每日维护编排 (`hn-daily`)
 
-通过明确的有向无环图（DAG）编排调用四个独立子技能，兼顾并发效率与数据一致性：
+通过有向无环图（DAG）编排调用四个独立子技能，默认开启**分步即时输出**（每步完成立刻吐出该步结果，不等全部跑完）与**失败/超时快速跳过**（每个步骤都有严格超时保护与进程组清理，失败或超时立即标记并放行后续步骤）。
 
 ## 并行与串行编排架构
 
 ```text
-Stage 1 (并行) ──┬──► [1A] hn-ai-software-update  (内部各包管理器通道再并发；brew 通道内部串行)
-                 └──► [1B] hn-token-stats          (纯只读统计，抢在清理缓存前完成)
+Stage 1 (并行) ──┬──► [1A] hn-ai-software-update  (内部按包管理器再并发；遇源码重编译自动跳过)
+                 └──► [1B] hn-token-stats          (纯只读统计，约十余秒率先完成并立即输出)
                          │
-                         ▼ (依赖 1A 升级后的 skills CLI 与环境)
-Stage 2 (串行) ───────► [2]  hn-skills-sync        (更新第三方 skills + 同步 holynova/hn-codex-skills)
+                         ▼ (等待 1A 完成或跳过后立即启动)
+Stage 2 (串行) ───────► [2]  hn-skills-sync        (更新第三方 skills + 同步个人 GitHub 仓库)
                          │
-                         ▼ (依赖 1A 新版 Mole、1B 已完成读取、2 不再写入锁/缓存)
-Stage 3 (串行) ───────► [3]  hn-clean              (执行 mo clean + mo optimize，复测 df -k 并列大目录建议)
+                         ▼ (等待 1A 新版 Mole、1B Token 与 2 同步全部结束)
+Stage 3 (串行) ───────► [3]  hn-clean              (运行 mo clean + mo optimize，复测 df -k)
 ```
 
-### 编排依据
+### 编排与快速失败机制
 
-- **为什么 `[1A]` 与 `[1B]` 并行**：Token 统计仅读取会话日志与缓存指标，与软件更新无写冲突；同时让 `hn-token-stats` 在阶段一就完成读取，可避免后续 `mo clean` 清掉 `~/.npm/_npx` 里的 `ccusage` 缓存二进制。
-- **为什么 `[2]` 必须在 `[1A]` 之后串行**：`[1A]` 会先升级 `skills` CLI 与 AI CLI；在最新 CLI 就绪后再同步 skills，且避免与 npm/pnpm 并发争夺全局状态。
-- **为什么 `[3]` 必须最后串行**：① 可用上 `[1A]` 刚升级好的最新版 `mole`；② 一并扫掉 `[1A]` 和 `[2]` 新产生的下载缓存；③ 避免 `mo clean` 与 `brew` / `npm` / `pnpm` / `skills` / `ccusage` 同时读写缓存引发锁竞争或半成品误删。
+- **分步即时输出**：Stage 1 使用 `as_completed` 并发收集结果，`hn-token-stats` 跑完就立刻输出近 7 日进度条；随后软件更新、Skills 同步、磁盘清理每完成一步立即打印本步结论。
+- **失败/超时即跳过**：各阶段均设紧缩超时（默认 `update` 240s、`tokens` 45s、`skills` 180s、`clean` 150s），且所有外部子命令均通过独立进程组执行，超时立即 `SIGTERM/SIGKILL` 整组回收并标记 `skipped_timeout`，绝不卡死整套流程。
 
 ## 使用方式
 
 ```bash
-# 1. 安全预览模式（默认仅 dry-run + 只读 Token 统计）
+# 1. 安全预览模式（默认仅 dry-run + 只读 Token 统计，分步即时输出）
 python3 skills/hn-daily/scripts/hn_daily.py
 
-# 2. 实际执行模式（更新软件 + 同步 skills + 执行 mo clean / mo optimize + 输出近7日 Token 卡片）
+# 2. 实际执行模式（更新软件 + 同步 skills + 执行 mo clean / mo optimize + 极简汇总）
 python3 skills/hn-daily/scripts/hn_daily.py --apply
 
-# 3. 仅运行部分阶段 / 跳过某阶段 / 输出 JSON
+# 3. 常用选项：过滤阶段 / 仅输出最终汇总 / 保存报告 / JSON 输出
 python3 skills/hn-daily/scripts/hn_daily.py --apply --only "tokens,clean"
-python3 skills/hn-daily/scripts/hn_daily.py --apply --skip "clean"
+python3 skills/hn-daily/scripts/hn_daily.py --apply --skip "clean" --no-stream
 python3 skills/hn-daily/scripts/hn_daily.py --apply --json --save-report ~/ai-daily-reports
 ```
 
-## 容错与交付原则
+## 终报格式规范（极简方案 C + 近 7 日图形化 Token 卡片）
 
-- **单步隔离**：某个子技能部分完成或遇权限/GUI 阻塞（如 `mo optimize` 需管理员密码或某桌面端需应用内点击更新）时，记录状态并继续执行后续独立步骤，不中断整套日报。
-- **分开呈现**：软件更新状态、skills 增删改明细、Mole 估算与 `df -k` 实测可用空间变化、以及未清理大目录建议（如 `pnpm store`、`worktrees`、`mo purge`）全部独立列出；Token 统计完整保留近 7 日 `1/8` 刻度进度条卡片。
+全部步骤结束后，统一输出顶部 1 行 KPI 脉冲条 + 只列变化与异常的 3 条精简摘要 + 按需待办 + 完整近 7 日 `1/8` 刻度进度条卡片：
+
+```markdown
+### ✅ Daily 汇总｜YYYY-MM-DD（apply · 2m 10s）
+**更新 12 项 · 同步 26 技能 · 可用空间 +5.62 GB（→ 23.18 GB）· 7日 2亿5,532万 Token**
+
+- **软件（✅）**：升级 `mole` `cc-switch` ... · 48s
+- **Skills（✅）**：第三方更新 18 项；个人库新增 ... · 32s
+- **清理（⚠️）**：`mo clean` 清 `3.06GB`，可用 `17.56 → 23.18 GB`（**+5.62 GB**）；`mo optimize` 已应用 2 项 · 50s
+
+> **待按需处理**：系统级优化需终端执行 `mo optimize`；大目录建议留存未删：`pnpm store` / `AI agent worktrees` / `Build artifacts`
+
+📊 Codex Token｜近7日（11/19–11/25）
+日期 | 进度条         | Token
+11/19 | █▋░░░░░░░░░░ | 6,408万
+...
+7日累计：约 10亿7,585万 Token
+注：含缓存，按1万取整；进度按周峰值，每格含1/8刻度。
+```

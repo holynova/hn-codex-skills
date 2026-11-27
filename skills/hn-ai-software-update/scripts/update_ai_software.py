@@ -9,6 +9,7 @@ import os
 import plistlib
 import re
 import shutil
+import signal
 import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
@@ -18,6 +19,7 @@ from pathlib import Path
 CATALOG_PATH = Path(__file__).resolve().parents[1] / "references" / "software-catalog.json"
 
 SEMVER_RE = re.compile(r"^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?(?:\+.*)?$")
+HEAVY_SOURCE_BUILD_FORMULAE = {"llvm", "rust", "gcc", "cmake", "go", "zig", "node"}
 
 
 def load_catalog(path: Path | None = None) -> dict:
@@ -93,7 +95,7 @@ def is_newer_version(installed: str, candidate: str) -> bool:
 def run_cmd(
     cmd: list[str],
     *,
-    timeout: int = 300,
+    timeout: int = 120,
     env_extra: dict[str, str] | None = None,
 ) -> tuple[int, str, str]:
     env = {
@@ -104,21 +106,35 @@ def run_cmd(
         **(env_extra or {}),
     }
     try:
-        proc = subprocess.run(
+        proc = subprocess.Popen(
             cmd,
             stdin=subprocess.DEVNULL,
-            capture_output=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             text=True,
-            timeout=timeout,
             env=env,
+            start_new_session=True,
         )
-        return proc.returncode, proc.stdout, proc.stderr
-    except subprocess.TimeoutExpired as exc:
-        out = exc.stdout if isinstance(exc.stdout, str) else ""
-        err = exc.stderr if isinstance(exc.stderr, str) else ""
-        return 124, out, f"Timed out after {timeout}s\n{err}"
     except OSError as exc:
         return 127, "", str(exc)
+
+    try:
+        out, err = proc.communicate(timeout=timeout)
+        return proc.returncode, out or "", err or ""
+    except subprocess.TimeoutExpired:
+        try:
+            os.killpg(proc.pid, signal.SIGTERM)
+        except ProcessLookupError:
+            pass
+        try:
+            out, err = proc.communicate(timeout=3)
+        except subprocess.TimeoutExpired:
+            try:
+                os.killpg(proc.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            out, err = proc.communicate()
+        return 124, out or "", f"Timed out after {timeout}s\n{err or ''}"
 
 
 def extract_json(raw: str):
@@ -134,9 +150,6 @@ def extract_json(raw: str):
                 except json.JSONDecodeError:
                     pass
     return None
-
-
-HEAVY_SOURCE_BUILD_FORMULAE = {"llvm", "rust", "gcc", "cmake", "go", "zig", "node"}
 
 
 def detect_heavy_brew_source_build(dry_run_output: str) -> list[str]:
@@ -160,14 +173,14 @@ def detect_heavy_brew_source_build(dry_run_output: str) -> list[str]:
 
 
 def fetch_npm_latest_tag(pkg: str) -> str | None:
-    rc, out, _ = run_cmd(["npm", "view", pkg, "dist-tags", "--json"], timeout=30)
+    rc, out, _ = run_cmd(["npm", "view", pkg, "dist-tags", "--json"], timeout=15)
     if rc == 0:
         tags = extract_json(out)
         if isinstance(tags, dict):
             latest = tags.get("latest")
             if isinstance(latest, str) and latest:
                 return latest
-    rc2, out2, _ = run_cmd(["npm", "view", pkg, "version"], timeout=30)
+    rc2, out2, _ = run_cmd(["npm", "view", pkg, "version"], timeout=15)
     if rc2 == 0 and out2.strip():
         return out2.strip().splitlines()[-1].strip()
     return None
@@ -180,14 +193,14 @@ def lane_homebrew(catalog: dict, apply: bool, only: set[str], no_casks: bool) ->
 
     brew_env = {"HOMEBREW_NO_AUTO_UPDATE": "1"}
     if apply:
-        rc_upd, _, err_upd = run_cmd(["brew", "update"], timeout=600, env_extra={"HOMEBREW_NO_AUTO_UPDATE": "0"})
+        rc_upd, _, err_upd = run_cmd(["brew", "update"], timeout=90, env_extra={"HOMEBREW_NO_AUTO_UPDATE": "0"})
         if rc_upd != 0:
-            res["issues"].append({"name": "brew update", "manager": "homebrew", "message": (err_upd or "brew update failed").strip()[-300:]})
+            res["issues"].append({"name": "brew update", "manager": "homebrew", "message": (err_upd or "brew update failed").strip()[-240:]})
 
-    rc_f, out_f, _ = run_cmd(["brew", "list", "--formula", "--full-name"], timeout=60, env_extra=brew_env)
+    rc_f, out_f, _ = run_cmd(["brew", "list", "--formula", "--full-name"], timeout=45, env_extra=brew_env)
     installed_formulae = [line.strip() for line in out_f.splitlines() if line.strip()] if rc_f == 0 else []
 
-    rc_c, out_c, _ = run_cmd(["brew", "list", "--cask", "--full-name"], timeout=60, env_extra=brew_env)
+    rc_c, out_c, _ = run_cmd(["brew", "list", "--cask", "--full-name"], timeout=45, env_extra=brew_env)
     installed_casks = [line.strip() for line in out_c.splitlines() if line.strip()] if rc_c == 0 else []
 
     formula_cat = {x.lower() for x in catalog.get("homebrew_formulae", [])}
@@ -202,7 +215,7 @@ def lane_homebrew(catalog: dict, apply: bool, only: set[str], no_casks: bool) ->
             res["managed_apps"].add(app_name)
     matched_casks = [c for c in matched_casks if matches_only(c, only)]
 
-    rc_o, out_o, _ = run_cmd(["brew", "outdated", "--json=v2", "--greedy"], timeout=120, env_extra=brew_env)
+    rc_o, out_o, _ = run_cmd(["brew", "outdated", "--json=v2", "--greedy"], timeout=60, env_extra=brew_env)
     outdated_data = extract_json(out_o) if rc_o == 0 else {}
     if not isinstance(outdated_data, dict):
         outdated_data = {}
@@ -220,7 +233,7 @@ def lane_homebrew(catalog: dict, apply: bool, only: set[str], no_casks: bool) ->
 
     formula_versions: dict[str, str] = {}
     if matched_formulae:
-        rc_v, out_v, _ = run_cmd(["brew", "list", "--versions", *matched_formulae], timeout=60, env_extra=brew_env)
+        rc_v, out_v, _ = run_cmd(["brew", "list", "--versions", *matched_formulae], timeout=30, env_extra=brew_env)
         if rc_v == 0:
             for line in out_v.splitlines():
                 parts = line.split()
@@ -229,7 +242,7 @@ def lane_homebrew(catalog: dict, apply: bool, only: set[str], no_casks: bool) ->
 
     cask_versions: dict[str, str] = {}
     if matched_casks:
-        rc_cv, out_cv, _ = run_cmd(["brew", "list", "--cask", "--versions", *matched_casks], timeout=60, env_extra=brew_env)
+        rc_cv, out_cv, _ = run_cmd(["brew", "list", "--cask", "--versions", *matched_casks], timeout=30, env_extra=brew_env)
         if rc_cv == 0:
             for line in out_cv.splitlines():
                 parts = line.split()
@@ -247,7 +260,7 @@ def lane_homebrew(catalog: dict, apply: bool, only: set[str], no_casks: bool) ->
         if not apply:
             res["outdated"].append({"name": full_name, "manager": "brew-formula", "before": before, "latest": latest})
             continue
-        rc_dry, dry_out, dry_err = run_cmd(["brew", "upgrade", "--dry-run", full_name], timeout=60, env_extra=brew_env)
+        rc_dry, dry_out, dry_err = run_cmd(["brew", "upgrade", "--dry-run", full_name], timeout=30, env_extra=brew_env)
         heavy_src = detect_heavy_brew_source_build(f"{dry_out}\n{dry_err}") if rc_dry == 0 else []
         if heavy_src:
             preview_names = ", ".join(heavy_src[:6]) + (f" 等共 {len(heavy_src)} 项" if len(heavy_src) > 6 else "")
@@ -257,13 +270,13 @@ def lane_homebrew(catalog: dict, apply: bool, only: set[str], no_casks: bool) ->
                 "message": f"needs_manual: 无预编译 bottle，需从源码编译 {preview_names}（已跳过以免耗时卡死，可手动执行 brew upgrade {full_name}）",
             })
             continue
-        rc_u, u_out, u_err = run_cmd(["brew", "upgrade", full_name], timeout=300, env_extra=brew_env)
-        _, v_out, _ = run_cmd(["brew", "list", "--versions", full_name], timeout=30, env_extra=brew_env)
+        rc_u, u_out, u_err = run_cmd(["brew", "upgrade", full_name], timeout=120, env_extra=brew_env)
+        _, v_out, _ = run_cmd(["brew", "list", "--versions", full_name], timeout=20, env_extra=brew_env)
         after = v_out.split()[-1] if v_out.split() else latest
         if rc_u == 0:
             res["upgraded"].append({"name": full_name, "manager": "brew-formula", "before": before, "after": after})
         else:
-            res["issues"].append({"name": full_name, "manager": "brew-formula", "message": (u_err or u_out).strip()[-300:]})
+            res["issues"].append({"name": full_name, "manager": "brew-formula", "message": (u_err or u_out).strip()[-240:]})
 
     if not no_casks:
         for full_name in matched_casks:
@@ -277,10 +290,10 @@ def lane_homebrew(catalog: dict, apply: bool, only: set[str], no_casks: bool) ->
             if not apply:
                 res["outdated"].append({"name": full_name, "manager": "brew-cask", "before": before, "latest": latest})
                 continue
-            rc_u, u_out, u_err = run_cmd(["brew", "upgrade", "--cask", "--greedy", full_name], timeout=300, env_extra=brew_env)
+            rc_u, u_out, u_err = run_cmd(["brew", "upgrade", "--cask", "--greedy", full_name], timeout=120, env_extra=brew_env)
             combined = f"{u_out}\n{u_err}"
             if rc_u == 0:
-                _, cv_out, _ = run_cmd(["brew", "list", "--cask", "--versions", full_name], timeout=30, env_extra=brew_env)
+                _, cv_out, _ = run_cmd(["brew", "list", "--cask", "--versions", full_name], timeout=20, env_extra=brew_env)
                 after = cv_out.split()[-1] if cv_out.split() else latest
                 res["upgraded"].append({"name": full_name, "manager": "brew-cask", "before": before, "after": after})
             else:
@@ -295,7 +308,7 @@ def lane_npm(catalog: dict, apply: bool, only: set[str]) -> dict:
     if not shutil.which("npm"):
         return res
 
-    rc, out, _ = run_cmd(["npm", "list", "-g", "--depth=0", "--json"], timeout=60)
+    rc, out, _ = run_cmd(["npm", "list", "-g", "--depth=0", "--json"], timeout=30)
     data = extract_json(out) if rc in (0, 1) else None
     deps = data.get("dependencies", {}) if isinstance(data, dict) else {}
     pkg_set = {p.lower() for p in catalog.get("js_packages", [])}
@@ -321,7 +334,7 @@ def lane_npm(catalog: dict, apply: bool, only: set[str]) -> dict:
         if not apply:
             res["outdated"].append({"name": pkg_name, "manager": "npm", "before": installed, "latest": latest})
             continue
-        rc_i, i_out, i_err = run_cmd(["npm", "install", "-g", f"{pkg_name}@latest"], timeout=300)
+        rc_i, i_out, i_err = run_cmd(["npm", "install", "-g", f"{pkg_name}@latest"], timeout=90)
         if rc_i == 0:
             _, out2, _ = run_cmd(["npm", "list", "-g", pkg_name, "--depth=0", "--json"], timeout=30)
             d2 = extract_json(out2)
@@ -377,7 +390,7 @@ def lane_pnpm(catalog: dict, apply: bool, only: set[str], npm_pkgs: set[str]) ->
     if not shutil.which("pnpm"):
         return res
 
-    rc, out, _ = run_cmd(["pnpm", "list", "-g", "--depth=0", "--json"], timeout=60)
+    rc, out, _ = run_cmd(["pnpm", "list", "-g", "--depth=0", "--json"], timeout=30)
     data = extract_json(out) if rc == 0 else None
     deps: dict[str, str] = {}
     if isinstance(data, list):
@@ -411,7 +424,7 @@ def lane_pnpm(catalog: dict, apply: bool, only: set[str], npm_pkgs: set[str]) ->
         if not apply:
             res["outdated"].append({"name": pkg_name, "manager": "pnpm", "before": installed, "latest": latest})
             continue
-        rc_i, i_out, i_err = run_cmd(["pnpm", "add", "-g", f"{pkg_name}@latest"], timeout=300)
+        rc_i, i_out, i_err = run_cmd(["pnpm", "add", "-g", f"{pkg_name}@latest"], timeout=90)
         if rc_i == 0:
             _, out2, _ = run_cmd(["pnpm", "list", "-g", "--depth=0", "--json"], timeout=30)
             d2 = extract_json(out2)
@@ -427,11 +440,23 @@ def lane_pnpm(catalog: dict, apply: bool, only: set[str], npm_pkgs: set[str]) ->
     return res
 
 
+def classify_uv_upgrade(pkg: str, before: str, after: str, combined_output: str) -> tuple[str, dict]:
+    low = combined_output.lower()
+    if (
+        "nothing to upgrade" in low
+        or "already up to date" in low
+        or "already at latest" in low
+        or (after == before and before != "?" and "upgraded" not in low)
+    ):
+        return "already_latest", {"name": pkg, "manager": "uv", "version": after or before}
+    return "upgraded", {"name": pkg, "manager": "uv", "before": before, "after": after}
+
+
 def lane_python_and_cargo(catalog: dict, apply: bool, only: set[str]) -> dict:
     res: dict = {"lane": "python-cargo", "upgraded": [], "outdated": [], "already_latest": [], "issues": []}
 
     if shutil.which("uv"):
-        rc, out, _ = run_cmd(["uv", "tool", "list"], timeout=60)
+        rc, out, _ = run_cmd(["uv", "tool", "list"], timeout=30)
         uv_cat = {x.lower() for x in catalog.get("uv_tools", [])}
         if rc == 0:
             for line in out.splitlines():
@@ -446,25 +471,23 @@ def lane_python_and_cargo(catalog: dict, apply: bool, only: set[str]) -> dict:
                 if not apply:
                     res["outdated"].append({"name": pkg, "manager": "uv", "before": ver, "latest": "check via uv tool upgrade"})
                     continue
-                rc_u, u_out, u_err = run_cmd(["uv", "tool", "upgrade", pkg], timeout=300)
+                rc_u, u_out, u_err = run_cmd(["uv", "tool", "upgrade", pkg], timeout=60)
                 combined = f"{u_out}\n{u_err}"
                 if rc_u == 0:
-                    if "nothing to upgrade" in combined.lower():
-                        res["already_latest"].append({"name": pkg, "manager": "uv", "version": ver})
-                    else:
-                        _, out2, _ = run_cmd(["uv", "tool", "list"], timeout=30)
-                        after = ver
-                        for l2 in out2.splitlines():
-                            p2 = l2.strip().split()
-                            if len(p2) >= 2 and p2[0] == pkg:
-                                after = p2[1].lstrip("v")
-                                break
-                        res["upgraded"].append({"name": pkg, "manager": "uv", "before": ver, "after": after})
+                    _, out2, _ = run_cmd(["uv", "tool", "list"], timeout=30)
+                    after = ver
+                    for l2 in out2.splitlines():
+                        p2 = l2.strip().split()
+                        if len(p2) >= 2 and p2[0] == pkg:
+                            after = p2[1].lstrip("v")
+                            break
+                    bucket, entry = classify_uv_upgrade(pkg, ver, after, combined)
+                    res[bucket].append(entry)
                 else:
                     res["issues"].append({"name": pkg, "manager": "uv", "message": combined.strip()[-240:]})
 
     if shutil.which("pipx"):
-        rc, out, _ = run_cmd(["pipx", "list", "--short"], timeout=60)
+        rc, out, _ = run_cmd(["pipx", "list", "--short"], timeout=30)
         pipx_cat = {x.lower() for x in catalog.get("pipx_packages", [])}
         if rc == 0:
             for line in out.splitlines():
@@ -478,7 +501,7 @@ def lane_python_and_cargo(catalog: dict, apply: bool, only: set[str]) -> dict:
                 if not apply:
                     res["outdated"].append({"name": pkg, "manager": "pipx", "before": ver, "latest": "check via pipx upgrade"})
                     continue
-                rc_u, u_out, u_err = run_cmd(["pipx", "upgrade", pkg], timeout=300)
+                rc_u, u_out, u_err = run_cmd(["pipx", "upgrade", pkg], timeout=60)
                 combined = f"{u_out}\n{u_err}"
                 if rc_u == 0:
                     if "already at latest" in combined.lower():
@@ -500,7 +523,7 @@ def lane_python_and_cargo(catalog: dict, apply: bool, only: set[str]) -> dict:
                 if not apply:
                     res["outdated"].append({"name": crate, "manager": "cargo", "before": "installed", "latest": "check via cargo install"})
                 else:
-                    rc_c, c_out, c_err = run_cmd(["cargo", "install", crate], timeout=900)
+                    rc_c, c_out, c_err = run_cmd(["cargo", "install", crate], timeout=180)
                     if rc_c == 0:
                         res["upgraded"].append({"name": crate, "manager": "cargo", "before": "installed", "after": "latest"})
                     else:
@@ -522,15 +545,15 @@ def lane_self_updaters(catalog: dict, apply: bool, only: set[str]) -> dict:
         if "/homebrew/" in resolved.lower() or "node_modules" in resolved.lower():
             continue
 
-        rc_v, v_out, _ = run_cmd(entry.get("version_cmd", [bin_name, "--version"]), timeout=20)
+        rc_v, v_out, _ = run_cmd(entry.get("version_cmd", [bin_name, "--version"]), timeout=15)
         before = v_out.strip().splitlines()[0] if rc_v == 0 and v_out.strip() else "?"
         if not apply:
             res["outdated"].append({"name": tool_id, "manager": "self-updater", "before": before, "latest": "check via self-update"})
             continue
 
-        rc_u, u_out, u_err = run_cmd(entry.get("update_cmd", [bin_name, "update"]), timeout=300)
+        rc_u, u_out, u_err = run_cmd(entry.get("update_cmd", [bin_name, "update"]), timeout=60)
         combined = f"{u_out}\n{u_err}"
-        _, v2_out, _ = run_cmd(entry.get("version_cmd", [bin_name, "--version"]), timeout=20)
+        _, v2_out, _ = run_cmd(entry.get("version_cmd", [bin_name, "--version"]), timeout=15)
         after = v2_out.strip().splitlines()[0] if v2_out.strip() else before
         if rc_u == 0:
             if after == before and any(k in combined.lower() for k in ("up to date", "up-to-date", "already", "latest", "no update")):
