@@ -23,7 +23,7 @@ Stage 3 (串行) ───────► [3]  hn-clean              (运行 mo 
 ### 编排与快速失败机制
 
 - **分步即时输出**：Stage 1 使用 `as_completed` 并发收集结果，`hn-token-stats` 跑完就立刻输出近 7 日进度条；随后软件更新、Skills 同步、磁盘清理每完成一步立即打印本步结论。
-- **失败/超时即跳过**：各阶段均设紧缩超时（默认 `update` 240s、`tokens` 45s、`skills` 180s、`clean` 150s），且所有外部子命令均通过独立进程组执行，超时立即 `SIGTERM/SIGKILL` 整组回收并标记 `skipped_timeout`，绝不卡死整套流程。
+- **失败/超时即跳过（`mo clean` 给予长超时必跑保障）**：`mo clean` 为必跑步骤，单步超时设至 900s（`clean` 阶段总上限 1080s，其中 `mo optimize` 上限 90s）；其余阶段维持紧缩超时（默认 `update` 240s、`tokens` 45s、`skills` 180s）。所有外部子命令均通过独立进程组执行，超时立即 `SIGTERM/SIGKILL` 整组回收并标记 `skipped_timeout`，绝不卡死整套流程。
 
 ## 使用方式
 

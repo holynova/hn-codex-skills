@@ -270,7 +270,7 @@ def execute(
         report["clean"] = clean_res
 
     if not skip_optimize:
-        opt_timeout = min(timeout, 45)
+        opt_timeout = min(timeout, 90)
         opt_res: dict = {}
         if (not apply) or with_preview:
             rc, out, err, timed_out = run_cmd([mo_bin, "optimize", "--dry-run"], timeout=opt_timeout)
@@ -377,7 +377,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--with-preview", action="store_true", help="Also run --dry-run before --apply.")
     parser.add_argument("--skip-clean", action="store_true", help="Skip mo clean.")
     parser.add_argument("--skip-optimize", action="store_true", help="Skip mo optimize.")
-    parser.add_argument("--timeout", type=int, default=90, help="Per-command timeout in seconds (default: 90).")
+    parser.add_argument("--timeout", type=int, default=900, help="Per-command timeout for mo clean in seconds (default: 900).")
     parser.add_argument("--json", action="store_true", help="Emit JSON output.")
     return parser.parse_args(argv)
 

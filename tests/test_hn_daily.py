@@ -232,6 +232,10 @@ class MoleCleanupTests(unittest.TestCase):
             self.assertNotIn("dry_run", res["optimize"])
             self.assertEqual([c[1:] for c in calls], [["--version"], ["clean"], ["optimize"]])
 
+    def test_clean_mandatory_long_timeout_defaults(self):
+        self.assertGreaterEqual(mole_clean.parse_args([]).timeout, 900)
+        self.assertGreaterEqual(hn_daily.DEFAULT_STAGE_TIMEOUTS["clean"], 1000)
+
 
 class DailyOrchestratorTests(unittest.TestCase):
     def test_dag_parallel_and_serial_order_and_streaming_plan_c(self):

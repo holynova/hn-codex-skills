@@ -21,7 +21,7 @@ DEFAULT_STAGE_TIMEOUTS = {
     "update": 240,
     "tokens": 45,
     "skills": 180,
-    "clean": 150,
+    "clean": 1080,
 }
 
 STAGE_TARGETS = {
